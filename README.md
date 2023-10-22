@@ -30,4 +30,4 @@ Este proyecto está bajo la Licencia MIT - ver el archivo [LICENSE.md](LICENSE.m
 
 ---
 
-Creado con ❤️ por el equipo de TeachCall.
+Creado con ❤️ por el equipo de TeachCall. UTEC
