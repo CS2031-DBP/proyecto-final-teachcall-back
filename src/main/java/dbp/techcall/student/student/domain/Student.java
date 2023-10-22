@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -182,5 +183,18 @@ public class Student {
 
     public void setReplies(Set<StudentReply> replies) {
         this.replies = replies;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Student student = (Student) o;
+        return Objects.equals(id, student.id) && Objects.equals(firstName, student.firstName) && Objects.equals(lastName, student.lastName) && Objects.equals(email, student.email) && Objects.equals(password, student.password) && Objects.equals(createdAt, student.createdAt) && Objects.equals(updatedAt, student.updatedAt) && Objects.equals(interests, student.interests) && Objects.equals(bookings, student.bookings) && Objects.equals(reviews, student.reviews) && Objects.equals(likedPosts, student.likedPosts) && Objects.equals(conversations, student.conversations) && Objects.equals(replies, student.replies);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, password, createdAt, updatedAt, interests, bookings, reviews, likedPosts, conversations, replies);
     }
 }
