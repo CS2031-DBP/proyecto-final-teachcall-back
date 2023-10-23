@@ -43,6 +43,33 @@ public class MeetingDetails {
      // Foreign Key
 
 
+    //Constructores:
+
+    public MeetingDetails(Integer id,
+                          String endDate,
+                          Boolean isLocked,
+                          String roomMode,
+                          String roomNamePrefix,
+                          String templateType,
+                          String hostRoomUrl,
+                          String viewerRoomUrl,
+                          Integer bookingId) {
+        this.id = id;
+        this.endDate = endDate;
+        this.isLocked = isLocked;
+        this.roomMode = roomMode;
+        this.roomNamePrefix = roomNamePrefix;
+        this.templateType = templateType;
+        this.hostRoomUrl = hostRoomUrl;
+        this.viewerRoomUrl = viewerRoomUrl;
+        this.bookingId = bookingId;
+    }
+
+    //Default constructor
+    public MeetingDetails() {
+    }
+
+
     public Integer getId() {
         return id;
     }

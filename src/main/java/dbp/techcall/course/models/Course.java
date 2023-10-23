@@ -26,6 +26,20 @@ public class Course {
     @Column(name = "professor_id", nullable = false)
     private Integer professorId;
 
+    //Constructor
+    public Course(Integer id, String title, String description, Integer price, Integer professorId) {
+        this.id = id;
+        this.title = title;
+        this.description = description;
+        this.price = price;
+        this.professorId = professorId;
+    }
+
+    //Default constructor
+    public Course() {
+    }
+
+
     public Integer getId() {
         return id;
     }

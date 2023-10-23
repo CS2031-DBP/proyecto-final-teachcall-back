@@ -18,6 +18,16 @@ public class CourseCategory {
     @Column(name="category_id", nullable = false)
     private Integer categoryId;
 
+    //Constructor
+    public CourseCategory(Integer courseId, Integer categoryId) {
+        this.courseId = courseId;
+        this.categoryId = categoryId;
+    }
+
+    //Default constructor
+    public CourseCategory() {
+    }
+
 
     public Integer getCourseId() {
         return courseId;

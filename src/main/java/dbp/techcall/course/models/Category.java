@@ -17,6 +17,17 @@ public class Category {
     @Column(name = "title",nullable = false)
     private String title;
 
+    //Constructores:
+    //Constructor
+    public Category(Integer id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    //Default constructor
+    public Category() {
+    }
+
     public Integer getId() {
         return id;
     }

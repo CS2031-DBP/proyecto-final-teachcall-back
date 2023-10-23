@@ -19,6 +19,16 @@ public class ProfessorCategory {
     @Column(name="category_id", nullable = false)
     private Integer categoryId;
 
+    //Constructor
+    public ProfessorCategory(Integer professorId, Integer categoryId) {
+        this.professorId = professorId;
+        this.categoryId = categoryId;
+    }
+
+    //Default constructor
+    public ProfessorCategory() {
+    }
+
     //getters
     public Integer getProfessorId() {
         return professorId;
@@ -37,14 +47,7 @@ public class ProfessorCategory {
         this.categoryId = categoryId;
     }
 
-    //constructor
-    public ProfessorCategory(Integer professorId, Integer categoryId) {
-        this.professorId = professorId;
-        this.categoryId = categoryId;
-    }
 
-    public ProfessorCategory() {
-    }
 
     @Override
     public String toString() {

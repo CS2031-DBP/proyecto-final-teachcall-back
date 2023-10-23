@@ -31,6 +31,25 @@ public class Booking {
     @Column(name="link",nullable = true)
     private String link;
 
+
+    //Constructores:
+
+
+    public Booking(Integer id, Integer studentId, Integer courseId, Integer professorId, String date, String status, String link) {
+        this.id = id;
+        this.studentId = studentId;
+        this.courseId = courseId;
+        this.professorId = professorId;
+        this.date = date;
+        this.status = status;
+        this.link = link;
+    }
+
+    //Default constructor
+    public Booking() {
+    }
+
+
     public Integer getId() {
         return id;
     }

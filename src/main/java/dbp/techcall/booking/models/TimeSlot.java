@@ -23,6 +23,19 @@ public class TimeSlot {
         return id;
     }
 
+    //Constructor
+
+    public TimeSlot(Integer id, String startTime, String endTime) {
+        this.id = id;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
+
+    //Default constructor
+    public TimeSlot() {
+    }
+
+
     public void setId(Integer id) {
         this.id = id;
     }
