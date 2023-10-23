@@ -1,14 +1,14 @@
 package dbp.techcall.professor.professor.infrastructure;
 
 
+import dbp.techcall.professor.post.infrastructure.Conversation;
 import dbp.techcall.professor.post.infrastructure.Post;
+import dbp.techcall.professor.post.infrastructure.ProfessorReply;
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
+
 import java.time.ZonedDateTime;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @Entity
 @Table(name = "professor", schema = "spring_app")

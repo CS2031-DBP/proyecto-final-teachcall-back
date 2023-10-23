@@ -1,5 +1,6 @@
 package dbp.techcall.professor.post.infrastructure;
 
+import dbp.techcall.professor.professor.infrastructure.Professor;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
