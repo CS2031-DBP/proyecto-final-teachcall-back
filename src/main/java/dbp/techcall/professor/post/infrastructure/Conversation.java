@@ -1,7 +1,7 @@
 package dbp.techcall.professor.post.infrastructure;
 
-import dbp.techcall.professor.professor.infrastructure.Professor;
-import dbp.techcall.student.student.domain.Student;
+import dbp.techcall.professor.professor.infrastructure.models.Professor;
+import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;
 
 @Entity

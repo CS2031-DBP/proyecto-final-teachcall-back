@@ -1,6 +1,6 @@
-package dbp.techcall.professor.post.infrastructure;
+package dbp.techcall.professor.post.infrastructure.models;
 
-import dbp.techcall.student.student.domain.Student;
+import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
