@@ -1,4 +1,4 @@
-package dbp.techcall.professor.post.infrastructure;
+package dbp.techcall.professor.post.infrastructure.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

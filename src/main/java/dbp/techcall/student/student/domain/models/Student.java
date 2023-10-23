@@ -1,10 +1,14 @@
-package dbp.techcall.student.student.domain;
+package dbp.techcall.student.student.domain.models;
 
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
 import java.util.Objects;
+import dbp.techcall.course.models.Category;
+import dbp.techcall.booking.models.Booking;
+import dbp.techcall.professor.post.infrastructure.models.Post;
+
 import java.util.Set;
 
 @Entity
