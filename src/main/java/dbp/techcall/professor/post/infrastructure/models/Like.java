@@ -2,10 +2,16 @@ package dbp.techcall.professor.post.infrastructure.models;
 
 import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "likes", schema = "spring_app")
 public class Like {
@@ -64,39 +70,6 @@ public class Like {
         public int hashCode() {
             return Objects.hash(studentId, postId);
         }
-    }
-
-    public Like(LikeId id, Student student, Post post) {
-        this.id = id;
-        this.student = student;
-        this.post = post;
-    }
-
-    public Like() {
-    }
-
-    public LikeId getId() {
-        return id;
-    }
-
-    public void setId(LikeId id) {
-        this.id = id;
-    }
-
-    public Student getStudent() {
-        return student;
-    }
-
-    public void setStudent(Student student) {
-        this.student = student;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
     }
 
     @Override

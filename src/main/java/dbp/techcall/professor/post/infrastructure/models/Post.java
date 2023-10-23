@@ -1,14 +1,24 @@
 package dbp.techcall.professor.post.infrastructure.models;
 
-import dbp.techcall.professor.professor.infrastructure.Professor;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "post", schema = "spring_app")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Post {
 
     @Id
@@ -34,75 +44,6 @@ public class Post {
 
     @OneToMany(mappedBy = "post")
     private Set<Like> likes = new HashSet<>();
-
-    public Post(Integer id, String title, String body, LocalDateTime createdAt, LocalDateTime updatedAt, Professor professor, Set<Like> likes) {
-        this.id = id;
-        this.title = title;
-        this.body = body;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.professor = professor;
-        this.likes = likes;
-    }
-
-    public Post() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Professor getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
-    }
-
-    public Set<Like> getLikes() {
-        return likes;
-    }
-
-    public void setLikes(Set<Like> likes) {
-        this.likes = likes;
-    }
 
     @Override
     public boolean equals(Object o) {

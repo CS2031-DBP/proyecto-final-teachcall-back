@@ -1,6 +1,7 @@
 package dbp.techcall.student.student.domain.models;
 
-import dbp.techcall.professor.post.infrastructure.Review;
+import dbp.techcall.professor.professor.infrastructure.Review;
+import dbp.techcall.professor.post.infrastructure.Conversation;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
@@ -9,9 +10,14 @@ import java.util.Objects;
 import dbp.techcall.course.models.Category;
 import dbp.techcall.booking.models.Booking;
 import dbp.techcall.professor.post.infrastructure.models.Post;
+import lombok.*;
 
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "student", schema = "spring_app")
 public class Student {
@@ -66,129 +72,6 @@ public class Student {
 
     @OneToMany(mappedBy = "student")
     private Set<StudentReply> replies = new HashSet<>();
-
-    public Student(Integer id, String firstName, String lastName, String email, String password, OffsetDateTime createdAt, OffsetDateTime updatedAt, Set<Category> interests, Set<Booking> bookings, Set<Review> reviews, Set<Post> likedPosts, Set<Conversation> conversations, Set<StudentReply> replies) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.interests = interests;
-        this.bookings = bookings;
-        this.reviews = reviews;
-        this.likedPosts = likedPosts;
-        this.conversations = conversations;
-        this.replies = replies;
-    }
-
-    public Student() {
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public OffsetDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(OffsetDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public OffsetDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(OffsetDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Set<Category> getInterests() {
-        return interests;
-    }
-
-    public void setInterests(Set<Category> interests) {
-        this.interests = interests;
-    }
-
-    public Set<Booking> getBookings() {
-        return bookings;
-    }
-
-    public void setBookings(Set<Booking> bookings) {
-        this.bookings = bookings;
-    }
-
-    public Set<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(Set<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public Set<Post> getLikedPosts() {
-        return likedPosts;
-    }
-
-    public void setLikedPosts(Set<Post> likedPosts) {
-        this.likedPosts = likedPosts;
-    }
-
-    public Set<Conversation> getConversations() {
-        return conversations;
-    }
-
-    public void setConversations(Set<Conversation> conversations) {
-        this.conversations = conversations;
-    }
-
-    public Set<StudentReply> getReplies() {
-        return replies;
-    }
-
-    public void setReplies(Set<StudentReply> replies) {
-        this.replies = replies;
-    }
 
     @Override
     public boolean equals(Object o) {

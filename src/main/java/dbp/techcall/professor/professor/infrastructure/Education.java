@@ -1,8 +1,16 @@
 package dbp.techcall.professor.professor.infrastructure;
 
+import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import jakarta.persistence.*;
+import lombok.*;
+
 import java.time.LocalDate;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "education")
 public class Education {
@@ -31,75 +39,4 @@ public class Education {
     @JoinColumn(name = "professor_id", referencedColumnName = "id", nullable = false)
     private Professor professor;
 
-    // Constructor
-
-    public Education() {
-    }
-
-    public Education(String degree, String description, LocalDate startDate, LocalDate endDate, School school, Professor professor) {
-        this.degree = degree;
-        this.description = description;
-        this.startDate = startDate;
-        this.endDate = endDate;
-        this.school = school;
-        this.professor = professor;
-    }
-
-    // Getters y setters
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getDegree() {
-        return degree;
-    }
-
-    public void setDegree(String degree) {
-        this.degree = degree;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public School getSchool() {
-        return school;
-    }
-
-    public void setSchool(School school) {
-        this.school = school;
-    }
-
-    public Professor getProfessor() {
-        return professor;
-    }
-
-    public void setProfessor(Professor professor) {
-        this.professor = professor;
-    }
 }
