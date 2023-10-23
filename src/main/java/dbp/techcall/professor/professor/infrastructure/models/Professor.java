@@ -2,6 +2,9 @@ package dbp.techcall.professor.professor.infrastructure.models;
 
 
 import dbp.techcall.professor.post.infrastructure.models.Post;
+import dbp.techcall.professor.post.infrastructure.Conversation;
+//import dbp.techcall.professor.post.infrastructure.Post;
+import dbp.techcall.professor.post.infrastructure.ProfessorReply;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
