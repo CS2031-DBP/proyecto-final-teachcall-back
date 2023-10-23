@@ -1,5 +1,6 @@
 package dbp.techcall.student.student.domain;
 
+import dbp.techcall.professor.post.infrastructure.Review;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
