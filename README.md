@@ -9,6 +9,7 @@ Este es el repositorio del backend de TeachCall, una aplicación diseñada para 
 | Nombre                      | Github User      | Contacto                   |
 |-----------------------------|------------------|----------------------------|
 | Gabriel Eduardo Romero Diez | gabrielromerod   | gabriel.romero@utec.edu.pe |
+| Gustavo Tadeo Ortiz Vasquez | gortiz1234       | gustavo.ortiz@utec.edu.pe
 
 ## Arquitectura 🏗️
 
