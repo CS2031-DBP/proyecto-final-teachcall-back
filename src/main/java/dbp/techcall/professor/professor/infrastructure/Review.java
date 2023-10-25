@@ -18,6 +18,12 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "body", columnDefinition = "TEXT", nullable = false)
+    private String body;
+
+    @Column(name = "rating", nullable = false)
+    private Integer rating;
+
     @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student student;
