@@ -13,7 +13,6 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "work_experience")
 public class WorkExperience {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

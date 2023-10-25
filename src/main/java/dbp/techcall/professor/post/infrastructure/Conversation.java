@@ -2,8 +2,11 @@ package dbp.techcall.professor.post.infrastructure;
 
 import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import dbp.techcall.student.student.domain.models.Student;
+import dbp.techcall.student.student.domain.models.StudentReply;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.List;
 
 
 @Getter
@@ -13,7 +16,6 @@ import lombok.*;
 @Entity
 @Table(name = "conversation")
 public class Conversation {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -28,5 +30,11 @@ public class Conversation {
     @ManyToOne
     @JoinColumn(name = "professor_id", referencedColumnName = "id", nullable = false)
     private Professor professor;
+
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    private List<ProfessorReply> professorReplies;
+
+    @OneToMany(mappedBy = "conversation", cascade = CascadeType.ALL)
+    private List<StudentReply> studentReplies;
 
 }

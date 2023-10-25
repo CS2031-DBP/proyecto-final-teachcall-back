@@ -13,7 +13,7 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "professor_shifts", schema = "spring_app")
+@Table(name = "professor_shifts")
 public class ProfessorShift {
 
     @EmbeddedId

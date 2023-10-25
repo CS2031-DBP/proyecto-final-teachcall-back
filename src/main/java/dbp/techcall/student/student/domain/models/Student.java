@@ -1,5 +1,7 @@
 package dbp.techcall.student.student.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dbp.techcall.professor.professor.infrastructure.Review;
 import dbp.techcall.professor.post.infrastructure.Conversation;
 import jakarta.persistence.*;
@@ -19,9 +21,9 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "student", schema = "spring_app")
+@Table(name = "student")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Student {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -36,7 +38,7 @@ public class Student {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "created_at", nullable = false)
@@ -61,7 +63,7 @@ public class Student {
 
     @ManyToMany
     @JoinTable(
-            name = "likes",
+            name = "student_likes",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )
