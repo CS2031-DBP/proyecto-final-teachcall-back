@@ -1,10 +1,7 @@
 package dbp.techcall.booking.models;
 
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -12,27 +9,26 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
-@Table(name="meeting_details", schema = "spring_app")
+@Table(name="meeting_details")
 public class MeetingDetails {
     @Id
     @Column(name = "id",nullable = false)
     private Integer id;
 
-    @Column(name="enddate",nullable = false)
+    @Column(name="end_date",nullable = false)
     private String endDate;
 
-    @Column(name="islocked",nullable = false)
+    @Column(name="is_locked",nullable = false)
     private Boolean isLocked;
 
-    @Column(name="roommode",nullable = false)
+    @Column(name="room_mode",nullable = false)
     private String roomMode;
 
-   @Column(name="roomnameprefix",nullable = false)
+   @Column(name="room_name_prefix",nullable = false)
     private String roomNamePrefix;
 
-    @Column(name="templatetype",nullable = false)
+    @Column(name="template_type",nullable = false)
     private String templateType;
 
 //    @Column(name="recording",nullable = false)
@@ -45,7 +41,9 @@ public class MeetingDetails {
     @Column(name="viewerroomurl",nullable = false)
     private String viewerRoomUrl;
 
-    @Column(name="booking_id",nullable = false)
-    private Integer bookingId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @JoinColumn(name="booking_id", referencedColumnName="id", insertable = false, updatable = false)
+    private Booking bookingId;
 
 }

@@ -1,28 +1,33 @@
 package dbp.techcall.booking.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import dbp.techcall.professor.professor.infrastructure.models.ProfessorShift;
+import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
-@Table(name="time_slot", schema = "spring_app")
+@Table(name="time_slot")
 public class TimeSlot {
-
     @Id
-    @Column(name = "id",nullable = false)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "time_start",nullable = false)
-    private String startTime;
+    @Column(name = "time_start", nullable = false)
+    private Date timeStart;
 
-    @Column(name = "time_end",nullable = false)
-    private String endTime;
+    @Column(name = "time_end", nullable = false)
+    private Date timeEnd;
+
+    @OneToMany(mappedBy = "timeSlot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ProfessorShift> professorShifts;
+
+    @OneToMany(mappedBy = "timeSlot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Booking> bookings;
 
 }

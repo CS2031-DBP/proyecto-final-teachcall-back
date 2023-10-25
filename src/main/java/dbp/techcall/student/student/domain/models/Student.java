@@ -1,11 +1,14 @@
 package dbp.techcall.student.student.domain.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dbp.techcall.professor.professor.infrastructure.Review;
 import dbp.techcall.professor.post.infrastructure.Conversation;
 import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import dbp.techcall.course.models.Category;
 import dbp.techcall.booking.models.Booking;
@@ -17,11 +20,10 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
-@Table(name = "student", schema = "spring_app")
+@Table(name = "student")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Student {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
@@ -36,7 +38,7 @@ public class Student {
     @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "created_at", nullable = false)
@@ -53,15 +55,15 @@ public class Student {
     )
     private Set<Category> interests = new HashSet<>();
 
-    @OneToMany(mappedBy = "student")
-    private Set<Booking> bookings = new HashSet<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 
     @OneToMany(mappedBy = "student")
     private Set<Review> reviews = new HashSet<>();
 
     @ManyToMany
     @JoinTable(
-            name = "likes",
+            name = "student_likes",
             joinColumns = @JoinColumn(name = "student_id"),
             inverseJoinColumns = @JoinColumn(name = "post_id")
     )

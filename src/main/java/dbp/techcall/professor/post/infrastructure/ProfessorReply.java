@@ -10,11 +10,9 @@ import java.time.ZonedDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "professor_reply")
 public class ProfessorReply {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

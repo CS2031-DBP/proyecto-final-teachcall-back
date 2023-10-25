@@ -11,14 +11,12 @@ import lombok.Setter;
 import java.sql.Timestamp;
 
 
-@Table(name="student_reply", schema = "spring_app")
+@Table(name="student_reply")
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class StudentReply {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
@@ -28,8 +26,11 @@ public class StudentReply {
     private int status;
 
     @ManyToOne
-    private Student student_id;
+    @JoinColumn(name ="conversation_id", referencedColumnName = "id", nullable = false)
+    private Conversation conversation;
 
     @ManyToOne
-    private Conversation conversation_id;
+    @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
+    private Student student;
+
 }

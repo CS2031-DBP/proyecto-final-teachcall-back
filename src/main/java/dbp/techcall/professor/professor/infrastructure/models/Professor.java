@@ -1,6 +1,7 @@
 package dbp.techcall.professor.professor.infrastructure.models;
 
 
+import dbp.techcall.booking.models.Booking;
 import dbp.techcall.course.models.Category;
 import dbp.techcall.course.models.Course;
 import dbp.techcall.professor.post.infrastructure.models.Post;
@@ -24,9 +25,8 @@ import java.util.Objects;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Entity
-@Table(name = "professor", schema = "spring_app")
+@Table(name = "professor")
 public class Professor {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -58,6 +58,9 @@ public class Professor {
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<Education> educations;
 
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
+
     @ManyToMany
     @JoinTable(
             name = "professor_category",
@@ -66,7 +69,7 @@ public class Professor {
     )
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProfessorShift> shifts;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)

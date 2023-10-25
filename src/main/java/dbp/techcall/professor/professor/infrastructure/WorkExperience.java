@@ -10,11 +10,9 @@ import java.time.LocalDate;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "work_experience")
 public class WorkExperience {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

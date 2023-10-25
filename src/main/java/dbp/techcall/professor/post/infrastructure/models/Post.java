@@ -3,6 +3,7 @@ package dbp.techcall.professor.post.infrastructure.models;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dbp.techcall.professor.professor.infrastructure.models.Professor;
+import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,12 +16,10 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
-@Table(name = "post", schema = "spring_app")
+@Table(name = "post")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -42,8 +41,8 @@ public class Post {
     @JoinColumn(name = "professor_id", referencedColumnName = "id", nullable = false)
     private Professor professor;
 
-    @OneToMany(mappedBy = "post")
-    private Set<Like> likes = new HashSet<>();
+    @ManyToMany(mappedBy = "likedPosts")
+    private Set<Student> likes = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

@@ -3,6 +3,7 @@ package dbp.techcall.course.models;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;
 import lombok.*;
@@ -13,12 +14,10 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
-@Table(name="category", schema = "spring_app")
+@Table(name="category")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Category {
-
     @Id
     @Column(name = "id",nullable = false)
     private Integer id;
@@ -28,6 +27,12 @@ public class Category {
 
     @ManyToMany(mappedBy = "interests")
     private Set<Student> students;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Professor> professors;
+
+    @ManyToMany(mappedBy = "categories")
+    private Set<Course> courses;
 
 }
 
