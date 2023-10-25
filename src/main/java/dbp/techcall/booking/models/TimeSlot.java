@@ -4,7 +4,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.*;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name="time_slot", schema = "spring_app")
 public class TimeSlot {
@@ -19,40 +25,4 @@ public class TimeSlot {
     @Column(name = "time_end",nullable = false)
     private String endTime;
 
-    public Integer getId() {
-        return id;
-    }
-
-    //Constructor
-
-    public TimeSlot(Integer id, String startTime, String endTime) {
-        this.id = id;
-        this.startTime = startTime;
-        this.endTime = endTime;
-    }
-
-    //Default constructor
-    public TimeSlot() {
-    }
-
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
 }

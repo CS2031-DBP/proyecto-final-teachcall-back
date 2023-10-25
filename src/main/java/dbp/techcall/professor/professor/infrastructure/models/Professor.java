@@ -1,16 +1,28 @@
 package dbp.techcall.professor.professor.infrastructure.models;
 
 
+import dbp.techcall.course.models.Category;
+import dbp.techcall.course.models.Course;
 import dbp.techcall.professor.post.infrastructure.models.Post;
 import dbp.techcall.professor.post.infrastructure.Conversation;
-//import dbp.techcall.professor.post.infrastructure.Post;
+import dbp.techcall.professor.professor.infrastructure.Education;
 import dbp.techcall.professor.post.infrastructure.ProfessorReply;
+import dbp.techcall.professor.professor.infrastructure.Review;
+import dbp.techcall.professor.professor.infrastructure.WorkExperience;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name = "professor", schema = "spring_app")
 public class Professor {
@@ -55,7 +67,7 @@ public class Professor {
     private List<Category> categories;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
-    private List<ProfessorShifts> shifts;
+    private List<ProfessorShift> shifts;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<Course> courses;
@@ -71,165 +83,6 @@ public class Professor {
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<ProfessorReply> professorReplies;
-
-    public Professor(Long id, String firstName, String lastName, String email, String password, ZonedDateTime createdAt, ZonedDateTime updatedAt, String description, List<Post> posts, List<Education> educations, List<Category> categories, List<ProfessorShifts> shifts, List<Course> courses, List<Review> reviews, List<WorkExperience> workExperiences, List<Conversation> conversations, List<ProfessorReply> professorReplies) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.description = description;
-        this.posts = posts;
-        this.educations = educations;
-        this.categories = categories;
-        this.shifts = shifts;
-        this.courses = courses;
-        this.reviews = reviews;
-        this.workExperiences = workExperiences;
-        this.conversations = conversations;
-        this.professorReplies = professorReplies;
-    }
-
-    public Professor() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public ZonedDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(ZonedDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public ZonedDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(ZonedDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
-
-    public List<Education> getEducations() {
-        return educations;
-    }
-
-    public void setEducations(List<Education> educations) {
-        this.educations = educations;
-    }
-
-    public List<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
-    }
-
-    public List<ProfessorShifts> getShifts() {
-        return shifts;
-    }
-
-    public void setShifts(List<ProfessorShifts> shifts) {
-        this.shifts = shifts;
-    }
-
-    public List<Course> getCourses() {
-        return courses;
-    }
-
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
-    public List<Review> getReviews() {
-        return reviews;
-    }
-
-    public void setReviews(List<Review> reviews) {
-        this.reviews = reviews;
-    }
-
-    public List<WorkExperience> getWorkExperiences() {
-        return workExperiences;
-    }
-
-    public void setWorkExperiences(List<WorkExperience> workExperiences) {
-        this.workExperiences = workExperiences;
-    }
-
-    public List<Conversation> getConversations() {
-        return conversations;
-    }
-
-    public void setConversations(List<Conversation> conversations) {
-        this.conversations = conversations;
-    }
-
-    public List<ProfessorReply> getProfessorReplies() {
-        return professorReplies;
-    }
-
-    public void setProfessorReplies(List<ProfessorReply> professorReplies) {
-        this.professorReplies = professorReplies;
-    }
 
     @Override
     public boolean equals(Object o) {
