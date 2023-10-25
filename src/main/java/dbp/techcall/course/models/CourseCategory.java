@@ -11,7 +11,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name="course_category", schema = "spring_app")
 public class CourseCategory {

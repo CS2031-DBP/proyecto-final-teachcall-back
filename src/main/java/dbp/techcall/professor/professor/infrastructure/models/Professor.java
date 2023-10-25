@@ -66,7 +66,7 @@ public class Professor {
     )
     private List<Category> categories;
 
-    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<ProfessorShift> shifts;
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)

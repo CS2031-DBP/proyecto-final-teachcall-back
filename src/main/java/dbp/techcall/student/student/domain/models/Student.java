@@ -6,6 +6,7 @@ import jakarta.persistence.*;
 
 import java.time.OffsetDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import dbp.techcall.course.models.Category;
 import dbp.techcall.booking.models.Booking;
@@ -17,7 +18,6 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "student", schema = "spring_app")
 public class Student {
@@ -53,8 +53,8 @@ public class Student {
     )
     private Set<Category> interests = new HashSet<>();
 
-    @OneToMany(mappedBy = "student")
-    private Set<Booking> bookings = new HashSet<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
+    private List<Booking> bookings;
 
     @OneToMany(mappedBy = "student")
     private Set<Review> reviews = new HashSet<>();

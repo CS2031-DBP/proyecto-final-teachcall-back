@@ -1,9 +1,7 @@
 package dbp.techcall.course.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import dbp.techcall.professor.professor.infrastructure.models.Professor;
+import jakarta.persistence.*;
 import lombok.*;
 
 
@@ -11,7 +9,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name="course", schema = "spring_app")
 public class Course {
@@ -29,7 +26,9 @@ public class Course {
     private Integer price;
 
     //Foreign key professor
-    @Column(name = "professor_id", nullable = false)
-    private Integer professorId;
+    @ManyToOne
+    @JoinColumn(name = "professor_id", nullable = false)
+    private Professor professor;
+
 
 }

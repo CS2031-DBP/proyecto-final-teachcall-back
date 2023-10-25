@@ -12,7 +12,6 @@ import lombok.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name="meeting_details", schema = "spring_app")
 public class MeetingDetails {

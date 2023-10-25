@@ -9,7 +9,6 @@ import lombok.*;
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name="professor_category", schema = "spring_app")

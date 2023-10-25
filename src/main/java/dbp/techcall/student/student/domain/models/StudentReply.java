@@ -16,7 +16,6 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 public class StudentReply {
 
     @Id

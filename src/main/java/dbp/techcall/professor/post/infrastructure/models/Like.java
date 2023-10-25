@@ -11,7 +11,6 @@ import java.util.Objects;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "likes", schema = "spring_app")
 public class Like {

@@ -1,16 +1,13 @@
 package dbp.techcall.booking.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import dbp.techcall.student.student.domain.models.Student;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name="booking", schema = "spring_app")
 public class Booking {
@@ -35,4 +32,8 @@ public class Booking {
 
     @Column(name="link",nullable = true)
     private String link;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="student_id", referencedColumnName="id", insertable = false, updatable = false)
+    private Student student;
 }
