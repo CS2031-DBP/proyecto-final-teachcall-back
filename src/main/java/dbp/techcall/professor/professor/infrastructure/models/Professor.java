@@ -23,7 +23,6 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
-@RequiredArgsConstructor
 @Entity
 @Table(name = "professor")
 public class Professor {
