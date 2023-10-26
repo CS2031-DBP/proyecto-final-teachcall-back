@@ -2,8 +2,8 @@ package dbp.techcall.professor.professor.infrastructure.models;
 
 
 import dbp.techcall.booking.models.Booking;
-import dbp.techcall.course.models.Category;
-import dbp.techcall.course.models.Course;
+import dbp.techcall.category.Category;
+import dbp.techcall.course.Course;
 import dbp.techcall.professor.post.infrastructure.models.Post;
 import dbp.techcall.professor.post.infrastructure.Conversation;
 import dbp.techcall.professor.professor.infrastructure.Education;
@@ -26,7 +26,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "professor")
+@Table(name = "professor", schema="spring_app")
 public class Professor implements UserDetails {
 
     @Id

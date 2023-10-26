@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import dbp.techcall.course.models.Category;
+import dbp.techcall.category.Category;
 import dbp.techcall.booking.models.Booking;
 import dbp.techcall.professor.post.infrastructure.models.Post;
 import lombok.*;

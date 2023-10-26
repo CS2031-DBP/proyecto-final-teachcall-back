@@ -1,8 +1,8 @@
-package dbp.techcall.course.models;
+package dbp.techcall.category;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import dbp.techcall.course.Course;
 import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;

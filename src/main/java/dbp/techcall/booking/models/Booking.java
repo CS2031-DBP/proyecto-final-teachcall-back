@@ -1,6 +1,6 @@
 package dbp.techcall.booking.models;
 
-import dbp.techcall.course.models.Course;
+import dbp.techcall.course.Course;
 import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import dbp.techcall.student.student.domain.models.Student;
 import jakarta.persistence.*;
