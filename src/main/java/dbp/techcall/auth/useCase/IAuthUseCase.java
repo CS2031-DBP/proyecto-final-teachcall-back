@@ -5,11 +5,11 @@ import dbp.techcall.auth.dto.LoginReq;
 import dbp.techcall.auth.dto.RegisterReq;
 
 public interface IAuthUseCase {
-    JwtRes register(RegisterReq request);
+    JwtRes registerProfessor(RegisterReq request);
 
-    //JwtRes loginProfessor(LoginReq request);
+    JwtRes loginProfessor(LoginReq request);
 
-    //JwtRes registerStudent(RegisterReq request);
+    JwtRes registerStudent(RegisterReq request);
 
-    JwtRes login(LoginReq request);
+    JwtRes loginStudent(LoginReq request);
 }

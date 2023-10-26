@@ -6,7 +6,7 @@ import dbp.techcall.professor.professor.infrastructure.Review;
 import dbp.techcall.professor.post.infrastructure.Conversation;
 import jakarta.persistence.*;
 
-import java.time.OffsetDateTime;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import dbp.techcall.course.models.Category;
@@ -42,10 +42,10 @@ public class Student implements UserDetails {
     private String password;
 
     @Column(name = "created_at", nullable = false)
-    private OffsetDateTime createdAt;
+    private ZonedDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
-    private OffsetDateTime updatedAt;
+    @Column(name = "updated_at", nullable = true)
+    private ZonedDateTime updatedAt;
 
     @ManyToMany
     @JoinTable(

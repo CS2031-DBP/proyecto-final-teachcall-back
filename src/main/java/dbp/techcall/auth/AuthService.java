@@ -3,19 +3,23 @@ package dbp.techcall.auth;
 import dbp.techcall.auth.dto.JwtRes;
 import dbp.techcall.auth.dto.LoginReq;
 import dbp.techcall.auth.dto.RegisterReq;
+import dbp.techcall.auth.exceptions.UserAlreadyExistsException;
 import dbp.techcall.auth.useCase.IAuthUseCase;
 import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import dbp.techcall.professor.repository.ProfessorRepository;
 import dbp.techcall.student.repository.StudentRepository;
+import dbp.techcall.student.student.domain.models.Student;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import dbp.techcall.jwt.useCase.service.JwtService;
 
-import java.util.Optional;
+
+import java.time.ZonedDateTime;
 
 @RequiredArgsConstructor
 @Service
@@ -37,31 +41,71 @@ public class AuthService implements IAuthUseCase {
     private final ModelMapper modelMapper;
 
 
-    public JwtRes register(RegisterReq request) {
-        var teacher = new Professor();
-        teacher.setFirstName(request.getFirstName());
-        teacher.setLastName(request.getLastName());
-        teacher.setEmail(request.getEmail());
-        teacher.setPassword(passwordEncoder.encode(request.getPassword()));
+    public JwtRes registerProfessor(RegisterReq request) {
+        Professor existingProfessor = teacherRepository.findByEmail(request.getEmail());
+        if (existingProfessor != null) {
+            throw new UserAlreadyExistsException("Teacher");
+        }
 
-        teacherRepository.save(teacher);
+        Professor professor = new Professor();
+        professor.setFirstName(request.getFirstName());
+        professor.setLastName(request.getLastName());
+        professor.setEmail(request.getEmail());
+        professor.setPassword(passwordEncoder.encode(request.getPassword()));
+        professor.setCreatedAt(ZonedDateTime.now());
 
-        String jwt = jwtService.generateToken(teacher);
+        teacherRepository.save(professor);
+
+        String jwt = jwtService.generateToken(professor);
         return new JwtRes(jwt);
     }
+    public JwtRes registerStudent(RegisterReq request) {
+        Student existingStudent = studentRepository.findByEmail(request.getEmail());
 
-    public JwtRes login(LoginReq request) {
+        if (existingStudent != null) {
+            throw new UserAlreadyExistsException("Student");
+        }
+
+        Student student = new Student();
+        student.setFirstName(request.getFirstName());
+        student.setLastName(request.getLastName());
+        student.setEmail(request.getEmail());
+        student.setPassword(passwordEncoder.encode(request.getPassword()));
+        student.setCreatedAt(ZonedDateTime.now());
+
+        studentRepository.save(student);
+
+        String jwt = jwtService.generateToken(student);
+        return new JwtRes(jwt);
+        }
+
+    public JwtRes loginProfessor(LoginReq request) {
 
         Professor teacher = teacherRepository.findByEmail(request.getEmail());
 
         if(teacher == null){
-            throw new IllegalArgumentException("Email is not registered");
+            throw new IllegalArgumentException("Email or password are incorrect");
         }
 
         if(!passwordEncoder.matches(request.getPassword(), teacher.getPassword())){
-            throw new IllegalArgumentException("Password is incorrect");
+            throw new IllegalArgumentException("Email or password are incorrect");
         }
 
         return new JwtRes(jwtService.generateToken(modelMapper.map(teacher, UserDetails.class)));
     }
+    public JwtRes loginStudent(LoginReq request) {
+
+        Student student = studentRepository.findByEmail(request.getEmail());
+
+        if(student == null){
+            throw new UsernameNotFoundException("Email is not registered");
+        }
+
+        if(!passwordEncoder.matches(request.getPassword(), student.getPassword())){
+            throw new IllegalArgumentException("Password is incorrect");
+        }
+
+        return new JwtRes(jwtService.generateToken(modelMapper.map(student, UserDetails.class)));
+    }
+
 }

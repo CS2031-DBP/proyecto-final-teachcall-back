@@ -24,7 +24,6 @@ import java.util.Map;
 @Service
 public class JwtService implements IJwtService {
 
-    private final JwtService jwtService;
     private final ProfessorService professorService;
     private final StudentService studentService;
 
@@ -58,8 +57,11 @@ public class JwtService implements IJwtService {
 
 
     public void validateToken(String token, String userEmail) throws AuthenticationException{
+
+        System.out.println("token: " + token);
+
         JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
-        final String userRole = jwtService.extractUserRole(token);
+        final String userRole = this.extractUserRole(token);
         UserDetails userDetails =
                 userRole.equals("PROFESSOR") ?
                         professorService.userDetailsService().loadUserByUsername(userEmail) :

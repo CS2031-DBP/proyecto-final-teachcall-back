@@ -48,7 +48,7 @@ public class Professor implements UserDetails {
     @Column(name = "created_at", nullable = false)
     private ZonedDateTime createdAt;
 
-    @Column(name = "updated_at", nullable = false)
+    @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
 
     @Column(name = "description")

@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class JwtRes {
-    private final String accessToken;
+    private final String token;
 }
