@@ -43,7 +43,7 @@ public class CourseService {
                 .collect(Collectors.toList());
     }
 
-    private CourseDTO convertToDTO(Course course) {
+    public CourseDTO convertToDTO(Course course) {
         CourseDTO dto = new CourseDTO();
         dto.setId(Long.valueOf(course.getId()));
         dto.setTitle(course.getTitle());
