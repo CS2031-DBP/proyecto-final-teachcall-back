@@ -1,8 +1,9 @@
-package dbp.techcall.course.models;
+package dbp.techcall.course;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dbp.techcall.booking.models.Booking;
+import dbp.techcall.category.Category;
 import dbp.techcall.professor.professor.infrastructure.models.Professor;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="course")
+@Table(name="course", schema = "spring_app")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Course {
     @Id
@@ -47,4 +48,11 @@ public class Course {
     private List<Booking> booking;
 
 
+    public double getPricePerHour() {
+        return price;
+    }
+
+    public Long getProfessorId() {
+        return professor.getId();
+    }
 }
