@@ -131,4 +131,8 @@ public class Professor implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+    public Professor orElse(Object o) {
+return null;
+    }
 }
