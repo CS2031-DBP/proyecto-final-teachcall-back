@@ -4,7 +4,6 @@ package dbp.techcall.booking.models;
 import jakarta.persistence.*;
 import lombok.*;
 
-
 @Getter
 @Setter
 @AllArgsConstructor
@@ -13,7 +12,7 @@ import lombok.*;
 @Table(name="meeting_details")
 public class MeetingDetails {
     @Id
-    @Column(name = "id",nullable = false)
+    @Column(name = "id", nullable = false)
     private Integer id;
 
     @Column(name="end_date",nullable = false)
@@ -30,7 +29,10 @@ public class MeetingDetails {
 
     @Column(name="template_type",nullable = false)
     private String templateType;
-
+    
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    private Booking booking;
 //    @Column(name="recording",nullable = false)
 //    private  recording; //jsonb
     //type jsonb
@@ -45,5 +47,7 @@ public class MeetingDetails {
     @MapsId
     @JoinColumn(name="booking_id", referencedColumnName="id", insertable = false, updatable = false)
     private Booking bookingId;
+    @Getter
+    private String link;
 
 }

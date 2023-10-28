@@ -38,6 +38,4 @@ public class AuthController {
     public ResponseEntity<JwtRes> signinStudent(@RequestBody LoginReq request) {
         return ResponseEntity.ok(authService.loginStudent(request));
     }
-
-
 }

@@ -47,4 +47,7 @@ public class Course {
     private List<Booking> booking;
 
 
+    public String getSubject() {
+        return null;
+    }
 }

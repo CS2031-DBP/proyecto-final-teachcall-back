@@ -30,4 +30,8 @@ public class TimeSlot {
     @OneToMany(mappedBy = "timeSlot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Booking> bookings;
 
+    public MeetingDetails getMeetingDetails() {
+        return null;
+    }
 }
+

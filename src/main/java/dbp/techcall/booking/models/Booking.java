@@ -17,6 +17,7 @@ public class Booking{
     @Column(name = "id",nullable = false)
     private Integer id;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="student_id", referencedColumnName="id", insertable = false, updatable = false)
     private Student student;
@@ -38,4 +39,10 @@ public class Booking{
 
     @Column(name="link",nullable = true)
     private String link;
+
+    @Getter
+    @OneToOne(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private MeetingDetails meetingDetails;
+
+
 }
