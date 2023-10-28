@@ -1,6 +1,7 @@
 package dbp.techcall.booking.models;
 
-import dbp.techcall.professor.professor.infrastructure.models.ProfessorShift;
+import dbp.techcall.booking.domain.Booking;
+import dbp.techcall.professorShift.domain.ProfessorShift;
 import jakarta.persistence.*;
 import lombok.*;
 

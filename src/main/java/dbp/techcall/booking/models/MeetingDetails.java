@@ -1,6 +1,7 @@
 package dbp.techcall.booking.models;
 
 
+import dbp.techcall.booking.domain.Booking;
 import jakarta.persistence.*;
 import lombok.*;
 

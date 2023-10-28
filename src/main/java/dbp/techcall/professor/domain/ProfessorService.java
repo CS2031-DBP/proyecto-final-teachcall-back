@@ -1,9 +1,7 @@
 package dbp.techcall.professor.domain;
 
 import dbp.techcall.professor.dto.NewProfessorDto;
-import dbp.techcall.professor.professor.infrastructure.models.Professor;
-import dbp.techcall.professor.repository.ProfessorRepository;
-import dbp.techcall.professor.useCase.IProfessorService;
+import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;

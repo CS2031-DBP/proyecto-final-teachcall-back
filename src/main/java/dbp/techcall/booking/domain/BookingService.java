@@ -1,6 +1,5 @@
 package dbp.techcall.booking.domain;
 
-import dbp.techcall.booking.models.Booking;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
