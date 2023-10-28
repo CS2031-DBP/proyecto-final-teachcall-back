@@ -18,7 +18,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 public class StudentReply {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     private Timestamp time;

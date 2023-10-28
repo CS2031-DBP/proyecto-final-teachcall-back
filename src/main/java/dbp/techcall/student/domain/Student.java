@@ -25,9 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Table(name = "student", schema = "spring_app")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Student implements UserDetails {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "first_name", nullable = false)
@@ -59,10 +59,10 @@ public class Student implements UserDetails {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private Set<Review> reviews = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
             name = "student_likes",
             joinColumns = @JoinColumn(name = "student_id"),
@@ -70,10 +70,10 @@ public class Student implements UserDetails {
     )
     private Set<Post> likedPosts = new HashSet<>();
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private Set<Conversation> conversations = new HashSet<>();
 
-    @OneToMany(mappedBy = "student")
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private Set<StudentReply> replies = new HashSet<>();
 
     @Override

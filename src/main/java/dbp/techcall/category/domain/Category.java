@@ -20,6 +20,7 @@ import java.util.Set;
 public class Category {
     @Id
     @Column(name = "id",nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "title",nullable = false)
