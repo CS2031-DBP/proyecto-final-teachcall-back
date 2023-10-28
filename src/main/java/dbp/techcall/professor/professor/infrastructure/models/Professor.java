@@ -1,6 +1,4 @@
 package dbp.techcall.professor.professor.infrastructure.models;
-
-
 import dbp.techcall.booking.models.Booking;
 import dbp.techcall.category.Category;
 import dbp.techcall.course.Course;
