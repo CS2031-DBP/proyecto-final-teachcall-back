@@ -47,12 +47,4 @@ public class Course {
     @OneToMany(mappedBy = "course" , cascade = CascadeType.ALL)
     private List<Booking> booking;
 
-
-    public double getPricePerHour() {
-        return price;
-    }
-
-    public Long getProfessorId() {
-        return professor.getId();
-    }
 }
