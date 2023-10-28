@@ -1,7 +1,7 @@
 package dbp.techcall.booking.domain;
 
-import dbp.techcall.booking.models.MeetingDetails;
-import dbp.techcall.booking.models.TimeSlot;
+import dbp.techcall.meetingDetails.domain.MeetingDetails;
+import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.course.domain.Course;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.student.domain.Student;

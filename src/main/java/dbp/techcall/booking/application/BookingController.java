@@ -1,6 +1,5 @@
 package dbp.techcall.booking.application;
 
-import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.booking.domain.BookingService;
 import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.booking.dto.BookingInfo;
@@ -18,31 +17,8 @@ public class BookingController {
 
     @GetMapping("/short/{id}")
     public BookingInfo getBookingInfoById(@PathVariable Long id) {
-        Booking booking = bookingService.getBookingById(id);
-
-        if (booking == null) {
-            throw new BookingNotFoundException("La reserva con el ID " + id + " no se encontró.");
-        }
-
-        BookingInfo bookingInfo = new BookingInfo();
-        bookingInfo.setBooking(booking);
-
-        // Verifica si el profesor asociado a la reserva no es nulo
-        if (booking.getProfessor() != null) {
-            bookingInfo.setProfessorName(booking.getProfessor().getFirstName());
-            bookingInfo.setProfessorLastname(booking.getProfessor().getLastName());
-        }
-
-        // Verifica si el curso asociado a la reserva no es nulo
-        if (booking.getCourse() != null) {
-            bookingInfo.setCourseSubject(booking.getCourse().getSubject());
-        }
-
-        // Verifica si los detalles de la reunión asociados a la reserva no son nulos
-        if (booking.getMeetingDetails() != null) {
-            bookingInfo.setMeetingDetailsLink(booking.getMeetingDetails().getLink());
-        }
-        return bookingInfo;
+            BookingInfo bookingInfo = bookingService.getBookingInfoById(id);
+            return bookingInfo;
     }
 
     @PostMapping

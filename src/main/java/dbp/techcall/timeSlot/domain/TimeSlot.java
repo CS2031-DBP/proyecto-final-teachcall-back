@@ -1,6 +1,7 @@
-package dbp.techcall.booking.models;
+package dbp.techcall.timeSlot.domain;
 
 import dbp.techcall.booking.domain.Booking;
+import dbp.techcall.meetingDetails.domain.MeetingDetails;
 import dbp.techcall.professorShift.domain.ProfessorShift;
 import jakarta.persistence.*;
 import lombok.*;

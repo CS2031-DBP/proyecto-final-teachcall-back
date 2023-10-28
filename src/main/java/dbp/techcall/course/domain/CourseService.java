@@ -49,10 +49,10 @@ public class CourseService {
         dto.setId(Long.valueOf(course.getId()));
         dto.setTitle(course.getTitle());
         dto.setDescription(course.getDescription());
-        dto.setPricePerHour(course.getPricePerHour());
+        dto.setPricePerHour(course.getPrice());
 
         // Assuming you have a ProfessorRepository and ModelMapper available
-        Professor professor = professorRepository.findById(course.getProfessorId());
+        Professor professor = professorRepository.findById(course.getProfessor().getId());
         NewProfessorDto professorDTO = modelMapper.map(professor, NewProfessorDto.class);
         dto.setProfessorData(professorDTO);
 

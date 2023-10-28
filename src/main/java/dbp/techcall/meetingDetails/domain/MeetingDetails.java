@@ -1,4 +1,4 @@
-package dbp.techcall.booking.models;
+package dbp.techcall.meetingDetails.domain;
 
 
 import dbp.techcall.booking.domain.Booking;
@@ -38,10 +38,10 @@ public class MeetingDetails {
 //    private  recording; //jsonb
     //type jsonb
 
-    @Column(name="hostroomurl",nullable = false)
+    @Column(name="host_room_url",nullable = false)
     private String hostRoomUrl;
 
-    @Column(name="viewerroomurl",nullable = false)
+    @Column(name="viewer_room_url",nullable = false)
     private String viewerRoomUrl;
 
     @OneToOne(fetch = FetchType.LAZY)
