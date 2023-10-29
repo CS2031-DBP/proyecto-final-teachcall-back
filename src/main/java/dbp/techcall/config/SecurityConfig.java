@@ -27,7 +27,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/auth/**","/course","/course/**", "/course/**","/category/**").permitAll()
+                                .requestMatchers("/auth/**","/course","/course/**", "/course/**","/category/**","/usuarioA/**","/usuarioB/**").permitAll()
 
                                 .requestMatchers("/professor/**").hasRole("PROFESSOR")
                                 .requestMatchers("/student/**").hasRole("STUDENT")

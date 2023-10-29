@@ -10,4 +10,5 @@ import lombok.Setter;
 public class LoginReq {
     private final String email;
     private final String password;
+    private final String role;
 }

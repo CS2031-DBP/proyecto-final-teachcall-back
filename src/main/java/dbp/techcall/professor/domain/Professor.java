@@ -7,6 +7,7 @@ import dbp.techcall.conversation.domain.Conversation;
 import dbp.techcall.education.domain.Education;
 import dbp.techcall.professorReply.domain.ProfessorReply;
 import dbp.techcall.review.domain.Review;
+import dbp.techcall.user.domain.Users;
 import dbp.techcall.workExperience.domain.WorkExperience;
 import dbp.techcall.professorShift.domain.ProfessorShift;
 import jakarta.persistence.*;
@@ -26,9 +27,9 @@ import java.util.Objects;
 @NoArgsConstructor
 @Entity
 @Table(name = "professor", schema="spring_app")
-public class Professor implements UserDetails {
+public class Professor extends Users {
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
@@ -49,7 +50,7 @@ public class Professor implements UserDetails {
 
     @Column(name = "updated_at")
     private ZonedDateTime updatedAt;
-
+*/
     @Column(name = "description")
     private String description;
 
@@ -93,45 +94,14 @@ public class Professor implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Professor professor = (Professor) o;
-        return Objects.equals(id, professor.id) && Objects.equals(firstName, professor.firstName) && Objects.equals(lastName, professor.lastName) && Objects.equals(email, professor.email) && Objects.equals(password, professor.password) && Objects.equals(createdAt, professor.createdAt) && Objects.equals(updatedAt, professor.updatedAt) && Objects.equals(description, professor.description) && Objects.equals(posts, professor.posts) && Objects.equals(educations, professor.educations) && Objects.equals(categories, professor.categories) && Objects.equals(shifts, professor.shifts) && Objects.equals(courses, professor.courses) && Objects.equals(reviews, professor.reviews) && Objects.equals(workExperiences, professor.workExperiences) && Objects.equals(conversations, professor.conversations) && Objects.equals(professorReplies, professor.professorReplies);
+        return Objects.equals(getId(), professor.getId()) && Objects.equals(getFirstName(), professor.getFirstName()) && Objects.equals(getLastName(), professor.getLastName()) && Objects.equals(getEmail(), professor.getEmail()) && Objects.equals(getPassword(), professor.getPassword()) && Objects.equals(getCreatedAt(), professor.getCreatedAt()) && Objects.equals(getUpdatedAt(), professor.getUpdatedAt()) && Objects.equals(description, professor.description) && Objects.equals(posts, professor.posts) && Objects.equals(educations, professor.educations) && Objects.equals(categories, professor.categories) && Objects.equals(shifts, professor.shifts) && Objects.equals(courses, professor.courses) && Objects.equals(reviews, professor.reviews) && Objects.equals(workExperiences, professor.workExperiences) && Objects.equals(conversations, professor.conversations) && Objects.equals(professorReplies, professor.professorReplies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, createdAt, updatedAt, description, posts, educations, categories, shifts, courses, reviews, workExperiences, conversations, professorReplies);
+        return Objects.hash(getId(), getFirstName(), getLastName(), getEmail(), getPassword(), getCreatedAt(), getUpdatedAt(), description, posts, educations, categories, shifts, courses, reviews, workExperiences, conversations, professorReplies);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_PROFESSOR"));
-    }
 
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
-    public Professor orElse(Object o) {
-return null;
-    }
+    public Professor orElse(Object o) { return null; }
 }
