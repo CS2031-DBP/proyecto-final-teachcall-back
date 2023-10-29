@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -52,7 +53,11 @@ public class CourseService {
         dto.setPricePerHour(course.getPrice());
 
         // Assuming you have a ProfessorRepository and ModelMapper available
-        Professor professor = professorRepository.findById(course.getProfessor().getId());
+        Optional<Professor> professor = professorRepository.findById(course.getProfessor().getId());
+        if(professor.isEmpty()) {
+            throw new RuntimeException("Professor not found");
+        }
+
         NewProfessorDto professorDTO = modelMapper.map(professor, NewProfessorDto.class);
         dto.setProfessorData(professorDTO);
 

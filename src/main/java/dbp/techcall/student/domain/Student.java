@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dbp.techcall.review.domain.Review;
 import dbp.techcall.conversation.domain.Conversation;
 import dbp.techcall.studentReply.domain.StudentReply;
+import dbp.techcall.user.domain.Users;
 import jakarta.persistence.*;
 
 import java.time.ZonedDateTime;
@@ -24,9 +25,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Entity
 @Table(name = "student", schema = "spring_app")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Student implements UserDetails {
+public class Student extends Users {
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
@@ -47,7 +48,7 @@ public class Student implements UserDetails {
 
     @Column(name = "updated_at", nullable = true)
     private ZonedDateTime updatedAt;
-
+*/
     @ManyToMany
     @JoinTable(
             name = "student_interests",
@@ -81,41 +82,12 @@ public class Student implements UserDetails {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Student student = (Student) o;
-        return Objects.equals(id, student.id) && Objects.equals(firstName, student.firstName) && Objects.equals(lastName, student.lastName) && Objects.equals(email, student.email) && Objects.equals(password, student.password) && Objects.equals(createdAt, student.createdAt) && Objects.equals(updatedAt, student.updatedAt) && Objects.equals(interests, student.interests) && Objects.equals(bookings, student.bookings) && Objects.equals(reviews, student.reviews) && Objects.equals(likedPosts, student.likedPosts) && Objects.equals(conversations, student.conversations) && Objects.equals(replies, student.replies);
+        return Objects.equals(getId(), student.getId()) && Objects.equals(this.getFirstName(), student.getFirstName()) && Objects.equals(getLastName(), student.getLastName()) && Objects.equals(getEmail(), student.getEmail()) && Objects.equals(getPassword(), student.getPassword()) && Objects.equals(getCreatedAt(), student.getCreatedAt()) && Objects.equals(getUpdatedAt(), student.getUpdatedAt()) && Objects.equals(interests, student.interests) && Objects.equals(bookings, student.bookings) && Objects.equals(reviews, student.reviews) && Objects.equals(likedPosts, student.likedPosts) && Objects.equals(conversations, student.conversations) && Objects.equals(replies, student.replies);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, createdAt, updatedAt, interests, bookings, reviews, likedPosts, conversations, replies);
+        return Objects.hash(this.getId(), this.getFirstName(), getLastName(), getEmail(), getPassword(), getCreatedAt(), getUpdatedAt(), interests, bookings, reviews, likedPosts, conversations, replies);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_STUDENT"));
-    }
-
-    @Override
-    public String getUsername() {
-        return email;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

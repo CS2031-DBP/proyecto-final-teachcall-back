@@ -9,6 +9,7 @@ import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.student.domain.Student;
+import dbp.techcall.user.domain.Users;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,84 @@ public class AuthService implements IAuthUseCase {
 
     @Autowired
     private final ModelMapper modelMapper;
+
+    public JwtRes register(RegisterReq request){
+
+        if (request.getRole().equals("student")) {
+            Student existingStudent = studentRepository.findByEmail(request.getEmail());
+
+            if (existingStudent != null) {
+                throw new UserAlreadyExistsException("Student");
+            }
+        }
+        if (request.getRole().equals("teacher")) {
+            Professor existingProfessor = teacherRepository.findByEmail(request.getEmail());
+
+            if (existingProfessor != null) {
+                throw new UserAlreadyExistsException("Teacher");
+            }
+        }
+
+        if (request.getRole().equals("student")) {
+            Student student = new Student();
+            student.setFirstName(request.getFirstName());
+            student.setLastName(request.getLastName());
+            student.setEmail(request.getEmail());
+            student.setPassword(passwordEncoder.encode(request.getPassword()));
+            student.setRole(request.getRole());
+            student.setCreatedAt(ZonedDateTime.now());
+
+            studentRepository.save(student);
+
+            String jwt = jwtService.generateToken(student);
+            return new JwtRes(jwt);
+        }
+        if (request.getRole().equals("teacher")) {
+            Professor professor = new Professor();
+            professor.setFirstName(request.getFirstName());
+            professor.setLastName(request.getLastName());
+            professor.setEmail(request.getEmail());
+            professor.setPassword(passwordEncoder.encode(request.getPassword()));
+            professor.setRole(request.getRole());
+            professor.setCreatedAt(ZonedDateTime.now());
+
+            teacherRepository.save(professor);
+
+            String jwt = jwtService.generateToken(professor);
+            return new JwtRes(jwt);
+        }
+        else {
+            throw new IllegalArgumentException("Role is not valid");
+        }
+
+    }
+
+    public JwtRes login(LoginReq req){
+
+        Users user;
+
+        if (req.getRole().equals("student")) {
+            user = studentRepository.findByEmail(req.getEmail());
+        }
+        else if (req.getRole().equals("teacher")) {
+            user = teacherRepository.findByEmail(req.getEmail());
+        }
+        else {
+            throw new IllegalArgumentException("Role is not valid");
+        }
+
+        if(user == null){
+            throw new UsernameNotFoundException("Email is not registered");
+        }
+
+        if(!passwordEncoder.matches(req.getPassword(), user.getPassword())){
+            throw new IllegalArgumentException("Password is incorrect");
+        }
+
+        return new JwtRes(jwtService.generateToken(modelMapper.map(user, UserDetails.class)));
+
+
+    }
 
 
     public JwtRes registerProfessor(RegisterReq request) {

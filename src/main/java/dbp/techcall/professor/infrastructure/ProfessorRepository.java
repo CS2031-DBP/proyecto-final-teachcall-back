@@ -1,10 +1,12 @@
 package dbp.techcall.professor.infrastructure;
 
 import dbp.techcall.professor.domain.Professor;
-import org.springframework.data.jpa.repository.JpaRepository;
+import dbp.techcall.user.infrastructure.BaseUserRepository;
 
-public interface ProfessorRepository extends JpaRepository<Professor, Integer> {
+import java.util.Optional;
+
+public interface ProfessorRepository extends BaseUserRepository<Professor> {
     Professor findByEmail(String email);
 
-    Professor findById(Long professorId);
+    Optional<Professor> findById(Long professorId);
 }

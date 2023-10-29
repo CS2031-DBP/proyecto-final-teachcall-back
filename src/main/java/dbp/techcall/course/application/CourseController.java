@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -42,12 +43,12 @@ public class CourseController {
 
     @GetMapping("/professor/{id}")
     public ResponseEntity<List<CourseDTO>> coursesByProfessor(@PathVariable Long id){
-        Professor professor = professorRepository.findById(id);
-        if (professor == null) {
+        Optional<Professor> professor = professorRepository.findById(id);
+        if (professor.isEmpty()) {
             return ResponseEntity.status(404).body(null);
         }
 
-        List<Course> courses = professor.getCourses();
+        List<Course> courses = professor.get().getCourses();
         List<CourseDTO> coursesDto = courses.stream()
                 .map(courseService::convertToDTO)
                 .collect(Collectors.toList());
