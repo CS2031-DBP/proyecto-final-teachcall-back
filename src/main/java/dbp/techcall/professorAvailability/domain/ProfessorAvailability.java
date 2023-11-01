@@ -15,7 +15,10 @@ import java.time.LocalTime;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "professor_availability", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"professor_id", "day", "week_number"}, name = "unique_professor_availability_per_day")
+        @UniqueConstraint(
+                columnNames = {"professor_id", "day", "week_number"},
+                name = "unique_professor_availability_per_day"
+        )
 })
 public class ProfessorAvailability {
 
@@ -29,7 +32,9 @@ public class ProfessorAvailability {
 
     @Min(1)
     @Max(6)
-    @Column(name = "day" , nullable = false, columnDefinition = "INTEGER CHECK (day > 0 AND day < 7)")
+    @Column(name = "day" ,
+            nullable = false,
+            columnDefinition = "INTEGER CHECK (day > 0 AND day < 7)")
     private int day;
 
     @Column(name = "start_time",

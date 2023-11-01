@@ -8,13 +8,13 @@ import dbp.techcall.professorAvailability.dto.NextFourWeeksAvailabilityResponse;
 import dbp.techcall.professorAvailability.dto.WeekAvailabilityRequest;
 import dbp.techcall.professorAvailability.exceptions.UnsetAvailabilityException;
 import dbp.techcall.professorAvailability.infrastructure.ProfessorAvailabilityRepository;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 
@@ -36,12 +36,11 @@ public class ProfessorAvailabilityService {
         List<List<ProfessorAvailability>> professorAvailabilityList = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
-
             LocalDate date = LocalDate.now();
             int weekOfYear = date.get(ChronoField.ALIGNED_WEEK_OF_YEAR);
 
-            professorAvailabilityList.add(professorAvailabilityRepository.findByProfessorIdAndWeekNumber(professorId, weekOfYear + 1));
-
+            professorAvailabilityList
+                    .add(professorAvailabilityRepository.findByProfessorIdAndWeekNumber(professorId, weekOfYear + 1));
         }
 
         if (professorAvailabilityList.isEmpty()) {
@@ -71,37 +70,13 @@ public class ProfessorAvailabilityService {
 
     }
 
-    public void setAvailabilityByWeekNumber(WeekAvailabilityRequest request) {
-        Professor professor = professorService.findById(request.getProfessorId());
-
-        if (professor == null) {
-            throw new RuntimeException("Professor not found");
-        }
-
-        for (Map.Entry<Integer, Pair<LocalTime, LocalTime>> entry : request.getTimeRanges().entrySet()) {
-            ProfessorAvailability professorAvailability = new ProfessorAvailability();
-
-            professorAvailability.setProfessor(professor);
-            professorAvailability.setDay(entry.getKey());
-            professorAvailability.setStartTime(entry.getValue().getFirst());
-            professorAvailability.setEndTime(entry.getValue().getSecond());
-            professorAvailability.setWeekNumber(request.getWeekNumber());
-
-            professorAvailabilityRepository.save(professorAvailability);
-        }
-    }
-
     public DayTimeSlotsResponse getAvailabilityByDay(Long professorId, Integer week, Integer day) {
         Professor professor = professorService.findById(professorId);
 
         if( professor == null) throw new RuntimeException("Professor not found");
 
         List<ProfessorAvailability> professorAvailabilities = professorAvailabilityRepository
-                .findByProfessorIdAndWeekNumberAndDay(
-                        professor,
-                        week,
-                        day
-                );
+                .findByProfessorIdAndWeekNumberAndDay( professor, week, day);
 
         if (professorAvailabilities.isEmpty()) throw new UnsetAvailabilityException("Professor does not have daily schedule yet");
 
@@ -118,11 +93,44 @@ public class ProfessorAvailabilityService {
                     .add(Pair.of(
                             professorAvailability.getStartTime(),
                             professorAvailability.getEndTime()
-                            )
-                    );
+                    ));
         }
 
         response.setDayTimeSlots(dayTimeSlots);
         return response;
     }
+
+    public void setAvailabilityByWeekNumber(WeekAvailabilityRequest request) {
+        Professor professor = professorService.findById(request.getProfessorId());
+
+        if (professor == null) {
+            throw new RuntimeException("Professor not found");
+        }
+
+        for (Map.Entry<Integer, Pair<LocalTime, LocalTime>> entry : request.getTimeRanges().entrySet()) {
+
+            if(entry.getValue().getFirst().isAfter(entry.getValue().getSecond())) throw new RuntimeException("Start time cannot be after end time" );
+            if(entry.getValue().getFirst().isBefore(LocalTime.of(6,0))) throw new RuntimeException("Start time cannot be before 6:00" );
+            if(entry.getValue().getSecond().isAfter(LocalTime.of(22,0))) throw new RuntimeException("End time cannot be after 22:00" );
+
+            LocalTime startTime = entry.getValue().getFirst();
+            LocalTime endTime = entry.getValue().getSecond();
+
+            long oneHourSlots = ChronoUnit.MINUTES.between(startTime, endTime) / 60;
+
+            Integer weekNumber = request.getWeekNumber();
+
+            for(int iSlot = 0; iSlot < oneHourSlots ;iSlot++){
+                ProfessorAvailability professorAvailability = new ProfessorAvailability();
+
+                professorAvailability.setProfessor(professor);
+                professorAvailability.setDay(entry.getKey());
+                professorAvailability.setStartTime(startTime.plusHours(iSlot));
+                professorAvailability.setEndTime(startTime.plusHours((iSlot + 1)));
+                professorAvailability.setWeekNumber(weekNumber);
+                professorAvailabilityRepository.save(professorAvailability);
+            }
+        }
+    }
+
 }
