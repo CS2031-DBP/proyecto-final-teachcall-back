@@ -5,6 +5,7 @@ import dbp.techcall.course.domain.Course;
 import dbp.techcall.post.domain.Post;
 import dbp.techcall.conversation.domain.Conversation;
 import dbp.techcall.education.domain.Education;
+import dbp.techcall.professorAvailability.domain.ProfessorAvailability;
 import dbp.techcall.professorReply.domain.ProfessorReply;
 import dbp.techcall.review.domain.Review;
 import dbp.techcall.user.domain.Users;
@@ -88,6 +89,11 @@ public class Professor extends Users {
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<ProfessorReply> professorReplies;
+
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+    private List<ProfessorAvailability> professorAvailabilities;
+
+
 
     @Override
     public boolean equals(Object o) {

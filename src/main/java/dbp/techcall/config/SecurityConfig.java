@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -27,7 +26,7 @@ public class SecurityConfig {
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth ->
                         auth
-                                .requestMatchers("/auth/**","/course","/course/**", "/course/**","/category/**","/usuarioA/**","/usuarioB/**").permitAll()
+                                .requestMatchers("/auth/**","/course","/course/**", "/course/**","/category/**","/usuarioA/**","/usuarioB/**","professor-availability/**").permitAll()
 
                                 .requestMatchers("/professor/**").hasRole("PROFESSOR")
                                 .requestMatchers("/student/**").hasRole("STUDENT")
