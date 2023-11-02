@@ -17,5 +17,5 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DayTimeSlotsResponse {
     private Long professorId;
-    private Map<Integer, List<Pair<LocalTime,LocalTime>>> dayTimeSlots;
+    private Map<Integer, List<SlotAvailability>> dayTimeSlots;
 }

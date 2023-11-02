@@ -23,9 +23,9 @@ public class ProfessorAvailabilityController {
 
     @GetMapping("/{id}")
     public ResponseEntity<NextFourWeeksAvailabilityResponse> getNextFourWeeksAvailability(@PathVariable Long id) {
-        //return ResponseEntity.ok("Availability set successfully");
         return ResponseEntity.ok(professorAvailabilityService.getNextFourWeeksAvailability(id));
     }
+
 
     @GetMapping("/day/{professorId}/{week}/{day}")
     public ResponseEntity<DayTimeSlotsResponse> getAvailabilityByDay(@PathVariable Long professorId, @PathVariable Integer week, @PathVariable Integer day) {

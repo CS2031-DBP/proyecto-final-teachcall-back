@@ -39,17 +39,19 @@ public class ProfessorAvailability {
 
     @Column(name = "start_time",
             nullable = false,
-            columnDefinition = "TIME WITHOUT TIME ZONE CHECK (date_part('hour', start_time) > 6 AND date_part('hour', start_time) < 22 AND date_part('hour', start_time) < date_part('hour', end_time))")
+            columnDefinition = "TIME WITHOUT TIME ZONE CHECK (date_part('hour', start_time) > 8 AND date_part('hour', start_time) < 21 AND date_part('hour', start_time) < date_part('hour', end_time))")
     private LocalTime startTime;
 
     @Column(name = "end_time",
             nullable = false,
-            columnDefinition = "TIME WITHOUT TIME ZONE CHECK (date_part('hour', end_time) > 6 AND date_part('hour', end_time) < 22 AND date_part('hour', end_time) > date_part('hour', start_time))"
+            columnDefinition = "TIME WITHOUT TIME ZONE CHECK (date_part('hour', end_time) > 8 AND date_part('hour', end_time) < 21 AND date_part('hour', end_time) > date_part('hour', start_time))"
     )
     private LocalTime endTime;
 
     @Column(name = "week_number" , nullable = false, columnDefinition = "INTEGER CHECK (week_number > 0 AND week_number < 53)")
     private int weekNumber;
 
+    @Column(name="is_available", nullable = false, columnDefinition = "boolean default true")
+    private Boolean isAvailable;
 
 }
