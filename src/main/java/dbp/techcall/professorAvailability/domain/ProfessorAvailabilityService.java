@@ -31,7 +31,8 @@ public class ProfessorAvailabilityService {
 
 
     /**
-     * This method calculates the number of the current week corresponding to the current year and find every availability slot in the following 4 weeks including the current week
+     * This method calculates the number of the current week corresponding to the current year
+     * and find every availability slot in the following 4 week including the current week
      * @param professorId
      *      A Long used to find the professor and its related Availabilities
      *
@@ -105,7 +106,7 @@ public class ProfessorAvailabilityService {
      * @param day
      *      An integer corresponding to the specific day of the week (0-6) for which we want to know the availability.
      * @throws UnsetAvailabilityException If the professor has not yet defined his or her availability for any week
-     * @throws RuntimeException If the professorId does not correspond to an existing professor
+     * @throws RuntimeException If the professorId does not correspond to an existing professor object
      * @return Up to 13 tuples corresponding to each one-hour interval in the teacher's range of availability sorted by start time.
      *     <pre>
      *         Example:<br>
@@ -170,6 +171,8 @@ public class ProfessorAvailabilityService {
 
 
     /**
+     * This method sets the availability of a professor for a specific week.
+     * Calculates the number of one-hour slots between the start time and the end time and creates a ProfessorAvailability object for each one of them.
      *
      * @param request
      *      A DTO containing the professorId, the weekNumber and a Map whose keys are the days of the week and the values are the time ranges in which the professor is available.
