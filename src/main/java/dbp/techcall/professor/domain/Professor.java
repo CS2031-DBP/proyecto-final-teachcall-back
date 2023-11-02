@@ -5,6 +5,7 @@ import dbp.techcall.course.domain.Course;
 import dbp.techcall.post.domain.Post;
 import dbp.techcall.conversation.domain.Conversation;
 import dbp.techcall.education.domain.Education;
+import dbp.techcall.professorAvailability.domain.ProfessorAvailability;
 import dbp.techcall.professorReply.domain.ProfessorReply;
 import dbp.techcall.review.domain.Review;
 import dbp.techcall.user.domain.Users;
@@ -29,28 +30,6 @@ import java.util.Objects;
 @Table(name = "professor", schema="spring_app")
 public class Professor extends Users {
 
-    /*@Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "created_at", nullable = false)
-    private ZonedDateTime createdAt;
-
-    @Column(name = "updated_at")
-    private ZonedDateTime updatedAt;
-*/
     @Column(name = "description")
     private String description;
 
@@ -88,6 +67,11 @@ public class Professor extends Users {
 
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<ProfessorReply> professorReplies;
+
+    @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
+    private List<ProfessorAvailability> professorAvailabilities;
+
+
 
     @Override
     public boolean equals(Object o) {
