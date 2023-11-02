@@ -5,7 +5,9 @@ import dbp.techcall.student.domain.Student;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Date;
 import java.util.Objects;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -15,8 +17,8 @@ import java.util.Objects;
 @Table(name = "review")
 public class Review {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
 
     @Column(name = "body", columnDefinition = "TEXT", nullable = false)
     private String body;
@@ -24,11 +26,17 @@ public class Review {
     @Column(name = "rating", nullable = false)
     private Integer rating;
 
-    @ManyToOne
+    @Column(name = "created_at", nullable = false)
+    private Date createdAt;
+
+    @Column(name = "updated_at")
+    private Date updatedAt;
+
+    @ManyToOne()
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student student;
 
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "professor_id", referencedColumnName = "id", nullable = false)
     private Professor professor;
 

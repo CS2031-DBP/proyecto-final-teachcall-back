@@ -9,5 +9,8 @@ import java.util.Optional;
 @Repository
 public interface ProfessorRepository extends BaseUserRepository<Professor> {
     Professor findByEmail(String email);
-    Optional<Professor> findById(Long professorId);
+
+    @Override
+    Optional<Professor> findById( Long professorId);
+
 }

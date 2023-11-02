@@ -4,6 +4,7 @@ import dbp.techcall.auth.exceptions.UserAlreadyExistsException;
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.professorAvailability.exceptions.AvailabilityDatesErrorException;
 import dbp.techcall.professorAvailability.exceptions.UnsetAvailabilityException;
+import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -41,6 +42,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(UnsetAvailabilityException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected String handleNoAvailabilitySetException(UnsetAvailabilityException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    protected String handleResourceNotFoundException(ResourceNotFoundException e) {
         return e.getMessage();
     }
 }
