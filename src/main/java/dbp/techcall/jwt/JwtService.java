@@ -58,8 +58,6 @@ public class JwtService implements IJwtService {
 
     public void validateToken(String token, String userEmail) throws AuthenticationException{
 
-        System.out.println("token: " + token);
-
         JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
         final String userRole = this.extractUserRole(token);
         UserDetails userDetails =

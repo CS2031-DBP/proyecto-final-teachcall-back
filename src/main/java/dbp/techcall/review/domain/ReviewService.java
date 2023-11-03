@@ -5,6 +5,7 @@ import dbp.techcall.professor.domain.ProfessorService;
 import dbp.techcall.review.dto.ProfessorRatingInfo;
 import dbp.techcall.review.dto.ReviewRequest;
 import dbp.techcall.review.dto.ReviewResponse;
+import dbp.techcall.review.dto.UpdateReviewRequest;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.review.infrastructure.ReviewRepository;
 import dbp.techcall.student.domain.Student;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class ReviewService {
@@ -36,6 +38,13 @@ public class ReviewService {
     @Autowired
     private ModelMapper modelMapper;
 
+
+    /**
+     * Save a new review
+     *
+     * @throws UsernameNotFoundException if professor or student is not found
+     * @param request review object passed in request body
+     */
     public void saveReview(ReviewRequest request) {
         Professor professor = professorService.findById(request.getProfessorId());
         Student student = studentService.getStudentById(request.getStudentId());
@@ -48,6 +57,19 @@ public class ReviewService {
         reviewRepository.save(newReview);
     }
 
+    /**
+     * Get reviews by professorId using pagination.
+     * Pagination parameters must be passed in request params
+     * <pre>
+     *     Example: /review/1?page=0&size=10&sort=createdAt,desc
+     *     page - page number
+     *     size - number of reviews per page
+     *     sort - sort by createdAt in descending order
+     * </pre>
+     * @param professorId id of professor to get reviews for
+     * @param pageable Pageable object containing pagination parameters
+     * @return Page<ReviewResponse> - Page of reviews by professorId
+     */
     public Page<ReviewResponse> getReviewsByProfessorId(Long professorId, Pageable pageable) {
         Page<Review> page = reviewRepository.findAllByProfessorId(professorId, pageable);
         return page
@@ -108,9 +130,9 @@ public class ReviewService {
      *
      * @throws ResourceNotFoundException if review is not found
      * @param id  id of review to update
-     * @param review review object passed in request body
+     * @param review An UpdateReviewRequest object passed in request body
      */
-    public void updateReview(Long id, Review review) {
+    public void updateReview(UUID id, UpdateReviewRequest review) {
         Review reviewToUpdate = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         reviewToUpdate.setBody(review.getBody());
@@ -120,7 +142,7 @@ public class ReviewService {
         reviewRepository.save(reviewToUpdate);
     }
 
-    public void deleteReview(Long id) {
+    public void deleteReview(UUID id) {
         Review reviewToDelete = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
         reviewRepository.delete(reviewToDelete);
     }
@@ -134,12 +156,12 @@ public class ReviewService {
      * @see dbp.techcall.review.dto.ProfessorRatingInfo
      */
     public ProfessorRatingInfo getAverageRating(Long professorId) {
-        List<Double> info =  reviewRepository.getAverageRating(professorId);
+        List<Object[]> info =  reviewRepository.getAverageRating(professorId);
 
         ProfessorRatingInfo professorRatingInfo = new ProfessorRatingInfo();
         professorRatingInfo.setProfessorId(professorId);
-        professorRatingInfo.setAverageRating(info.get(0));
-        professorRatingInfo.setReviewCount(info.get(1).intValue());
+        professorRatingInfo.setAverageRating((Double) info.get(0)[0]);
+        professorRatingInfo.setReviewCount((Long) info.get(0)[1]);
 
         return professorRatingInfo;
     }
@@ -155,7 +177,7 @@ public class ReviewService {
      * @param id  id of review to update
      * @param request review object passed in request body
      */
-    public void patchUpdateReview(Long id, ReviewRequest request) {
+    public void patchUpdateReview(UUID id, ReviewRequest request) {
         Review reviewToUpdate = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
         if (request.getBody() != null) reviewToUpdate.setBody(request.getBody());

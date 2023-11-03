@@ -5,6 +5,7 @@ import dbp.techcall.review.dto.ProfessorRatingInfo;
 import dbp.techcall.review.dto.ReviewRequest;
 import dbp.techcall.review.domain.ReviewService;
 import dbp.techcall.review.dto.ReviewResponse;
+import dbp.techcall.review.dto.UpdateReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/review")
@@ -41,19 +43,19 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<String> updateReview(@PathVariable Long id, @RequestBody Review review){
+    public ResponseEntity<String> updateReview(@PathVariable UUID id, @RequestBody UpdateReviewRequest review){
         reviewService.updateReview(id, review);
         return ResponseEntity.ok("Review updated");
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<String> updateReview(@PathVariable Long id, @RequestBody ReviewRequest request){
+    public ResponseEntity<String> updateReview(@PathVariable UUID id, @RequestBody ReviewRequest request){
         reviewService.patchUpdateReview(id, request);
         return ResponseEntity.ok("Review updated");
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteReview(@PathVariable Long id){
+    public ResponseEntity<String> deleteReview(@PathVariable UUID id){
         reviewService.deleteReview(id);
         return ResponseEntity.ok("Review deleted");
     }
