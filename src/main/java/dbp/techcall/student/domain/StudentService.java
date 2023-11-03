@@ -21,4 +21,8 @@ public class StudentService {
             }
         };
     }
+
+    public Student getStudentById(Long studentId) throws UsernameNotFoundException{
+        return studentRepository.findById(studentId).orElse(null);
+    }
 }
