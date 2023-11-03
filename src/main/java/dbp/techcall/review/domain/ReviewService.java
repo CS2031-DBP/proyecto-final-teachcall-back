@@ -37,7 +37,7 @@ public class ReviewService {
     private ModelMapper modelMapper;
 
     public void saveReview(ReviewRequest request) {
-        Professor professor = professorService.getProfessorById(request.getProfessorId());
+        Professor professor = professorService.findById(request.getProfessorId());
         Student student = studentService.getStudentById(request.getStudentId());
 
         if (professor == null || student == null) throw new UsernameNotFoundException("Professor and Student must not be null");
@@ -60,6 +60,28 @@ public class ReviewService {
         });
     }
 
+
+    /**
+     * Get top 5 reviews by professorId
+     * and use a Sort Object to sort by rating and createdAt in descending order (highest rating first)
+     *
+     *
+     * @param professorId
+     * @return List<ReviewResponse> - List of top 5 reviews by professorId
+     * <pre>
+     * Example:<br>
+     * [<br>
+     *  {<br>
+     *      "body": "This is a review",<br>
+     *      "rating": 5,<br>
+     *      "studentName": "John",<br>
+     *      "createdAt": "2021-04-20T00:00:00.000+00:00"<br>
+     *  }<br>
+     *]<br>
+     *</pre>
+     *
+     *
+     */
     public List<ReviewResponse> getTopReviewsByProfessorId(Long professorId) {
 
         Sort sort = Sort.by(
@@ -76,11 +98,18 @@ public class ReviewService {
                     reviewResponse.setBody(review.getBody());
                     reviewResponse.setRating(review.getRating());
                     reviewResponse.setStudentName(review.getStudent().getFirstName());
+                    reviewResponse.setCreatedAt(review.getCreatedAt().toString());
             return reviewResponse;
         }).toList();
     }
 
-
+    /**
+     * Update review by id and review object passed in request body (PUT)
+     *
+     * @throws ResourceNotFoundException if review is not found
+     * @param id  id of review to update
+     * @param review review object passed in request body
+     */
     public void updateReview(Long id, Review review) {
         Review reviewToUpdate = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
 
@@ -96,6 +125,14 @@ public class ReviewService {
         reviewRepository.delete(reviewToDelete);
     }
 
+    /**
+     * Get average rating and review count by professorId using a custom query
+     *
+     * @param professorId
+     * @return ProfessorRatingInfo - object containing average rating and review count
+     * @see dbp.techcall.review.infrastructure.ReviewRepository#getAverageRating(Long)
+     * @see dbp.techcall.review.dto.ProfessorRatingInfo
+     */
     public ProfessorRatingInfo getAverageRating(Long professorId) {
         List<Double> info =  reviewRepository.getAverageRating(professorId);
 
@@ -105,5 +142,26 @@ public class ReviewService {
         professorRatingInfo.setReviewCount(info.get(1).intValue());
 
         return professorRatingInfo;
+    }
+
+    /**
+     * Update review by id and review object passed in request body (PATCH)
+     * Due to being a PATCH request, only update fields that are not null
+     *
+     * @implNote It would be useful to implement something like <a href="https://datatracker.ietf.org/doc/html/rfc6902">RFC 6902</a> (JSON Patch) in the future.
+     *
+     *
+     * @throws ResourceNotFoundException if review is not found
+     * @param id  id of review to update
+     * @param request review object passed in request body
+     */
+    public void patchUpdateReview(Long id, ReviewRequest request) {
+        Review reviewToUpdate = reviewRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Review not found"));
+
+        if (request.getBody() != null) reviewToUpdate.setBody(request.getBody());
+        if (request.getRating() != null) reviewToUpdate.setRating(request.getRating());
+        reviewToUpdate.setUpdatedAt(new Date(System.currentTimeMillis()));
+
+        reviewRepository.save(reviewToUpdate);
     }
 }

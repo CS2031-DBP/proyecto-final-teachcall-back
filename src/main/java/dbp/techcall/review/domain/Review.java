@@ -32,11 +32,11 @@ public class Review {
     @Column(name = "updated_at")
     private Date updatedAt;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "student_id", referencedColumnName = "id", nullable = false)
     private Student student;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "professor_id", referencedColumnName = "id", nullable = false)
     private Professor professor;
 

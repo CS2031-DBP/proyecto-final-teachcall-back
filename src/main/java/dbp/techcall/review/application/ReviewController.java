@@ -7,7 +7,9 @@ import dbp.techcall.review.domain.ReviewService;
 import dbp.techcall.review.dto.ReviewResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,14 +22,16 @@ public class ReviewController {
     @Autowired
     private ReviewService reviewService;
 
-    @PostMapping()
+    @PostMapping
     public ResponseEntity<String> createReview(@RequestBody ReviewRequest request){
         reviewService.saveReview(request);
         return ResponseEntity.ok("Review created");
     }
 
+
     @GetMapping("/{professorId}")
-    public ResponseEntity<Page<ReviewResponse>> getReviewsByProfessorId(@PathVariable Long professorId, @RequestBody Pageable pageable){
+    public ResponseEntity<Page<ReviewResponse>> getReviewsByProfessorId(@PathVariable Long professorId, @RequestParam Integer page, @RequestParam Integer size, @RequestParam(required = false) String sort){
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
         return ResponseEntity.ok(reviewService.getReviewsByProfessorId(professorId, pageable));
     }
 
@@ -39,6 +43,12 @@ public class ReviewController {
     @PutMapping("/{id}")
     public ResponseEntity<String> updateReview(@PathVariable Long id, @RequestBody Review review){
         reviewService.updateReview(id, review);
+        return ResponseEntity.ok("Review updated");
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<String> updateReview(@PathVariable Long id, @RequestBody ReviewRequest request){
+        reviewService.patchUpdateReview(id, request);
         return ResponseEntity.ok("Review updated");
     }
 

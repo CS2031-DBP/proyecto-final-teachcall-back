@@ -11,4 +11,5 @@ public class ReviewResponse {
     private String body;
     private Integer rating;
     private String studentName;
+    private String createdAt;
 }
