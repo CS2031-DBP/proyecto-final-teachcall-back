@@ -3,7 +3,10 @@ package dbp.techcall.education.domain;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.school.domain.School;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 

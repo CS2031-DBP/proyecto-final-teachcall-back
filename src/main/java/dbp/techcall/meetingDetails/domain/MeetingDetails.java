@@ -3,7 +3,10 @@ package dbp.techcall.meetingDetails.domain;
 
 import dbp.techcall.booking.domain.Booking;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

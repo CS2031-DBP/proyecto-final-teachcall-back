@@ -1,24 +1,23 @@
 package dbp.techcall.professor.domain;
+
 import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.category.domain.Category;
-import dbp.techcall.course.domain.Course;
-import dbp.techcall.post.domain.Post;
 import dbp.techcall.conversation.domain.Conversation;
+import dbp.techcall.course.domain.Course;
 import dbp.techcall.education.domain.Education;
+import dbp.techcall.post.domain.Post;
 import dbp.techcall.professorAvailability.domain.ProfessorAvailability;
 import dbp.techcall.professorReply.domain.ProfessorReply;
+import dbp.techcall.professorShift.domain.ProfessorShift;
 import dbp.techcall.review.domain.Review;
 import dbp.techcall.user.domain.Users;
 import dbp.techcall.workExperience.domain.WorkExperience;
-import dbp.techcall.professorShift.domain.ProfessorShift;
 import jakarta.persistence.*;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.ZonedDateTime;
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 

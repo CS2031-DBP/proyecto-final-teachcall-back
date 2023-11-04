@@ -2,7 +2,8 @@ package dbp.techcall.jwt;
 
 
 import com.auth0.jwt.JWT;
-import dbp.techcall.jwt.IJwtService;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Payload;
 import dbp.techcall.professor.domain.ProfessorService;
 import dbp.techcall.student.domain.StudentService;
 import lombok.RequiredArgsConstructor;
@@ -13,9 +14,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Payload;
-
 
 import java.util.Date;
 import java.util.Map;

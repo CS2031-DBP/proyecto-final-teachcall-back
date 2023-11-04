@@ -1,7 +1,7 @@
 package dbp.techcall.professorShift.domain;
 
-import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.professor.domain.Professor;
+import dbp.techcall.timeSlot.domain.TimeSlot;
 import jakarta.persistence.*;
 import lombok.*;
 

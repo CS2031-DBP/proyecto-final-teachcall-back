@@ -2,22 +2,22 @@ package dbp.techcall.student.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import dbp.techcall.review.domain.Review;
+import dbp.techcall.booking.domain.Booking;
+import dbp.techcall.category.domain.Category;
 import dbp.techcall.conversation.domain.Conversation;
+import dbp.techcall.post.domain.Post;
+import dbp.techcall.review.domain.Review;
 import dbp.techcall.studentReply.domain.StudentReply;
 import dbp.techcall.user.domain.Users;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.time.ZonedDateTime;
-import java.util.*;
-
-import dbp.techcall.category.domain.Category;
-import dbp.techcall.booking.domain.Booking;
-import dbp.techcall.post.domain.Post;
-import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter

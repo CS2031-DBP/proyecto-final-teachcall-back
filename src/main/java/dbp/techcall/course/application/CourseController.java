@@ -1,8 +1,9 @@
 package dbp.techcall.course.application;
+
+import dbp.techcall.course.domain.Course;
+import dbp.techcall.course.domain.CourseService;
 import dbp.techcall.course.dto.CourseDTO;
 import dbp.techcall.course.infrastructure.CourseRepository;
-import dbp.techcall.course.domain.CourseService;
-import dbp.techcall.course.domain.Course;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;

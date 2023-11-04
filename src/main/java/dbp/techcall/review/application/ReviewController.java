@@ -1,9 +1,8 @@
 package dbp.techcall.review.application;
 
-import dbp.techcall.review.domain.Review;
+import dbp.techcall.review.domain.ReviewService;
 import dbp.techcall.review.dto.ProfessorRatingInfo;
 import dbp.techcall.review.dto.ReviewRequest;
-import dbp.techcall.review.domain.ReviewService;
 import dbp.techcall.review.dto.ReviewResponse;
 import dbp.techcall.review.dto.UpdateReviewRequest;
 import org.springframework.beans.factory.annotation.Autowired;

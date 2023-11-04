@@ -1,14 +1,15 @@
 package dbp.techcall.auth.domain;
 
+import dbp.techcall.auth.application.IAuthUseCase;
 import dbp.techcall.auth.dto.JwtRes;
 import dbp.techcall.auth.dto.LoginReq;
 import dbp.techcall.auth.dto.RegisterReq;
 import dbp.techcall.auth.exceptions.UserAlreadyExistsException;
-import dbp.techcall.auth.application.IAuthUseCase;
+import dbp.techcall.jwt.JwtService;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
-import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.student.domain.Student;
+import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.user.domain.Users;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -17,8 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import dbp.techcall.jwt.JwtService;
-
 
 import java.time.ZonedDateTime;
 

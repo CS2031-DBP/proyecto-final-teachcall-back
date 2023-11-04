@@ -1,12 +1,15 @@
 package dbp.techcall.booking.domain;
 
-import dbp.techcall.meetingDetails.domain.MeetingDetails;
-import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.course.domain.Course;
+import dbp.techcall.meetingDetails.domain.MeetingDetails;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.student.domain.Student;
+import dbp.techcall.timeSlot.domain.TimeSlot;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter

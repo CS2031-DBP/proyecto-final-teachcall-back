@@ -1,17 +1,16 @@
 package dbp.techcall.professorAvailability.domain;
 
-import dbp.techcall.professorAvailability.dto.SlotAvailability;
-import org.aspectj.weaver.patterns.ConcreteCflowPointcut;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.util.Pair;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
 import dbp.techcall.professorAvailability.dto.DayTimeSlotsResponse;
 import dbp.techcall.professorAvailability.dto.NextFourWeeksAvailabilityResponse;
+import dbp.techcall.professorAvailability.dto.SlotAvailability;
 import dbp.techcall.professorAvailability.dto.WeekAvailabilityRequest;
 import dbp.techcall.professorAvailability.exceptions.UnsetAvailabilityException;
 import dbp.techcall.professorAvailability.infrastructure.ProfessorAvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

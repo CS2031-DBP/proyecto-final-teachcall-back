@@ -1,17 +1,18 @@
 package dbp.techcall.category.application;
+
 import dbp.techcall.category.domain.Category;
+import dbp.techcall.category.domain.CategoryService;
+import dbp.techcall.category.dto.CategoryDto;
+import dbp.techcall.category.infrastructure.CategoryRepository;
 import dbp.techcall.course.domain.Course;
-import dbp.techcall.course.dto.CourseDTO;
 import dbp.techcall.course.domain.CourseService;
+import dbp.techcall.course.dto.CourseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import dbp.techcall.category.infrastructure.CategoryRepository;
-import dbp.techcall.category.domain.CategoryService;
-import dbp.techcall.category.dto.CategoryDto;
 
 import java.util.List;
 import java.util.Set;
