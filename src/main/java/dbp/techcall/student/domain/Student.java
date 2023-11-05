@@ -23,7 +23,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 @NoArgsConstructor
 @Entity
-@Table(name = "student", schema = "spring_app")
+@Table(name = "student")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Student extends Users {
 
