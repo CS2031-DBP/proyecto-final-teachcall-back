@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @Setter
 @RequiredArgsConstructor
 public class SlotAvailability {
+    private Integer slotId;
     private LocalTime startTime;
     private LocalTime endTime;
     private Boolean isAvailable;

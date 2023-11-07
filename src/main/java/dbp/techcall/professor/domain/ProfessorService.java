@@ -1,10 +1,15 @@
 package dbp.techcall.professor.domain;
 
+import dbp.techcall.category.domain.Category;
+import dbp.techcall.category.infrastructure.CategoryRepository;
 import dbp.techcall.education.domain.Education;
 import dbp.techcall.education.dto.BasicEducationRequest;
 import dbp.techcall.education.dto.BasicEducationResponse;
 import dbp.techcall.education.infrastructure.EducationRepository;
+import dbp.techcall.professor.dto.AddCategoriesReq;
+import dbp.techcall.professor.dto.DescripcionDTO;
 import dbp.techcall.professor.dto.NewProfessorDto;
+import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.school.domain.School;
@@ -42,6 +47,9 @@ public class ProfessorService implements IProfessorService {
 
     @Autowired
     private SchoolRepository schoolRepository;
+
+    @Autowired
+    CategoryRepository categoryRepository;
 
     @Autowired
     private WorkExperienceRepository workExperienceRepository;
@@ -88,8 +96,8 @@ public class ProfessorService implements IProfessorService {
         return educationRepository.findAllByProfessorId(id);
     }
 
-    public void addEducation(Long id, BasicEducationRequest education) {
-        Professor professor = findById(id);
+    public void addEducation(String email, BasicEducationRequest education) {
+        Professor professor = findByEmail(email);
         School school = schoolRepository.findByName(education.getSchoolName());
 
         if (school == null) {
@@ -97,6 +105,9 @@ public class ProfessorService implements IProfessorService {
             newSchool.setName(education.getSchoolName());
             newSchool.setImgUrl(education.getImgUrl());
             schoolRepository.save(newSchool);
+
+            school = newSchool;
+
         }
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
@@ -138,5 +149,52 @@ public class ProfessorService implements IProfessorService {
     public Page<List<BasicExperienceResponse>> getExperiencesById(Long id, Integer page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("startDate").descending());
         return workExperienceRepository.findWorkExperiencesByProfessorId(id, pageable);
+    }
+
+    public void setCompletedTour(String id) {
+        Professor professor = findByEmail(id);
+
+        if (professor == null) {
+            throw new ResourceNotFoundException("Professor not found");
+        }
+
+        if(professor.getTourCompleted()) {
+            throw new AlreadyCompletedTourException("Professor already completed tour");
+        }
+
+        professor.setTourCompleted(true);
+        professorRepository.save(professor);
+    }
+
+    public void setDescription(String email, String description) {
+        Professor professor = findByEmail(email);
+
+        if (professor == null) {
+            throw new ResourceNotFoundException("Professor not found");
+        }
+
+        professor.setDescription(description);
+        professorRepository.save(professor);
+    }
+
+    public void addCategoriesByEmail( AddCategoriesReq categories) {
+        Professor professor = findByEmail(categories.getEmail());
+
+        if (professor == null) {
+            throw new ResourceNotFoundException("Professor not found");
+        }
+
+        for (Long categoryId : categories.getCategories()) {
+            Optional<Category> category = categoryRepository.findById(categoryId);
+
+            if (category.isEmpty()) {
+                throw new ResourceNotFoundException("Category not found");
+            }
+
+            professor.getCategories().add(category.get());
+        }
+
+        professorRepository.save(professor);
+
     }
 }

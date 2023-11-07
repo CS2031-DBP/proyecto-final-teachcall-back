@@ -2,10 +2,7 @@ package dbp.techcall.professorAvailability.domain;
 
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
-import dbp.techcall.professorAvailability.dto.DayTimeSlotsResponse;
-import dbp.techcall.professorAvailability.dto.NextFourWeeksAvailabilityResponse;
-import dbp.techcall.professorAvailability.dto.SlotAvailability;
-import dbp.techcall.professorAvailability.dto.WeekAvailabilityRequest;
+import dbp.techcall.professorAvailability.dto.*;
 import dbp.techcall.professorAvailability.exceptions.UnsetAvailabilityException;
 import dbp.techcall.professorAvailability.infrastructure.ProfessorAvailabilityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
@@ -98,8 +96,7 @@ public class ProfessorAvailabilityService {
 
     /**
      * This method finds every availability slot for a specific day of the week in a specific week.
-     * @param professorId
-     *      A Long used to find the professor and its related Availabilities
+     * @param email The email of the professor whose availability we want to fetch.
      * @param week
      *      An Integer corresponding to the week number from which we want to fetch the data.
      * @param day
@@ -134,21 +131,21 @@ public class ProfessorAvailabilityService {
      *         </pre>
      *
      */
-    public DayTimeSlotsResponse getAvailabilityByDay(Long professorId, Integer week, Integer day) {
-        Professor professor = professorService.findById(professorId);
+    public DayTimeSlotsResponse getAvailabilityByDay(String email, Integer week, Integer day) {
+        Professor professor = professorService.findByEmail(email);
 
         if( professor == null) throw new RuntimeException("Professor not found");
 
         Sort sort = Sort.by(Sort.Direction.ASC, "startTime");
 
         List<ProfessorAvailability> professorAvailabilities = professorAvailabilityRepository
-                .findByProfessorIdAndWeekNumberAndDay( professorId, week, day, sort);
+                .findByProfessorIdAndWeekNumberAndDay(professor.getId(), week, day, sort);
 
         if (professorAvailabilities.isEmpty()) throw new UnsetAvailabilityException("Professor does not have daily schedule yet");
 
 
         DayTimeSlotsResponse response = new DayTimeSlotsResponse();
-        response.setProfessorId(professorId);
+        response.setProfessorId(professor.getId());
 
         Map<Integer, List<SlotAvailability>> dayTimeSlots = new HashMap<>();
 
@@ -157,6 +154,7 @@ public class ProfessorAvailabilityService {
 
             SlotAvailability slotAvailability = new SlotAvailability();
 
+            slotAvailability.setSlotId(professorAvailability.getProfessorAvalabilityId());
             slotAvailability.setStartTime(professorAvailability.getStartTime());
             slotAvailability.setEndTime(professorAvailability.getEndTime());
             slotAvailability.setIsAvailable(professorAvailability.getIsAvailable());
@@ -173,48 +171,60 @@ public class ProfessorAvailabilityService {
      * This method sets the availability of a professor for a specific week.
      * Calculates the number of one-hour slots between the start time and the end time and creates a ProfessorAvailability object for each one of them.
      *
+     * @apiNote Take into account the restrictions on the start and end time and its formats.
+     * The start time must be before the end time and the start time must be after 8:00 and the end time must be before 21:00
+     * See this <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html"> link </a> for more information on the accepted formats
+     *
      * @param request
      *      A DTO containing the professorId, the weekNumber and a Map whose keys are the days of the week and the values are the time ranges in which the professor is available.
      *      The time ranges are represented by a Pair of LocalTime objects, the first one representing the start time and the second one representing the end time.
      *      <pre>
      * Example:<br>
      * {<br>
-     * "professorId": 1,<br>
-     * "weekNumber": 1<br>
-     * "timeRanges": {<br>
-     *      "1": {<br>
-     *          "first": "08:00",<br>
-     *          "second": "12:00"<br>
-     *           },<br>
-     *      "2": {<br>
-     *          "first": "08:00",<br>
-     *          "second": "12:00"<br>
-     *           },<br>
-     *      "3": {<br>
-     *          "first": "08:00",<br>
-     *          "second": "12:00"<br>
+     *     "professorId": 1653,<br>
+     *     "weekNumber": 45,<br>
+     *     "timeRanges": {<br>
+     *         "1": {<br>
+     *             "startTime": "09:00:00",<br>
+     *             "endTime": "10:00:00"<br>
+     *         },<br>
+     *         "2": {<br>
+     *             "startTime": "09:00:00",<br>
+     *             "endTime": "10:00:00"<br>
+     *         },<br>
+     *         "3": {<br>
+     *             "startTime": "09:00:00",<br>
+     *             "endTime": "10:00:00"<br>
+     *         },<br>
+     *         "4": {<br>
+     *             "startTime": "09:00:00",<br>
+     *             "endTime": "10:00:00"<br>
      *         }<br>
-     *      }<br>
+     *     }<br>
      * }<br>
      * </pre>
      *
      * @throws RuntimeException If the professorId does not correspond to an existing professor or the start time is after the end time or the start time is before 6:00 or the end time is after 22:00
      */
     public void setAvailabilityByWeekNumber(WeekAvailabilityRequest request) {
-        Professor professor = professorService.findById(request.getProfessorId());
+        Professor professor = professorService.findByEmail(request.getProfessorEmail());
 
         if (professor == null) {
             throw new RuntimeException("Professor not found");
         }
 
-        for (Map.Entry<Integer, Pair<LocalTime, LocalTime>> entry : request.getTimeRanges().entrySet()) {
+        for (Map.Entry<Integer, TimeRange> entry : request.getTimeRanges().entrySet()) {
 
-            if(entry.getValue().getFirst().isAfter(entry.getValue().getSecond())) throw new RuntimeException("Start time cannot be after end time" );
-            if(entry.getValue().getFirst().isBefore(LocalTime.of(6,0))) throw new RuntimeException("Start time cannot be before 6:00" );
-            if(entry.getValue().getSecond().isAfter(LocalTime.of(22,0))) throw new RuntimeException("End time cannot be after 22:00" );
+            LocalTime startTime = LocalTime.parse(entry.getValue().getFirst());
+            LocalTime endTime = LocalTime.parse(entry.getValue().getSecond());
 
-            LocalTime startTime = entry.getValue().getFirst();
-            LocalTime endTime = entry.getValue().getSecond();
+            System.out.println(startTime);
+            System.out.println(endTime);
+
+            if(startTime.isAfter(endTime)) throw new RuntimeException("Start time cannot be after end time" );
+            if(startTime.isBefore(LocalTime.of(6,0))) throw new RuntimeException("Start time cannot be before 6:00" );
+            if(endTime.isAfter(LocalTime.of(22,0))) throw new RuntimeException("End time cannot be after 22:00" );
+
 
             long oneHourSlots = ChronoUnit.MINUTES.between(startTime, endTime) / 60;
 
@@ -226,11 +236,51 @@ public class ProfessorAvailabilityService {
                 professorAvailability.setProfessor(professor);
                 professorAvailability.setDay(entry.getKey());
                 professorAvailability.setStartTime(startTime.plusHours(iSlot));
-                professorAvailability.setEndTime(startTime.plusHours((iSlot + 1)));
+                professorAvailability.setEndTime(startTime.plusHours(iSlot + 1));
                 professorAvailability.setWeekNumber(weekNumber);
+                professorAvailability.setIsAvailable(true);
                 professorAvailabilityRepository.save(professorAvailability);
             }
         }
     }
 
+    /**
+     * This method finds every available day in a given week for a specific professor.
+     *
+     * The request url should be in the following format: <br>
+     * <pre>
+     * <code>[GET] /professor-availability/weekly/{professorId}?week={weekNumber}</code>
+     * </pre>
+     * @param email The email of the professor whose availability we want to fetch.
+     * @param week The week number should be provided as a query parameter.
+     * @return A DTO containing  a list of available days.
+     * <pre>
+     *     Example:<br>
+     *     { "availableDays": [ 1, 2, 3, 4, 5, 6] }<br>
+     * </pre>
+     * @throws RuntimeException If the professorId does not correspond to an existing professor object
+     */
+    public WeekAvailabilityResponse getAvailabilityByWeekNumber(String email, Integer week) {
+        Professor professor = professorService.findByEmail(email);
+
+        if (professor == null) {
+            throw new RuntimeException("Professor not found");
+        }
+
+        List<BasicDayAvailability> professorAvailabilities = professorAvailabilityRepository
+                .findByProfessorIdAndWeekNumber(professor.getId(), week);
+
+        if (professorAvailabilities.isEmpty()) {
+            throw new UnsetAvailabilityException("Professor does not have any availability set yet");
+        }
+
+        WeekAvailabilityResponse response = new WeekAvailabilityResponse();
+        response.setAvailableDays(new ArrayList<>());
+
+        for (BasicDayAvailability professorAvailability : professorAvailabilities) {
+            response.getAvailableDays().add(professorAvailability.getDay());
+        }
+
+        return response;
+    }
 }

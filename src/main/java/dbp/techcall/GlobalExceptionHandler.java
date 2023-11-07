@@ -2,6 +2,7 @@ package dbp.techcall;
 
 import dbp.techcall.auth.exceptions.UserAlreadyExistsException;
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
+import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
 import dbp.techcall.professorAvailability.exceptions.AvailabilityDatesErrorException;
 import dbp.techcall.professorAvailability.exceptions.UnsetAvailabilityException;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
@@ -48,6 +49,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     protected String handleResourceNotFoundException(ResourceNotFoundException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(AlreadyCompletedTourException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    protected String handleAlreadyCompletedTourException(AlreadyCompletedTourException e) {
         return e.getMessage();
     }
 }

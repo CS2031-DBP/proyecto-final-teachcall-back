@@ -32,6 +32,9 @@ public class Professor extends Users {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "completed_tour", columnDefinition = "boolean default false")
+    private Boolean tourCompleted;
+
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<Post> posts;
 

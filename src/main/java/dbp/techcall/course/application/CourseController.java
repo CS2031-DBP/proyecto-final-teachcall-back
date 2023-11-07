@@ -3,15 +3,13 @@ package dbp.techcall.course.application;
 import dbp.techcall.course.domain.Course;
 import dbp.techcall.course.domain.CourseService;
 import dbp.techcall.course.dto.CourseDTO;
+import dbp.techcall.course.dto.TopFiveCourses;
 import dbp.techcall.course.infrastructure.CourseRepository;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/course")
+@CrossOrigin(origins ={"http://localhost:5173", "http://127.0.0.1:5173"})
 public class CourseController {
     @Autowired
     private CourseRepository courseRepository;
@@ -55,6 +54,12 @@ public class CourseController {
                 .collect(Collectors.toList());
         return ResponseEntity.status(200).body(coursesDto);
 
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<List<TopFiveCourses>> topCourses(){
+        List<TopFiveCourses> courses = courseService.getTopCourses();
+        return ResponseEntity.ok(courses);
     }
 
 //    @PostMapping

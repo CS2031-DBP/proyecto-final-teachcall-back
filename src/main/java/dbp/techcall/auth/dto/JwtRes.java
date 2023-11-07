@@ -1,5 +1,6 @@
 package dbp.techcall.auth.dto;
 
+import dbp.techcall.user.BasicUserInfo;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -8,5 +9,6 @@ import lombok.Setter;
 @Setter
 @RequiredArgsConstructor
 public class JwtRes {
-    private final String token;
+    private String token;
+    private BasicUserInfo user;
 }

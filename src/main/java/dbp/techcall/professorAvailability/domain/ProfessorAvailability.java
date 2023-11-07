@@ -1,5 +1,6 @@
 package dbp.techcall.professorAvailability.domain;
 
+import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.professor.domain.Professor;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
@@ -14,16 +15,12 @@ import java.time.LocalTime;
 @Setter
 @RequiredArgsConstructor
 @Entity
-@Table(name = "professor_availability", uniqueConstraints = {
-        @UniqueConstraint(
-                columnNames = {"professor_id", "day", "week_number"},
-                name = "unique_professor_availability_per_day"
-        )
-})
+@Table(name = "professor_availability")
 public class ProfessorAvailability {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id",nullable = false)
     private Integer professorAvalabilityId;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -53,5 +50,9 @@ public class ProfessorAvailability {
 
     @Column(name="is_available", nullable = false, columnDefinition = "boolean default true")
     private Boolean isAvailable;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking", referencedColumnName = "id")
+    private Booking booking;
 
 }

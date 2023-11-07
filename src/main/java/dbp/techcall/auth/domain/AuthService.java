@@ -10,6 +10,7 @@ import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.student.domain.Student;
 import dbp.techcall.student.repository.StudentRepository;
+import dbp.techcall.user.BasicUserInfo;
 import dbp.techcall.user.domain.Users;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -69,7 +70,10 @@ public class AuthService implements IAuthUseCase {
             studentRepository.save(student);
 
             String jwt = jwtService.generateToken(student);
-            return new JwtRes(jwt);
+            JwtRes response = new JwtRes();
+            response.setToken(jwt);
+            response.setUser(modelMapper.map(student, BasicUserInfo.class));
+            return  response;
         }
         if (request.getRole().equals("teacher")) {
             Professor professor = new Professor();
@@ -79,11 +83,16 @@ public class AuthService implements IAuthUseCase {
             professor.setPassword(passwordEncoder.encode(request.getPassword()));
             professor.setRole(request.getRole());
             professor.setCreatedAt(ZonedDateTime.now());
+            professor.setTourCompleted(false);
 
             teacherRepository.save(professor);
 
             String jwt = jwtService.generateToken(professor);
-            return new JwtRes(jwt);
+            JwtRes response =  new JwtRes();
+
+            response.setToken(jwt);
+            response.setUser(modelMapper.map(professor, BasicUserInfo.class));
+            return  response;
         }
         else {
             throw new IllegalArgumentException("Role is not valid");
@@ -113,8 +122,9 @@ public class AuthService implements IAuthUseCase {
             throw new IllegalArgumentException("Password is incorrect");
         }
 
-        return new JwtRes(jwtService.generateToken(modelMapper.map(user, UserDetails.class)));
-
-
+        JwtRes response = new JwtRes();
+        response.setToken(jwtService.generateToken(modelMapper.map(user, UserDetails.class)));
+        response.setUser(modelMapper.map(user, BasicUserInfo.class));
+        return response;
     }
 }

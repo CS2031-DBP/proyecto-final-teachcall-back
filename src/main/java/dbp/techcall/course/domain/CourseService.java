@@ -1,6 +1,7 @@
 package dbp.techcall.course.domain;
 
 import dbp.techcall.course.dto.CourseDTO;
+import dbp.techcall.course.dto.TopFiveCourses;
 import dbp.techcall.course.infrastructure.CourseRepository;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.dto.NewProfessorDto;
@@ -62,5 +63,9 @@ public class CourseService {
         dto.setProfessorData(professorDTO);
 
         return dto;
+    }
+
+    public List<TopFiveCourses> getTopCourses() {
+        return courseRepository.findTopCourses();
     }
 }
