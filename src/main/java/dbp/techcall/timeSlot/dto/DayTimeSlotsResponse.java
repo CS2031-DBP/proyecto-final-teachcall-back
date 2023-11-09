@@ -1,14 +1,10 @@
-package dbp.techcall.professorAvailability.dto;
-
-
+package dbp.techcall.timeSlot.dto;
 
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.util.Pair;
 
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Map;
 

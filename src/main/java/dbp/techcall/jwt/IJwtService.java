@@ -1,6 +1,5 @@
 package dbp.techcall.jwt;
 
-import dbp.techcall.auth.dto.RegisterReq;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;

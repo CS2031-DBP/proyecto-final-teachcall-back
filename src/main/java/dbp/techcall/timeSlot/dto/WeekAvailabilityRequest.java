@@ -1,12 +1,10 @@
-package dbp.techcall.professorAvailability.dto;
+package dbp.techcall.timeSlot.dto;
 
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.springframework.data.util.Pair;
 
-import java.time.LocalTime;
 import java.util.Map;
 
 @Getter
@@ -14,7 +12,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class WeekAvailabilityRequest {
 
-    private Long professorId;
+    private String professorEmail;
     private Integer weekNumber;
-    private Map<Integer, Pair<LocalTime, LocalTime>> timeRanges;
+    private Map<Integer, TimeRange> timeRanges;
 }

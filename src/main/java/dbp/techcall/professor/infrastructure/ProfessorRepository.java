@@ -12,5 +12,4 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
 
     @Override
     Optional<Professor> findById( Long professorId);
-
 }

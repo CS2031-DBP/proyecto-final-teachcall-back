@@ -2,7 +2,10 @@ package dbp.techcall.school.domain;
 
 import dbp.techcall.education.domain.Education;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -21,7 +24,7 @@ public class School {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "img_url", nullable = false)
+    @Column(name = "img_url")
     private String imgUrl;
 
     @OneToMany(mappedBy = "school")

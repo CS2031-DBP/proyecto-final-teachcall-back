@@ -2,10 +2,12 @@ package dbp.techcall.jwt;
 
 
 import com.auth0.jwt.JWT;
-import dbp.techcall.jwt.IJwtService;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.Payload;
 import dbp.techcall.professor.domain.ProfessorService;
 import dbp.techcall.student.domain.StudentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -13,9 +15,6 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.Payload;
-
 
 import java.util.Date;
 import java.util.Map;
@@ -24,7 +23,9 @@ import java.util.Map;
 @Service
 public class JwtService implements IJwtService {
 
+    @Autowired
     private final ProfessorService professorService;
+    @Autowired
     private final StudentService studentService;
 
     @Value("${my.awesome.secret}")
@@ -60,8 +61,9 @@ public class JwtService implements IJwtService {
 
         JWT.require(Algorithm.HMAC256(secretKey)).build().verify(token);
         final String userRole = this.extractUserRole(token);
+        System.out.println(userRole);
         UserDetails userDetails =
-                userRole.equals("PROFESSOR") ?
+                userRole.equals("ROLE_teacher") ?
                         professorService.userDetailsService().loadUserByUsername(userEmail) :
                         studentService.userDetailsService().loadUserByUsername(userEmail);
 

@@ -6,7 +6,10 @@ import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.category.domain.Category;
 import dbp.techcall.professor.domain.Professor;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 

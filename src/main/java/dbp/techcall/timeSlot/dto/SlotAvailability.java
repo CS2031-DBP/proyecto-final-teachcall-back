@@ -1,4 +1,4 @@
-package dbp.techcall.professorAvailability.dto;
+package dbp.techcall.timeSlot.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +10,7 @@ import java.time.LocalTime;
 @Setter
 @RequiredArgsConstructor
 public class SlotAvailability {
+    private Long slotId;
     private LocalTime startTime;
     private LocalTime endTime;
     private Boolean isAvailable;
