@@ -1,4 +1,4 @@
-package dbp.techcall.professorAvailability.exceptions;
+package dbp.techcall.timeSlot.exceptions;
 
 public class UnsetAvailabilityException extends RuntimeException{
     public UnsetAvailabilityException(String message) {

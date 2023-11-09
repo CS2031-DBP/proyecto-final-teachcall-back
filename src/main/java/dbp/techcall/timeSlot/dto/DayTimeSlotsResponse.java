@@ -1,4 +1,4 @@
-package dbp.techcall.professorAvailability.dto;
+package dbp.techcall.timeSlot.dto;
 
 
 import lombok.Getter;

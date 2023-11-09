@@ -7,7 +7,6 @@ import dbp.techcall.education.dto.BasicEducationRequest;
 import dbp.techcall.education.dto.BasicEducationResponse;
 import dbp.techcall.education.infrastructure.EducationRepository;
 import dbp.techcall.professor.dto.AddCategoriesReq;
-import dbp.techcall.professor.dto.DescripcionDTO;
 import dbp.techcall.professor.dto.NewProfessorDto;
 import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;

@@ -1,11 +1,8 @@
-package dbp.techcall.professorAvailability.dto;
+package dbp.techcall.timeSlot.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-
-import java.time.LocalTime;
 
 @Setter
 @Getter

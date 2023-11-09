@@ -4,7 +4,6 @@ import dbp.techcall.education.dto.BasicEducationRequest;
 import dbp.techcall.education.dto.BasicEducationResponse;
 import dbp.techcall.professor.domain.ProfessorService;
 import dbp.techcall.professor.dto.AddCategoriesReq;
-import dbp.techcall.professor.dto.DescripcionDTO;
 import dbp.techcall.workExperience.dto.BasicExperienceRequest;
 import dbp.techcall.workExperience.dto.BasicExperienceResponse;
 import org.springframework.beans.factory.annotation.Autowired;

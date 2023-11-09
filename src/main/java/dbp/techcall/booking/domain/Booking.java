@@ -3,7 +3,6 @@ package dbp.techcall.booking.domain;
 import dbp.techcall.course.domain.Course;
 import dbp.techcall.meetingDetails.domain.MeetingDetails;
 import dbp.techcall.professor.domain.Professor;
-import dbp.techcall.professorAvailability.domain.ProfessorAvailability;
 import dbp.techcall.student.domain.Student;
 import dbp.techcall.timeSlot.domain.TimeSlot;
 import jakarta.persistence.*;
@@ -12,7 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -44,15 +43,11 @@ public class Booking{
     @JoinColumn(name="professor_id", referencedColumnName="id", insertable = false, updatable = false)
     private Professor professor;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="time_slot_id", referencedColumnName="id", insertable = false, updatable = false)
-    private TimeSlot timeSlot;
+    @OneToMany(mappedBy = "booking" ,fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+    private Set<TimeSlot> timeSlot;
 
     @Getter
     @OneToOne(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private MeetingDetails meetingDetails;
-
-    @OneToMany(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<ProfessorAvailability> professorAvailabilities;
 
 }

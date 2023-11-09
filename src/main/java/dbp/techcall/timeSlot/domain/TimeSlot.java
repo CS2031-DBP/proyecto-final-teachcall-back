@@ -1,16 +1,16 @@
 package dbp.techcall.timeSlot.domain;
 
 import dbp.techcall.booking.domain.Booking;
-import dbp.techcall.meetingDetails.domain.MeetingDetails;
-import dbp.techcall.professorShift.domain.ProfessorShift;
+import dbp.techcall.professor.domain.Professor;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -23,20 +23,32 @@ public class TimeSlot {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "time_start", nullable = false)
-    private Date timeStart;
+    @Min(1)
+    @Max(6)
+    @Column(name = "day" ,
+            nullable = false,
+            columnDefinition = "INTEGER CHECK (day > 0 AND day < 7)")
+    private int day;
 
-    @Column(name = "time_end", nullable = false)
-    private Date timeEnd;
+    @Column(name = "start_time", nullable = false)
+    private LocalTime startTime;
 
-    @OneToMany(mappedBy = "timeSlot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ProfessorShift> professorShifts;
+    @Column(name = "end_time", nullable = false)
+    private LocalTime endTime;
 
-    @OneToMany(mappedBy = "timeSlot", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Booking> bookings;
+    @Column(name = "week_number" , nullable = false, columnDefinition = "INTEGER CHECK (week_number > 0 AND week_number < 53)")
+    private int weekNumber;
 
-    public MeetingDetails getMeetingDetails() {
-        return null;
-    }
+    @Column(name="is_available", nullable = false, columnDefinition = "boolean default true")
+    private Boolean isAvailable;
+
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "booking_id", referencedColumnName = "id")
+    private Booking booking;
+
+    @ManyToOne
+    @JoinColumn(name = "professor_id", referencedColumnName = "id")
+    private Professor professor;
+
 }
 
