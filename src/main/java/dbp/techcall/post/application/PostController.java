@@ -1,11 +1,16 @@
 package dbp.techcall.post.application;
 
 
+import dbp.techcall.like.domain.Likes;
+import dbp.techcall.like.infrastructure.LikeRepository;
 import dbp.techcall.post.domain.Post;
 import dbp.techcall.post.domain.PostService;
 import dbp.techcall.post.infrastructure.PostRepository;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
+import dbp.techcall.student.domain.Student;
+import dbp.techcall.student.domain.StudentService;
+import dbp.techcall.student.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -22,6 +27,12 @@ public class PostController {
 //    @Autowired
     private PostService postService;
     private ProfessorService professorService;
+
+    private StudentService studentService;
+
+    private StudentRepository studentRepository;
+
+    private LikeRepository likeRepository;
 
     @Autowired
     private PostRepository postRepository;
@@ -94,6 +105,24 @@ public class PostController {
 
         return ResponseEntity.ok(savedPost).getBody();
     }
+
+    @PostMapping("like/{post_id}")
+    public Post create(@PathVariable Long post_id){
+        Authentication authentication  = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Student student = studentRepository.findByEmail(username);
+        //if no student:
+//        throw new ResourceNotFoundException("Student not found");
+
+        Long studentId = student.getId();
+
+        Likes like = new Likes(post_id,studentId);
+        likeRepository.save(like);
+
+
+    }
+
 }
 
 
