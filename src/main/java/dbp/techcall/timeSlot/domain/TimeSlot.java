@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Getter
@@ -17,11 +18,14 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="time_slot")
+@Table(name="time_slot", uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "day", "start_time", "end_time", "week_number"})})
 public class TimeSlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "date")
+    private LocalDate date;
 
     @Min(1)
     @Max(6)

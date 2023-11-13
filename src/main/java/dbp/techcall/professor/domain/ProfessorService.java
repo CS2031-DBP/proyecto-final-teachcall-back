@@ -7,8 +7,11 @@ import dbp.techcall.education.dto.BasicEducationRequest;
 import dbp.techcall.education.dto.BasicEducationResponse;
 import dbp.techcall.education.infrastructure.EducationRepository;
 import dbp.techcall.professor.dto.AddCategoriesReq;
+import dbp.techcall.professor.dto.BasicEducation;
+import dbp.techcall.professor.dto.LastExperienceDto;
 import dbp.techcall.professor.dto.NewProfessorDto;
 import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
+import dbp.techcall.professor.infrastructure.BasicProfessorResponse;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.school.domain.School;
@@ -70,7 +73,6 @@ public class ProfessorService implements IProfessorService {
     }
 
 
-
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
             @Override
@@ -81,18 +83,13 @@ public class ProfessorService implements IProfessorService {
     }
 
     public Professor findById(Long professorId) {
-        Optional<Professor> professor =  professorRepository.findById(professorId);
+        Optional<Professor> professor = professorRepository.findById(professorId);
 
-        if(professor.isEmpty()) {
+        if (professor.isEmpty()) {
             throw new RuntimeException("Professor not found");
         }
 
         return professor.get();
-    }
-
-
-    public List<BasicEducationResponse> getEducationsById(Long id) {
-        return educationRepository.findAllByProfessorId(id);
     }
 
     public void addEducation(String email, BasicEducationRequest education) {
@@ -157,7 +154,7 @@ public class ProfessorService implements IProfessorService {
             throw new ResourceNotFoundException("Professor not found");
         }
 
-        if(professor.getTourCompleted()) {
+        if (professor.getTourCompleted()) {
             throw new AlreadyCompletedTourException("Professor already completed tour");
         }
 
@@ -176,7 +173,7 @@ public class ProfessorService implements IProfessorService {
         professorRepository.save(professor);
     }
 
-    public void addCategoriesByEmail( AddCategoriesReq categories) {
+    public void addCategoriesByEmail(AddCategoriesReq categories) {
         Professor professor = findByEmail(categories.getEmail());
 
         if (professor == null) {
@@ -196,4 +193,47 @@ public class ProfessorService implements IProfessorService {
         professorRepository.save(professor);
 
     }
+
+    public Page<BasicProfessorResponse> getProfessors(Integer page) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return professorRepository.findAllProfessorsWithPagination(pageable);
+    }
+
+    public Page<BasicProfessorResponse> getProfessorsByCategory(Integer page, String category) {
+        Pageable pageable = PageRequest.of(page, 10);
+        return professorRepository.findAllProfessorsByCategoryWithPagination(pageable, category);
+    }
+
+    public Double getRating(String email) {
+        return professorRepository.getRating(email);
+    }
+
+    public String getDescription(String email) {
+        return professorRepository.findByEmail(email).getDescription();
+    }
+
+    public LastExperienceDto getExperience(String email) {
+        Professor professor = professorRepository.findByEmail(email);
+        if (professor == null) {
+            throw new ResourceNotFoundException("Professor not found");
+        }
+        return professorRepository.getExperience(professor.getId());
+    }
+
+    public Page<BasicEducation> getEducationWithPagination(String email, int page) {
+        Professor professor = professorRepository.findByEmail(email);
+        Pageable pageable = PageRequest.of(page, 5, Sort.by("endDate"));
+
+        return educationRepository.getEducationWithPagination(professor.getId(), pageable);
+    }
 }
+
+
+
+
+
+
+
+
+
+

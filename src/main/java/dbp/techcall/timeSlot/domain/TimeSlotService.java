@@ -13,7 +13,11 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
+import java.time.temporal.WeekFields;
 import java.util.*;
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.temporal.TemporalAdjusters;
 
 
 @Service
@@ -232,6 +236,14 @@ public class TimeSlotService {
             for(int iSlot = 0; iSlot < oneHourSlots ;iSlot++){
                 TimeSlot timeSlot = new TimeSlot();
 
+                LocalDate currentDate = LocalDate.now();
+                LocalDate adjustedDate = currentDate.with(TemporalAdjusters.nextOrSame(getDayOfWeek(entry.getKey()))).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+
+                if (currentDate.get(WeekFields.ISO.weekOfWeekBasedYear()) != weekNumber) {
+                    adjustedDate = adjustedDate.plusWeeks(weekNumber - currentDate.get(WeekFields.ISO.weekOfWeekBasedYear()));
+                }
+
+                timeSlot.setDate(adjustedDate);
                 timeSlot.setProfessor(professor);
                 timeSlot.setDay(entry.getKey());
                 timeSlot.setStartTime(startTime.plusHours(iSlot));
@@ -281,5 +293,24 @@ public class TimeSlotService {
         }
 
         return response;
+    }
+
+    private static DayOfWeek getDayOfWeek(int day) {
+        switch (day) {
+            case 1:
+                return DayOfWeek.MONDAY;
+            case 2:
+                return DayOfWeek.TUESDAY;
+            case 3:
+                return DayOfWeek.WEDNESDAY;
+            case 4:
+                return DayOfWeek.THURSDAY;
+            case 5:
+                return DayOfWeek.FRIDAY;
+            case 6:
+                return DayOfWeek.SATURDAY;
+            default:
+                throw new IllegalArgumentException("Invalid day value. It should be between 1 and 6.");
+        }
     }
 }
