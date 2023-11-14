@@ -1,5 +1,6 @@
 package dbp.techcall.review.domain;
 
+import com.nimbusds.jose.crypto.impl.PRFParams;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
 import dbp.techcall.review.dto.ProfessorRatingInfo;
@@ -66,12 +67,14 @@ public class ReviewService {
      *     size - number of reviews per page
      *     sort - sort by createdAt in descending order
      * </pre>
-     * @param professorId id of professor to get reviews for
+     * @param email professor email
      * @param pageable Pageable object containing pagination parameters
      * @return Page<ReviewResponse> - Page of reviews by professorId
      */
-    public Page<ReviewResponse> getReviewsByProfessorId(Long professorId, Pageable pageable) {
-        Page<Review> page = reviewRepository.findAllByProfessorId(professorId, pageable);
+    public Page<ReviewResponse> getReviewsByProfessorId(String email, Pageable pageable) {
+        System.out.println("\n\n\n" + email + "\n\n\n");
+        Professor professor = professorService.findByEmail(email);
+        Page<Review> page = reviewRepository.findAllByProfessorId(professor.getId(), pageable);
         return page
                 .map(review -> {
                     ReviewResponse reviewResponse = new ReviewResponse();
