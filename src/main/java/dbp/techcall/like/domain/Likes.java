@@ -1,12 +1,10 @@
 package dbp.techcall.like.domain;
 
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 @Entity
+@IdClass(LikesId.class)
 @Table(name = "likes")
 public class Likes {
 

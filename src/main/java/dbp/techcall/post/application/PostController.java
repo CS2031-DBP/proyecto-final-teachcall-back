@@ -50,12 +50,12 @@ public class PostController {
 
 
     @GetMapping("/{id}")
-    public Post getPostById(@PathVariable("id") Integer id){
+    public Post getPostById(@PathVariable("id") Long id){
         return postRepository.findById(id).orElse(null);
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable("id") Integer id, @RequestBody Post post) {
+    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody Post post) {
         // find the post
         Post existingPost = postRepository.findById(id).orElse(null);
 
@@ -120,6 +120,7 @@ public class PostController {
         Likes like = new Likes(post_id,studentId);
         likeRepository.save(like);
 
+        return postRepository.findById(post_id).orElse(null);
 
     }
 
