@@ -11,14 +11,18 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
 
+import static java.lang.Integer.valueOf;
+
 @RestController
 @RequestMapping("/review")
-@CrossOrigin(origins ={"http://localhost:5173", "http://127.0.0.1:5173"})
+@CrossOrigin(origins = {"http://localhost:5137", "http://127.0.0.1:5137"})
+@PreAuthorize("hasAnyRole('teacher','student')")
 public class ReviewController {
 
     @Autowired
@@ -31,9 +35,12 @@ public class ReviewController {
     }
 
 
-    @GetMapping("/{email}")
-    public ResponseEntity<Page<ReviewResponse>> getReviewsByProfessorEmail(@PathVariable String email, @RequestParam Integer page, @RequestParam Integer size){
-        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+    @GetMapping(value = "/all/{email}")
+    public ResponseEntity<Page<ReviewResponse>> getReviewsByProfessorEmail(@PathVariable String email, @RequestParam(name = "page") Long page, @RequestParam(name="size") Long size){
+        System.out.println("email: " + email);
+        int pageInt = page.intValue();
+        int sizeInt = size.intValue();
+        Pageable pageable = PageRequest.of( pageInt ,sizeInt, Sort.by("createdAt").descending());
         return ResponseEntity.ok(reviewService.getReviewsByProfessorId(email, pageable));
     }
 
@@ -48,7 +55,7 @@ public class ReviewController {
         return ResponseEntity.ok("Review updated");
     }
 
-    @PatchMapping("/    {id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<String> updateReview(@PathVariable UUID id, @RequestBody ReviewRequest request){
         reviewService.patchUpdateReview(id, request);
         return ResponseEntity.ok("Review updated");

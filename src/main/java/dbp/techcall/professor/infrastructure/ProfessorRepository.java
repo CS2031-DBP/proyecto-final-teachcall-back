@@ -45,10 +45,10 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
     Double getRating(@Param("email") String email);
 
     @Query(value =
-            "select dg.degree as degree, dg.name as schoolName, we.employer as Employwe, we.title as position\n" +
+            "select dg.firstName as firstName, dg.lastName as lastName, dg.degree as degree, dg.name as schoolName, we.employer as Employwe, we.title as position\n" +
                     "from work_experience as we\n" +
                     "         right join\n" +
-                    "     (select degree.professor_id, degree.degree, sc.name\n" +
+                    "     (select p.first_name as firstName, p.last_name as lastName, degree.professor_id, degree.degree, sc.name\n" +
                     "      from professor as p,\n" +
                     "           (select professor_id, degree, school_id\n" +
                     "            from education\n" +

@@ -12,13 +12,15 @@ import dbp.techcall.workExperience.dto.BasicExperienceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/professor")
-@CrossOrigin(origins ={"http://localhost:5173", "http://127.0.0.1:5173"})
+@CrossOrigin(origins = {"http://localhost:5137", "http://127.0.0.1:5137"})
+@PreAuthorize("hasAnyRole('teacher','student')")
 public class ProfessorController {
 
     @Autowired

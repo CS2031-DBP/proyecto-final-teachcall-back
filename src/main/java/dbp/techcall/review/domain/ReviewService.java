@@ -72,6 +72,7 @@ public class ReviewService {
      * @return Page<ReviewResponse> - Page of reviews by professorId
      */
     public Page<ReviewResponse> getReviewsByProfessorId(String email, Pageable pageable) {
+        System.out.println("\n\n\n" + email + "\n\n\n");
         Professor professor = professorService.findByEmail(email);
         Page<Review> page = reviewRepository.findAllByProfessorId(professor.getId(), pageable);
         return page

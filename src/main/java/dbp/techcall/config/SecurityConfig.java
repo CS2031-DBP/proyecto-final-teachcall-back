@@ -19,12 +19,14 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 @EnableWebSecurity
 @EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfig {
+
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        System.out.println("SecurityConfig.securityFilterChain");
         return http.csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
                 .sessionManagement(manager -> manager.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth ->
@@ -32,6 +34,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/**", "/course/**","/category/**","availability/**", "professor/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .cors(AbstractHttpConfigurer::disable)
                 .build();
     }
 

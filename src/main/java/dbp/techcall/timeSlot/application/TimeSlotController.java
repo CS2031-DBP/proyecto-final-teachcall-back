@@ -8,11 +8,13 @@ import dbp.techcall.timeSlot.dto.WeekAvailabilityResponse;
 import dbp.techcall.timeSlot.domain.TimeSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/availability")
-@CrossOrigin(origins ={"http://localhost:5173", "http://127.0.0.1:5173"})
+@CrossOrigin(origins = {"http://localhost:5137", "http://127.0.0.1:5137"})
+@PreAuthorize("hasAnyRole('teacher','student')")
 public class TimeSlotController{
 
     @Autowired
