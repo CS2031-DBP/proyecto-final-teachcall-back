@@ -21,7 +21,7 @@ import static java.lang.Integer.valueOf;
 
 @RestController
 @RequestMapping("/review")
-@CrossOrigin(origins = {"http://localhost:5137", "http://127.0.0.1:5137"})
+@CrossOrigin(origins = {"http://localhost:5173", "http://127.0.0.1:5173"})
 @PreAuthorize("hasAnyRole('teacher','student')")
 public class ReviewController {
 
