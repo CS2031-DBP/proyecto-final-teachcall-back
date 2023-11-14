@@ -28,6 +28,9 @@ import java.util.Objects;
 @Table(name = "professor", schema="spring_app")
 public class Professor extends Users {
 
+    @Column(name="price_per_hour")
+    private Double pricePerHour;
+
     @Column(name = "description")
     private String description;
 

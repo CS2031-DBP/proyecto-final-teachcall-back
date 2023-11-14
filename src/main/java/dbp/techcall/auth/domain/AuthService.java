@@ -92,7 +92,9 @@ public class AuthService implements IAuthUseCase {
 
             response.setToken(jwt);
             response.setUser(modelMapper.map(professor, BasicUserInfo.class));
+            System.out.println(jwt);
             return  response;
+
         }
         else {
             throw new IllegalArgumentException("Role is not valid");
