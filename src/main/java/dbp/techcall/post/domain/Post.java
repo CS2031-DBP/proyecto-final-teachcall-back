@@ -1,6 +1,7 @@
 package dbp.techcall.post.domain;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.student.domain.Student;
@@ -45,6 +46,7 @@ public class Post {
     private Professor professor;
 
     @ManyToMany(mappedBy = "likedPosts")
+    @JsonIgnore
     private Set<Student> likes = new HashSet<>();
 
     @Override
@@ -52,12 +54,12 @@ public class Post {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Post post = (Post) o;
-        return Objects.equals(id, post.id) && Objects.equals(title, post.title) && Objects.equals(body, post.body) && Objects.equals(createdAt, post.createdAt) && Objects.equals(updatedAt, post.updatedAt) && Objects.equals(professor, post.professor) && Objects.equals(likes, post.likes);
+        return Objects.equals(id, post.id) && Objects.equals(title, post.title) && Objects.equals(body, post.body) && Objects.equals(createdAt, post.createdAt) && Objects.equals(updatedAt, post.updatedAt) && Objects.equals(professor, post.professor);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, body, createdAt, updatedAt, professor, likes);
+        return Objects.hash(id, title, body, createdAt, updatedAt, professor);
     }
 
     @Override
@@ -69,7 +71,6 @@ public class Post {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", professor=" + professor +
-                ", likes=" + likes +
                 '}';
     }
 }

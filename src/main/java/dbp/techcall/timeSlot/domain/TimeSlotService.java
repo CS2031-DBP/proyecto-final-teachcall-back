@@ -313,4 +313,18 @@ public class TimeSlotService {
                 throw new IllegalArgumentException("Invalid day value. It should be between 1 and 6.");
         }
     }
+
+    public Object getFreeTimeSlots(Integer week, Integer day) {
+        List<BasicDayAvailability> timeSlots = timeSlotRepository.findByWeekNumberAndDay(week, day);
+
+        List<BasicDayAvailability> freeTimeSlots = new ArrayList<>();
+
+        for (BasicDayAvailability timeSlot : timeSlots) {
+            if (timeSlot.getIsAvailable()) {
+                freeTimeSlots.add(timeSlot);
+            }
+        }
+        return freeTimeSlots;
+
+    }
 }

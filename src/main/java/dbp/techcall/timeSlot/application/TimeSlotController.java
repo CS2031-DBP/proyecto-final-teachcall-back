@@ -44,4 +44,9 @@ public class TimeSlotController{
         return ResponseEntity.ok(timeSlotService.getAvailabilityByDay(email, week, day));
     }
 
+    @GetMapping("/free")
+    public ResponseEntity<?> getFreeTimeSlots(@RequestParam Integer week, @RequestParam Integer day) {
+        return ResponseEntity.ok(timeSlotService.getFreeTimeSlots(week,day));
+    }
+
 }

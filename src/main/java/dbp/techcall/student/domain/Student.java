@@ -41,7 +41,7 @@ public class Student extends Users {
     @OneToMany(mappedBy = "student", cascade = CascadeType.ALL)
     private Set<Review> reviews = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany()
     @JoinTable(
             name = "student_likes",
             joinColumns = @JoinColumn(name = "student_id"),
