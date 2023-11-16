@@ -1,7 +1,10 @@
 package dbp.techcall.course.infrastructure;
 
 import dbp.techcall.course.domain.Course;
+import dbp.techcall.course.dto.BasicCourseResponse;
 import dbp.techcall.course.dto.TopFiveCourses;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -24,4 +27,6 @@ public interface CourseRepository extends JpaRepository <Course,Long>{
                     "LIMIT 6;"
             , nativeQuery = true)
     List<TopFiveCourses> findTopCourses();
+
+    Page<BasicCourseResponse> findByProfessorId(Long id, Pageable pageable);
 }

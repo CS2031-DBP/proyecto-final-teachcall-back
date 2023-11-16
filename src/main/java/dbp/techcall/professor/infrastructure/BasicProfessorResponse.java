@@ -10,7 +10,7 @@ public interface BasicProfessorResponse {
 
     public String getDescription();
 
-    public Double getpricePerHour();
+    public Double getPricePerHour();
 
     public Double getRating();
 

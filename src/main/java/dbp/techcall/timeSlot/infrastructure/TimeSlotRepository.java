@@ -14,5 +14,5 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
 
     List<BasicDayAvailability> findByProfessorIdAndWeekNumber(Long professorId, Integer week);
 
-    List<BasicDayAvailability> findByWeekNumberAndDay(Integer week, Integer day);
+    List<BasicDayAvailability> findByProfessorIdAndWeekNumberAndDay(Long id, Integer week, Integer day);
 }

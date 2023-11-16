@@ -36,7 +36,6 @@ public class Course {
     @Column(name = "price_per_hour", nullable = false)
     private Double price;
 
-    //Foreign key professor
     @ManyToOne
     @JoinColumn(name = "professor_id", nullable = false)
     private Professor professor;

@@ -1,5 +1,6 @@
 package dbp.techcall.course.domain;
 
+import dbp.techcall.course.dto.BasicCourseResponse;
 import dbp.techcall.course.dto.CourseDTO;
 import dbp.techcall.course.dto.TopFiveCourses;
 import dbp.techcall.course.infrastructure.CourseRepository;
@@ -67,5 +68,10 @@ public class CourseService {
 
     public List<TopFiveCourses> getTopCourses() {
         return courseRepository.findTopCourses();
+    }
+
+    public Page<BasicCourseResponse> getCoursesByProfessor(Long id, Integer page) {
+        Pageable pageable = PageRequest.of(page, 15);
+        return courseRepository.findByProfessorId(id, pageable);
     }
 }

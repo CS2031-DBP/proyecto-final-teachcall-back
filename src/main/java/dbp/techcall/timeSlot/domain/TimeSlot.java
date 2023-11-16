@@ -46,7 +46,7 @@ public class TimeSlot {
     @Column(name="is_available", nullable = false, columnDefinition = "boolean default true")
     private Boolean isAvailable;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "booking_id", referencedColumnName = "id")
     private Booking booking;
 

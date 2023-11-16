@@ -1,15 +1,14 @@
 package dbp.techcall.timeSlot.application;
 
 
-import dbp.techcall.timeSlot.dto.DayTimeSlotsResponse;
-import dbp.techcall.timeSlot.dto.NextFourWeeksAvailabilityResponse;
-import dbp.techcall.timeSlot.dto.WeekAvailabilityRequest;
-import dbp.techcall.timeSlot.dto.WeekAvailabilityResponse;
+import dbp.techcall.timeSlot.dto.*;
 import dbp.techcall.timeSlot.domain.TimeSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/availability")
@@ -34,8 +33,8 @@ public class TimeSlotController{
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<NextFourWeeksAvailabilityResponse> getNextFourWeeksAvailability(@PathVariable Long id) {
-        return ResponseEntity.ok(timeSlotService.getNextFourWeeksAvailability(id));
+    public ResponseEntity<WeekAvailabilityResponse> getNextFourWeeksAvailability(@PathVariable Long id, @RequestParam Integer week) {
+        return ResponseEntity.ok(timeSlotService.getAvailabilityByProfessorIdAndWeekNumber(id, week));
     }
 
 
@@ -44,9 +43,9 @@ public class TimeSlotController{
         return ResponseEntity.ok(timeSlotService.getAvailabilityByDay(email, week, day));
     }
 
-    @GetMapping("/free")
-    public ResponseEntity<?> getFreeTimeSlots(@RequestParam Integer week, @RequestParam Integer day) {
-        return ResponseEntity.ok(timeSlotService.getFreeTimeSlots(week,day));
+    @GetMapping("/free/{id}")
+    public ResponseEntity<List<BasicDayAvailability>> getFreeTimeSlots(@PathVariable Long id , @RequestParam Integer week, @RequestParam Integer day) {
+        return ResponseEntity.ok(timeSlotService.getFreeTimeSlots(id, week,day));
     }
 
 }
