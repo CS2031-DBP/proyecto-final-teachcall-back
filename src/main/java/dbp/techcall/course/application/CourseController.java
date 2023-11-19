@@ -4,6 +4,7 @@ import dbp.techcall.course.domain.Course;
 import dbp.techcall.course.domain.CourseService;
 import dbp.techcall.course.dto.BasicCourseResponse;
 import dbp.techcall.course.dto.CourseDTO;
+import dbp.techcall.course.dto.CourseFullInfo;
 import dbp.techcall.course.dto.TopFiveCourses;
 import dbp.techcall.course.infrastructure.CourseRepository;
 import dbp.techcall.professor.domain.Professor;
@@ -36,12 +37,12 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<List<CourseDTO>> courses() {
-        List<CourseDTO> courses= courseService.getAll();
+        List<CourseDTO> courses = courseService.getAll();
         return ResponseEntity.ok(courses);
     }
 
     @GetMapping("/dashboard/student")
-    public ResponseEntity<List<CourseDTO>> coursesStudent(){
+    public ResponseEntity<List<CourseDTO>> coursesStudent() {
         List<CourseDTO> courses = courseService.getLimitSixCourses();
         return ResponseEntity.ok(courses);
 
@@ -56,9 +57,21 @@ public class CourseController {
     }
 
     @GetMapping("/top")
-    public ResponseEntity<List<TopFiveCourses>> topCourses(){
+    public ResponseEntity<List<TopFiveCourses>> topCourses() {
         List<TopFiveCourses> courses = courseService.getTopCourses();
         return ResponseEntity.ok(courses);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<BasicCourseResponse> course(@PathVariable Integer id) {
+        BasicCourseResponse course = courseRepository.findBasicResponseById(id);
+        return ResponseEntity.ok(course);
+    }
+
+    @GetMapping("/{id}/fullinfo")
+    public ResponseEntity<CourseFullInfo> getCourseFullInfo(@PathVariable Long id){
+        var response = courseService.getCourseFullInfo(id.intValue());
+        return ResponseEntity.ok(response);
     }
 
 
@@ -69,7 +82,6 @@ public class CourseController {
 //
 //        return ResponseEntity.status(201).body(courseService.convertToDTO(courseCreated));
 //    }
-
 
 
 }

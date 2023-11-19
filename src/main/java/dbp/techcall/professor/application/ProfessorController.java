@@ -26,6 +26,11 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<BasicProfessorResponse> getProfessors(@PathVariable Long id) {
+        return ResponseEntity.ok(professorService.getProfessorById(id));
+    }
+
     @GetMapping
     public ResponseEntity<Page<BasicProfessorResponse>> getProfessors(@RequestParam(defaultValue = "0") Integer page) {
         return ResponseEntity.ok(professorService.getProfessors(page));
@@ -57,7 +62,7 @@ public class ProfessorController {
     }
 
     @GetMapping("/experience/{id}")
-    public ResponseEntity<Page<List<BasicExperienceResponse>>> getExperiences(@PathVariable Long id, @RequestParam(defaultValue = "0") Integer page) {
+    public ResponseEntity<Page<BasicExperienceResponse>> getExperiences(@PathVariable Long id, @RequestParam(defaultValue = "0") Integer page) {
         return ResponseEntity.ok(professorService.getExperiencesById(id, page));
     }
 

@@ -10,11 +10,12 @@ import java.time.LocalDateTime;
 @Setter
 @RequiredArgsConstructor
 public class PostInfoResponse {
-
     Integer id;
     String title;
     String body;
-    LocalDateTime CreatedAt;
+    LocalDateTime createdAt;
+    String firstName;
+    String lastName;
     boolean liked;
-
+    int likesQ;
 }

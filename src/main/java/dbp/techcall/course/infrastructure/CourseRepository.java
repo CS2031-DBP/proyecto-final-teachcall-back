@@ -13,7 +13,7 @@ import java.util.List;
 
 
 @Repository
-public interface CourseRepository extends JpaRepository <Course,Long>{
+public interface CourseRepository extends JpaRepository <Course,Long    >{
     @Query(value =
             "select c.id, c.title, tp.firstName, tp.s as rating\n" +
                     "from course as c\n" +
@@ -29,4 +29,6 @@ public interface CourseRepository extends JpaRepository <Course,Long>{
     List<TopFiveCourses> findTopCourses();
 
     Page<BasicCourseResponse> findByProfessorId(Long id, Pageable pageable);
+
+    BasicCourseResponse findBasicResponseById(Integer id);
 }

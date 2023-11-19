@@ -2,6 +2,7 @@ package dbp.techcall.booking.domain;
 
 import dbp.techcall.booking.dto.BasicBookingReq;
 import dbp.techcall.booking.dto.BookingInfo;
+import dbp.techcall.booking.dto.StudentBookingsRes;
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.booking.infrastructure.BookingRepository;
 import dbp.techcall.course.domain.Course;
@@ -14,6 +15,10 @@ import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.timeSlot.infrastructure.TimeSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -112,6 +117,18 @@ public class BookingService {
         timeSlotRepository.save(timeSlot);
 
 
+    }
+
+    public Page<StudentBookingsRes> getStudentBookings(String username, Integer page) {
+        Student student = studentRepository.findByEmail(username);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student not found, user might be a professor");
+        }
+        Long studentId = student.getId();
+
+        Pageable pageable = PageRequest.of(page, 10);
+
+        return bookingRepository.getBookingsInfoByStudentId(studentId, pageable);
     }
 }
 

@@ -2,11 +2,18 @@ package dbp.techcall.course.domain;
 
 import dbp.techcall.course.dto.BasicCourseResponse;
 import dbp.techcall.course.dto.CourseDTO;
+import dbp.techcall.course.dto.CourseFullInfo;
 import dbp.techcall.course.dto.TopFiveCourses;
 import dbp.techcall.course.infrastructure.CourseRepository;
+import dbp.techcall.education.infrastructure.EducationRepository;
 import dbp.techcall.professor.domain.Professor;
+import dbp.techcall.professor.dto.BasicEducation;
 import dbp.techcall.professor.dto.NewProfessorDto;
+import dbp.techcall.professor.dto.ProfessorNames;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
+import dbp.techcall.review.exceptions.ResourceNotFoundException;
+import dbp.techcall.workExperience.dto.BasicExperienceResponse;
+import dbp.techcall.workExperience.infrastructure.WorkExperienceRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -30,6 +37,9 @@ public class CourseService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private EducationRepository educationRepository;
 
     public List<CourseDTO> getAll() {
         List<Course> courses = courseRepository.findAll();
@@ -74,4 +84,31 @@ public class CourseService {
         Pageable pageable = PageRequest.of(page, 15);
         return courseRepository.findByProfessorId(id, pageable);
     }
+
+    public CourseFullInfo getCourseFullInfo(Integer id) {
+        BasicCourseResponse course = courseRepository.findBasicResponseById(id);
+        if(course == null) {
+            throw new ResourceNotFoundException("Course not found");
+        }
+
+        ProfessorNames professor = professorRepository.findProfessorNamesById(course.getProfessor().getId());
+
+        Pageable pageable = PageRequest.of(0, 5);
+
+        Page<BasicEducation> education = educationRepository.getEducationWithPagination(course.getProfessor().getId(), pageable);
+        Double rating = professorRepository.getRating(course.getProfessor().getEmail());
+
+        CourseFullInfo response = new CourseFullInfo();
+
+        response.setRating(rating);
+        response.setId(course.getId());
+        response.setTitle(course.getTitle());
+        response.setDescription(course.getDescription());
+        response.setPrice(course.getPrice());
+        response.setProfessor(professor);
+        response.setEducations(education.getContent());
+
+        return response;
+    }
 }
+

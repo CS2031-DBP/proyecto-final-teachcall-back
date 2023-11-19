@@ -4,7 +4,9 @@ import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.booking.domain.BookingService;
 import dbp.techcall.booking.dto.BasicBookingReq;
 import dbp.techcall.booking.dto.BookingInfo;
+import dbp.techcall.booking.dto.StudentBookingsRes;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -53,5 +55,15 @@ public class BookingController {
         bookingService.addBooking(booking, username);
         return ResponseEntity.ok("booking added ");
     }
+
+    @GetMapping("/student")
+    public ResponseEntity<Page<StudentBookingsRes>> getStudentBookings(@RequestParam(defaultValue = "0") Integer page ){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(bookingService.getStudentBookings(username, page));
+    }
+
 }
 

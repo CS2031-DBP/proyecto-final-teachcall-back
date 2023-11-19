@@ -9,6 +9,7 @@ import dbp.techcall.post.dto.PostInfoResponse;
 import dbp.techcall.post.infrastructure.PostRepository;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
+import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.student.domain.Student;
 import dbp.techcall.student.domain.StudentService;
 import dbp.techcall.student.repository.StudentRepository;
@@ -32,7 +33,6 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/posts")
-@CrossOrigin(origins = "http://localhost:5173")
 public class PostController {
 
     @Autowired
@@ -156,7 +156,7 @@ public class PostController {
         return ResponseEntity.ok("success");
     }
 
-    @PostMapping("like/{post_id}")
+    @PostMapping("/like/{post_id}")
     public ResponseEntity<String> createLike(@PathVariable Long post_id) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
@@ -169,7 +169,7 @@ public class PostController {
         Post post = postRepository.findById(post_id).orElse(null);
 
         if (post == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResourceNotFoundException("Post not found");
         }
         student.getLikedPosts().add(post);
         studentRepository.save(student);

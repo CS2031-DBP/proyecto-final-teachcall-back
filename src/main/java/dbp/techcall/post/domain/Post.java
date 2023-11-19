@@ -73,4 +73,8 @@ public class Post {
                 ", professor=" + professor +
                 '}';
     }
+
+    public int getLikesQuantity() {
+        return this.likes.size();
+    }
 }
