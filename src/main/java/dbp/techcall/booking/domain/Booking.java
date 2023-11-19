@@ -6,17 +6,14 @@ import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.student.domain.Student;
 import dbp.techcall.timeSlot.domain.TimeSlot;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
 @Setter
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Entity
 @Table(name="booking")
 public class Booking{
@@ -25,29 +22,30 @@ public class Booking{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name="status",nullable = false)
+    @Column(name="status",nullable = true)
     private String status;
 
     @Column(name="link",nullable = true)
     private String link;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="student_id", referencedColumnName="id", insertable = false, updatable = false)
+    @ManyToOne()
+    @JoinColumn(name="student_id", referencedColumnName="id")
     private Student student;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="course_id", referencedColumnName="id", insertable = false, updatable = false)
+    @ManyToOne()
+    @JoinColumn(name="course_id", referencedColumnName="id")
     private Course course;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="professor_id", referencedColumnName="id", insertable = false, updatable = false)
+    @ManyToOne()
+    @JoinColumn(name="professor_id", referencedColumnName="id")
     private Professor professor;
 
-    @OneToMany(mappedBy = "booking" ,fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
-    private Set<TimeSlot> timeSlot;
+
+    @OneToMany(mappedBy = "booking" ,cascade = {CascadeType.ALL})
+    private Set<TimeSlot> timeSlot = new HashSet<>();
 
     @Getter
-    @OneToOne(mappedBy = "booking", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
     private MeetingDetails meetingDetails;
 
 }

@@ -142,7 +142,7 @@ public class ProfessorService implements IProfessorService {
         professorRepository.save(professor);
     }
 
-    public Page<List<BasicExperienceResponse>> getExperiencesById(Long id, Integer page) {
+    public Page<BasicExperienceResponse> getExperiencesById(Long id, Integer page) {
         Pageable pageable = PageRequest.of(page, 10, Sort.by("startDate").descending());
         return workExperienceRepository.findWorkExperiencesByProfessorId(id, pageable);
     }
@@ -199,6 +199,8 @@ public class ProfessorService implements IProfessorService {
         return professorRepository.findAllProfessorsWithPagination(pageable);
     }
 
+
+
     public Page<BasicProfessorResponse> getProfessorsByCategory(Integer page, String category) {
         Pageable pageable = PageRequest.of(page, 10);
         return professorRepository.findAllProfessorsByCategoryWithPagination(pageable, category);
@@ -225,6 +227,10 @@ public class ProfessorService implements IProfessorService {
         Pageable pageable = PageRequest.of(page, 5, Sort.by("endDate"));
 
         return educationRepository.getEducationWithPagination(professor.getId(), pageable);
+    }
+
+    public BasicProfessorResponse getProfessorById(Long id) {
+        return professorRepository.findProfessor(id);
     }
 }
 

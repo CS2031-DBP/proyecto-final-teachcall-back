@@ -2,6 +2,7 @@ package dbp.techcall.professor.infrastructure;
 
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.dto.LastExperienceDto;
+import dbp.techcall.professor.dto.ProfessorNames;
 import dbp.techcall.user.infrastructure.BaseUserRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,13 +17,15 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
     Professor findByEmail(String email);
 
     @Query(value =
-            "SELECT p.id as id, p.price_per_hour as pricePerHour ,p.first_name as firstName , p.last_name as lastName, p.description as description, COALESCE(AVG(r.rating), 0) AS rating, count(r.id) as reviewCount \n" +
-                    "FROM professor p \n" +
-                    "LEFT JOIN review r \n" +
-                    "ON p.id = r.professor_id\n" +
-                    "GROUP BY p.first_name, p.last_name, p.description, p.id \n" +
-                    "ORDER BY COALESCE(AVG(r.rating), 0) DESC \n"
-    , nativeQuery = true)
+            """
+                    SELECT p.id as id, p.price_per_hour as pricePerHour ,p.first_name as firstName , p.last_name as lastName, p.description as description, COALESCE(AVG(r.rating), 0) AS rating, count(r.id) as reviewCount\s
+                    FROM professor p\s
+                    LEFT JOIN review r\s
+                    ON p.id = r.professor_id
+                    GROUP BY p.first_name, p.last_name, p.description, p.id\s
+                    ORDER BY COALESCE(AVG(r.rating), 0) DESC\s
+                    """
+            , nativeQuery = true)
     Page<BasicProfessorResponse> findAllProfessorsWithPagination(Pageable pageable);
 
     @Query(value = "SELECT p.id as id, p.first_name as firstName, p.last_name as lastName, " +
@@ -36,7 +39,7 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
             "TRANSLATE(LOWER(:category), 'áéíóú', 'aeiou') LIMIT 1) " +
             "GROUP BY p.first_name, p.last_name, p.description, p.id " +
             "ORDER BY COALESCE(AVG(r.rating), 0) DESC NULLS LAST", nativeQuery = true)
-    Page<BasicProfessorResponse> findAllProfessorsByCategoryWithPagination(Pageable pageable, @Param("category")String category);
+    Page<BasicProfessorResponse> findAllProfessorsByCategoryWithPagination(Pageable pageable, @Param("category") String category);
 
     @Override
     Optional<Professor> findById(Long professorId);
@@ -59,6 +62,21 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
                     "      where p.id = degree.professor_id\n" +
                     "        and degree.school_id = sc.id) as dg\n" +
                     "     on we.professor_id = dg.professor_id;",
-    nativeQuery = true)
+            nativeQuery = true)
     LastExperienceDto getExperience(@Param("id") Long id);
+
+    ProfessorNames findProfessorNamesById(Long id);
+
+    @Query(value = """
+            SELECT p.id as id, p.first_name as firstName, p.last_name as lastName,
+            p.price_per_hour as pricePerHour, p.description as description, COALESCE(AVG(r.rating), 0) AS rating, 
+            COUNT(r.id) as reviewCount 
+            FROM professor p 
+            LEFT JOIN review r ON p.id = r.professor_id 
+            WHERE p.id = :id
+            GROUP BY p.id 
+            """
+            , nativeQuery = true)
+    BasicProfessorResponse findProfessor(@Param("id") Long id);
+
 }

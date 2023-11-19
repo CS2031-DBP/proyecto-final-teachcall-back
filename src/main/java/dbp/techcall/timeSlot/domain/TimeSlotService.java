@@ -286,7 +286,7 @@ public class TimeSlotService {
         }
 
         WeekAvailabilityResponse response = new WeekAvailabilityResponse();
-        response.setAvailableDays(new ArrayList<>());
+        response.setAvailableDays(new HashSet<>());
 
         for (BasicDayAvailability timeSlot : professorAvailabilities) {
             response.getAvailableDays().add(timeSlot.getDay());
@@ -313,4 +313,43 @@ public class TimeSlotService {
                 throw new IllegalArgumentException("Invalid day value. It should be between 1 and 6.");
         }
     }
+
+    public List<BasicDayAvailability> getFreeTimeSlots(Long id, Integer week, Integer day) {
+        List<BasicDayAvailability> timeSlots = timeSlotRepository.findByProfessorIdAndWeekNumberAndDay(id, week, day);
+
+        List<BasicDayAvailability> freeTimeSlots = new ArrayList<>();
+
+        for (BasicDayAvailability timeSlot : timeSlots) {
+            if (timeSlot.getIsAvailable()) {
+                freeTimeSlots.add(timeSlot);
+            }
+        }
+        return freeTimeSlots;
+
+    }
+
+    public WeekAvailabilityResponse getAvailabilityByProfessorIdAndWeekNumber(Long id, Integer week) {
+        Professor professor = professorService.findById(id);
+
+        if (professor == null) {
+            throw new RuntimeException("Professor not found");
+        }
+
+        List<BasicDayAvailability> professorAvailabilities = timeSlotRepository
+                .findByProfessorIdAndWeekNumber(professor.getId(), week);
+
+        if (professorAvailabilities.isEmpty()) {
+            throw new UnsetAvailabilityException("Professor does not have any availability set yet");
+        }
+
+        WeekAvailabilityResponse response = new WeekAvailabilityResponse();
+        response.setAvailableDays(new HashSet<>());
+
+        for (BasicDayAvailability timeSlot : professorAvailabilities) {
+            response.getAvailableDays().add(timeSlot.getDay());
+        }
+
+        return response;
+    }
+
 }

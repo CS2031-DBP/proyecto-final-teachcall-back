@@ -15,15 +15,17 @@ public interface EducationRepository extends JpaRepository<Education, Long> {
     List<BasicEducationResponse> findAllByProfessorId(Long id);
 
     @Query(value =
-            "select degree.degree as degree, sc.name as schoolName, degree.start_date as startDate, degree.end_date as endDate\n" +
-                    "from professor as p,\n" +
-                    "     (select professor_id, degree, school_id, start_date, end_date\n" +
-                    "      from education\n" +
-                    "      where professor_id = :id\n" +
-                    "      order by start_date desc) as degree,\n" +
-                    "     (select id, name from school) as sc\n" +
-                    "where p.id = degree.professor_id\n" +
-                    "  and degree.school_id = sc.id\n"
+            """
+                    select degree.id as id, degree.degree as degree, sc.name as schoolName, degree.start_date as startDate, degree.end_date as endDate
+                    from professor as p,
+                         (select id, professor_id, degree, school_id, start_date, end_date
+                          from education
+                          where professor_id = :id
+                          order by start_date desc) as degree,
+                         (select id, name from school) as sc
+                    where p.id = degree.professor_id
+                      and degree.school_id = sc.id
+                    """
             , nativeQuery = true)
     Page<BasicEducation> getEducationWithPagination(@Param("id")Long id, Pageable pageable);
 }
