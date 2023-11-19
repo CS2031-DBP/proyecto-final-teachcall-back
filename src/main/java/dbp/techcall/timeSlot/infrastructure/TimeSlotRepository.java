@@ -2,6 +2,7 @@ package dbp.techcall.timeSlot.infrastructure;
 
 import dbp.techcall.timeSlot.dto.BasicDayAvailability;
 import dbp.techcall.timeSlot.domain.TimeSlot;
+import dbp.techcall.timeSlot.dto.DateTimeProjection;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -15,4 +16,6 @@ public interface TimeSlotRepository extends JpaRepository<TimeSlot, Long> {
     List<BasicDayAvailability> findByProfessorIdAndWeekNumber(Long professorId, Integer week);
 
     List<BasicDayAvailability> findByProfessorIdAndWeekNumberAndDay(Long id, Integer week, Integer day);
+
+    DateTimeProjection findDateTimeProjectionById(Long id);
 }

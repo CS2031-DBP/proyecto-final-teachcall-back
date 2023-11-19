@@ -78,6 +78,7 @@ public class ReviewService {
         return page
                 .map(review -> {
                     ReviewResponse reviewResponse = new ReviewResponse();
+                    reviewResponse.setId(review.getId());
                     reviewResponse.setBody(review.getBody());
                     reviewResponse.setRating(review.getRating());
                     reviewResponse.setStudentName(review.getStudent().getFirstName());

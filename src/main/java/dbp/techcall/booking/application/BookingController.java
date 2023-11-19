@@ -2,9 +2,7 @@ package dbp.techcall.booking.application;
 
 import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.booking.domain.BookingService;
-import dbp.techcall.booking.dto.BasicBookingReq;
-import dbp.techcall.booking.dto.BookingInfo;
-import dbp.techcall.booking.dto.StudentBookingsRes;
+import dbp.techcall.booking.dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -63,6 +61,15 @@ public class BookingController {
         String username = userDetails.getUsername();
 
         return ResponseEntity.ok(bookingService.getStudentBookings(username, page));
+    }
+
+    @GetMapping("/professor")
+    public ResponseEntity<Page<ProfessorBookingRes>> getProfessorBookings(@RequestParam(defaultValue = "0") Integer page){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        return ResponseEntity.ok(bookingService.getProfessorBookings(username, page));
     }
 
 }

@@ -2,6 +2,7 @@ package dbp.techcall.course.infrastructure;
 
 import dbp.techcall.course.domain.Course;
 import dbp.techcall.course.dto.BasicCourseResponse;
+import dbp.techcall.course.dto.TitleDescriptionProjection;
 import dbp.techcall.course.dto.TopFiveCourses;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -31,4 +32,6 @@ public interface CourseRepository extends JpaRepository <Course,Long    >{
     Page<BasicCourseResponse> findByProfessorId(Long id, Pageable pageable);
 
     BasicCourseResponse findBasicResponseById(Integer id);
+
+    TitleDescriptionProjection findTitleDescriptionProjectionById(Integer id);
 }
