@@ -53,7 +53,7 @@ public class BookingService {
     public void deleteBooking(Long id) {
         // Eliminar una reserva por su ID
         bookings.removeIf(booking -> booking.getId().equals(id));
-    }
+it    }
 
     public BookingInfo getBookingInfoById(Long id) {
         Optional<Booking> booking = bookingRepository.findById(id);
