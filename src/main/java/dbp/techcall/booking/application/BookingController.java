@@ -38,9 +38,7 @@ public class BookingController {
 
     @DeleteMapping("/short/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
-        // Llama al servicio para eliminar la reserva por ID
         bookingService.deleteBooking(id);
-        // Retorna un ResponseEntity con el estado HTTP NO_CONTENT (204)
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -54,4 +52,3 @@ public class BookingController {
         return ResponseEntity.ok("booking added ");
     }
 }
-
