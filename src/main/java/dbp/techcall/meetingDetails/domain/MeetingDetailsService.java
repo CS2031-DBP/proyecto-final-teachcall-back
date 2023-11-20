@@ -30,4 +30,13 @@ public class MeetingDetailsService {
     public MeetingDetails getMeetingDetailsById(Long id) {
         return meetingDetailsRepository.findById(id).orElseThrow();
     }
+
+    public String getMeetingDetailsHostRoomUrl(Integer id) {
+        return meetingDetailsRepository.findByBookingId(id).getHostRoomUrl();
+    }
+
+    public String getMeetingDetailsViewerRoomUrl(Integer id) {
+        return meetingDetailsRepository.findByBookingId(id).getViewerRoomUrl();
+    }
+
 }
