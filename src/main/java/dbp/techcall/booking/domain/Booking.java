@@ -45,7 +45,8 @@ public class Booking{
     private Set<TimeSlot> timeSlot = new HashSet<>();
 
     @Getter
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL)
+    @Setter
+    @OneToOne(mappedBy = "booking")
     private MeetingDetails meetingDetails;
 
 }
