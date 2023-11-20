@@ -19,6 +19,7 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
+
     @GetMapping("/short/{id}")
     public BookingInfo getBookingInfoById(@PathVariable Long id) {
             BookingInfo bookingInfo = bookingService.getBookingInfoById(id);
