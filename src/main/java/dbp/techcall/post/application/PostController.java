@@ -89,39 +89,38 @@ public class PostController {
         return postRepository.findById(id).orElse(null);
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody Post post) {
-        // find the post
-        Post existingPost = postRepository.findById(id).orElse(null);
-
-        if (existingPost == null) {
-            // Return 404 Not Found if the post is not found
-            return ResponseEntity.notFound().build();
-        }
-
-        // find the user in session
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        String username = userDetails.getUsername();
-        Professor professor = professorService.findByEmail(username);
-
-        // check if the user is the author of the post
-        if (existingPost.getProfessor().equals(professor)) {
-            // update the post
-            existingPost.setTitle(post.getTitle());
-            existingPost.setBody(post.getBody());
-            existingPost.setUpdatedAt(post.getUpdatedAt());
-
-            // save the post
-            Post savedPost = postRepository.save(existingPost);
-
-            // return ok
-            return ResponseEntity.ok(savedPost);
-        } else {
-            // return forbidden
-            return ResponseEntity.status(403).build();
-        }
-    }
+//    @PatchMapping("/{id}")
+//    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody BasicPost post) {
+//        // find the post
+//        Post existingPost = postRepository.findById(id).orElse(null);
+//
+//        if (existingPost == null) {
+//            // Return 404 Not Found if the post is not found
+//            return ResponseEntity.notFound().build();
+//        }
+//
+//        // find the user in session
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+//        String username = userDetails.getUsername();
+//        Professor professor = professorService.findByEmail(username);
+//
+//        // check if the user is the author of the post
+//        if (existingPost.getProfessor().equals(professor)) {
+//            // update the post
+//            existingPost.setTitle(post.getTitle());
+//            existingPost.setBody(post.getBody());
+//            existingPost.setUpdatedAt(LocalDateTime.now());
+//            // save the post
+//            Post savedPost = postRepository.save(existingPost);
+//
+//            // return ok
+//            return ResponseEntity.ok(savedPost);
+//        } else {
+//            // return forbidden
+//            return ResponseEntity.status(403).build();
+//        }
+//    }
 
     @GetMapping("/feed")
     public ResponseEntity<Page<PostInfoResponse>> getAllPostWithPagination(@RequestParam("page") int page, @RequestParam("size") int size) {
@@ -175,6 +174,25 @@ public class PostController {
         studentRepository.save(student);
         return ResponseEntity.ok("success");
     }
+
+    @DeleteMapping("/like/{post_id}")
+    public ResponseEntity<String> deleteLike(@PathVariable Long post_id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        Student student = studentRepository.findByEmail(username);
+
+        Post post = postRepository.findById(post_id).orElse(null);
+
+        if (post == null) {
+            throw new ResourceNotFoundException("Post not found");
+        }
+        student.getLikedPosts().remove(post);
+        studentRepository.save(student);
+        return ResponseEntity.ok("success");
+    }
+
 
     @PatchMapping("/{post_id}")
     public  ResponseEntity<String> updatePost(@PathVariable Long post_id, @RequestBody BasicPost post) {
