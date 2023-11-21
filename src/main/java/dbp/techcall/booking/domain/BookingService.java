@@ -101,9 +101,21 @@ public class BookingService {
 
     public void addBooking(BasicBookingReq req, String username) throws ResourceNotFoundException {
         Student student = studentRepository.findByEmail(username);
-        Course course = courseRepository.findById(req.getCourseId()).get();
-        Professor professor = professorRepository.findById(req.getProfessorId()).get();
-        TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId()).get();
+        if (student == null) {
+            throw new ResourceNotFoundException("Estudiante no encontrado");
+        }
+
+        Optional<Booking> existingBooking = bookingRepository.findByCourseIdAndProfessorIdAndStudentIdAndTimeSlotId(
+                req.getCourseId(), req.getProfessorId(), student.getId(), req.getTimeSlotId());
+
+        if (existingBooking.isPresent()) {
+            throw new IllegalStateException("Ya existe un booking con estos datos");
+        }
+
+        Course course = courseRepository.findById(req.getCourseId()).orElseThrow(() -> new ResourceNotFoundException("Curso no encontrado"));
+        Professor professor = professorRepository.findById(req.getProfessorId()).orElseThrow(() -> new ResourceNotFoundException("Profesor no encontrado"));
+        TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId()).orElseThrow(() -> new ResourceNotFoundException("TimeSlot no encontrado"));
+
         Booking newBooking = new Booking();
         newBooking.setCourse(course);
         newBooking.setProfessor(professor);
