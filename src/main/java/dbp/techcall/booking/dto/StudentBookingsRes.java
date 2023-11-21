@@ -5,6 +5,7 @@ import java.time.LocalTime;
 
 
 public interface StudentBookingsRes {
+    Integer getId();
     LocalDate getDate();
     String getFirstName();
     String getLastName();
