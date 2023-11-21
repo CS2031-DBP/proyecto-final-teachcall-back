@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
 public interface ProfessorRepository extends BaseUserRepository<Professor> {
     Professor findByEmail(String email);
 
@@ -48,20 +47,21 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
     Double getRating(@Param("email") String email);
 
     @Query(value =
-            "select dg.firstName as firstName, dg.lastName as lastName, dg.degree as degree, dg.name as schoolName, we.employer as Employwe, we.title as position\n" +
-                    "from work_experience as we\n" +
-                    "         right join\n" +
-                    "     (select p.first_name as firstName, p.last_name as lastName, degree.professor_id, degree.degree, sc.name\n" +
-                    "      from professor as p,\n" +
-                    "           (select professor_id, degree, school_id\n" +
-                    "            from education\n" +
-                    "            where professor_id = :id\n" +
-                    "            order by start_date desc\n" +
-                    "            limit 1) as degree,\n" +
-                    "           (select id, name from school) as sc\n" +
-                    "      where p.id = degree.professor_id\n" +
-                    "        and degree.school_id = sc.id) as dg\n" +
-                    "     on we.professor_id = dg.professor_id;",
+            """
+                    select dg.firstName as firstName, dg.lastName as lastName, dg.degree as degree, dg.name as schoolName, we.employer as Employwe, we.title as position
+                    from work_experience as we
+                             right join
+                         (select p.first_name as firstName, p.last_name as lastName, degree.professor_id, degree.degree, sc.name
+                          from professor as p,
+                               (select professor_id, degree, school_id
+                                from education
+                                where professor_id = :id
+                                order by start_date desc
+                                limit 1) as degree,
+                               (select id, name from school) as sc
+                          where p.id = degree.professor_id
+                            and degree.school_id = sc.id) as dg
+                         on we.professor_id = dg.professor_id;""",
             nativeQuery = true)
     LastExperienceDto getExperience(@Param("id") Long id);
 

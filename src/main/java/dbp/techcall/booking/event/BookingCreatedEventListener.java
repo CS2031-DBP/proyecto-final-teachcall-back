@@ -65,12 +65,12 @@ public class BookingCreatedEventListener implements ApplicationListener<BookingC
     public void onApplicationEvent(BookingCreatedEvent bookingCreatedEvent) {
         Booking booking = bookingCreatedEvent.getBooking();
         String endDate = getLatestEndTime(booking);
-
+        System.out.println("endDate: " + endDate);
         if (endDate == null) {
             return;
         }
         var data = Map.of("endDate", endDate, "fields", Collections.singletonList("hostRoomUrl"));
-
+        System.out.println("data: " + data);
         HttpRequest request = null;
         try {
             request = HttpRequest.newBuilder(URI.create("https://api.whereby.dev/v1/meetings"))
@@ -78,12 +78,16 @@ public class BookingCreatedEventListener implements ApplicationListener<BookingC
                     .header("Content-Type", "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(new ObjectMapper().writeValueAsString(data)))
                     .build();
+            System.out.println("request: " + request.headers());
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
 
+        System.out.println("request: " + request);
+
         try {
             HttpResponse<String> response = sendRequestWithRetries(request);
+            System.out.println("response: " + response);
             if (response != null && response.statusCode() == 201) {
                 var responseBody = new ObjectMapper().readValue(response.body(), Map.class);
                 String hostRoomUrl = (String) responseBody.get("hostRoomUrl");
