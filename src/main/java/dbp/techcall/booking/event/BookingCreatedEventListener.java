@@ -2,6 +2,7 @@ package dbp.techcall.booking.event;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import dbp.techcall.booking.domain.Booking;
+import dbp.techcall.booking.email.EmailService;
 import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.meetingDetails.domain.MeetingDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 public class BookingCreatedEventListener implements ApplicationListener<BookingCreatedEvent> {
+
+    @Autowired
+    private EmailService emailService;
 
     private final MeetingDetailsService meetingDetailsService;
     @Value("${whereby}")
@@ -85,7 +89,21 @@ public class BookingCreatedEventListener implements ApplicationListener<BookingC
                 String hostRoomUrl = (String) responseBody.get("hostRoomUrl");
                 String viewerRoomUrl = (String) responseBody.get("roomUrl");
                 String meetingId = (String) responseBody.get("meetingId");
-                meetingDetailsService.createMeetingDetails(booking, hostRoomUrl, viewerRoomUrl, endDate, meetingId);
+                meetingDetailsService.createMeetingDetailsAync(booking, hostRoomUrl, viewerRoomUrl, endDate, meetingId);
+                String messageToStudent = String.format(
+                        "Hola, tienes un nuevo booking. Has agendado una cita con el profesor %s a las %s horas del curso %s.",
+                        booking.getProfessor().getFirstName(),
+                        booking.getTimeSlot().iterator().next().getStartTime(),
+                        booking.getCourse().getTitle()
+                );
+                String messageToTeacher = String.format(
+                        "Hola, tienes un nuevo booking. El estudiante %s ha agendado una cita contigo a las %s horas del curso %s.",
+                        booking.getStudent().getFirstName(),
+                        booking.getTimeSlot().iterator().next().getStartTime(),
+                        booking.getCourse().getTitle()
+                );
+                emailService.sendEmailAsync(booking.getStudent().getEmail(), "Nuevo Booking", messageToStudent);
+                emailService.sendEmailAsync(booking.getProfessor().getEmail(), "Nuevo Booking", messageToTeacher);
             }
         } catch (Exception e) {
         }
