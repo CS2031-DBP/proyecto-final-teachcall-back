@@ -8,12 +8,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(
             value = """
-                    select ts.date       as date,
+                    select bk.id         as id, 
+                            ts.date       as date,
                            ts.start_time as startTime,
                            p.first_name  as firstName,
                            p.last_name   as lastName,
@@ -27,7 +29,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                  professor_id as p_id,
                                  student_id   as s_id
                           from booking
-                          where student_id = :studentId ) as bk
+                          where student_id = :id ) as bk
                          on ts.booking_id = bk.id
                              join
                          (select id, first_name, last_name

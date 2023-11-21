@@ -18,7 +18,7 @@ import java.time.LocalTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name="time_slot", uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "day", "start_time", "end_time", "week_number"})})
+@Table(name="time_slot", uniqueConstraints = {@UniqueConstraint(columnNames = {"date", "professor_id", "start_time", "end_time"})})
 public class TimeSlot {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

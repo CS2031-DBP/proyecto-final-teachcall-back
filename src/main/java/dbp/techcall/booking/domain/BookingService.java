@@ -4,10 +4,6 @@ package dbp.techcall.booking.domain;
 import dbp.techcall.booking.dto.*;
 import dbp.techcall.booking.event.BookingCreatedEvent;
 import dbp.techcall.booking.event.BookingDeleteEvent;
-
-import dbp.techcall.booking.event.BookingCreatedEvent;
-import dbp.techcall.booking.event.BookingDeleteEvent;
-
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.booking.infrastructure.BookingRepository;
 import dbp.techcall.course.domain.Course;
@@ -23,14 +19,11 @@ import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.timeSlot.dto.DateTimeProjection;
 import dbp.techcall.timeSlot.infrastructure.TimeSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-
-
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.context.ApplicationEventPublisher;
-
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -11,13 +11,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.ChronoField;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.WeekFields;
+import java.time.temporal.*;
 import java.util.*;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 
 
 @Service
@@ -33,14 +30,10 @@ public class TimeSlotService {
     /**
      * This method calculates the number of the current week corresponding to the current year
      * and find every availability slot in the following 4 week including the current week
-     * @param professorId
-     *      A Long used to find the professor and its related Availabilities
      *
-     *
-     * @throws UnsetAvailabilityException If the professor has not yet defined his or her availability for any week
-     * @throws RuntimeException If the professorId does not correspond to an existing professor
+     * @param professorId A Long used to find the professor and its related Availabilities
      * @return A DTO containing the professorId and a Map whose keys are the number of the next 4 weeks and the days available for those weeks.
-     *      <pre>
+     * <pre>
      * Example:<br>
      * {<br>
      *      "professorId": 1,<br>
@@ -51,7 +44,8 @@ public class TimeSlotService {
      *      }<br>
      *  }<br>
      *      </pre>
-     *
+     * @throws UnsetAvailabilityException If the professor has not yet defined his or her availability for any week
+     * @throws RuntimeException           If the professorId does not correspond to an existing professor
      */
     public NextFourWeeksAvailabilityResponse getNextFourWeeksAvailability(Long professorId) {
         Professor professor = professorService.findById(professorId);
@@ -79,13 +73,13 @@ public class TimeSlotService {
         weekAvailability.setProfessorId(professorId);
         weekAvailability.setWeekAvailability(new HashMap<>());
 
-        for(List<TimeSlot> week : timeSlotList){
+        for (List<TimeSlot> week : timeSlotList) {
             if (week.isEmpty()) {
                 continue;
             }
             weekAvailability.getWeekAvailability().put(week.get(0).getWeekNumber(), new HashSet<>());
 
-            for(TimeSlot day : week){
+            for (TimeSlot day : week) {
                 weekAvailability
                         .getWeekAvailability()
                         .get(day.getWeekNumber())
@@ -99,15 +93,12 @@ public class TimeSlotService {
 
     /**
      * This method finds every availability slot for a specific day of the week in a specific week.
+     *
      * @param email The email of the professor whose availability we want to fetch.
-     * @param week
-     *      An Integer corresponding to the week number from which we want to fetch the data.
-     * @param day
-     *      An integer corresponding to the specific day of the week (0-6) for which we want to know the availability.
-     * @throws UnsetAvailabilityException If the professor has not yet defined his or her availability for any week
-     * @throws RuntimeException If the professorId does not correspond to an existing professor object
+     * @param week  An Integer corresponding to the week number from which we want to fetch the data.
+     * @param day   An integer corresponding to the specific day of the week (0-6) for which we want to know the availability.
      * @return Up to 13 tuples corresponding to each one-hour interval in the teacher's range of availability sorted by start time.
-     *     <pre>
+     * <pre>
      *         Example:<br>
      *         {<br>
      *          "professorId": 1,<br>
@@ -132,19 +123,21 @@ public class TimeSlotService {
      *              }<br>
      *         }<br>
      *         </pre>
-     *
+     * @throws UnsetAvailabilityException If the professor has not yet defined his or her availability for any week
+     * @throws RuntimeException           If the professorId does not correspond to an existing professor object
      */
     public DayTimeSlotsResponse getAvailabilityByDay(String email, Integer week, Integer day) {
         Professor professor = professorService.findByEmail(email);
 
-        if( professor == null) throw new RuntimeException("Professor not found");
+        if (professor == null) throw new RuntimeException("Professor not found");
 
         Sort sort = Sort.by(Sort.Direction.ASC, "startTime");
 
         List<TimeSlot> professorAvailabilities = timeSlotRepository
                 .findByProfessorIdAndWeekNumberAndDay(professor.getId(), week, day, sort);
 
-        if (professorAvailabilities.isEmpty()) throw new UnsetAvailabilityException("Professor does not have daily schedule yet");
+        if (professorAvailabilities.isEmpty())
+            throw new UnsetAvailabilityException("Professor does not have daily schedule yet");
 
 
         DayTimeSlotsResponse response = new DayTimeSlotsResponse();
@@ -152,8 +145,8 @@ public class TimeSlotService {
 
         Map<Integer, List<SlotAvailability>> dayTimeSlots = new HashMap<>();
 
-        for(TimeSlot timeSlot : professorAvailabilities){
-            if(!dayTimeSlots.containsKey(day))  dayTimeSlots.put(day, new ArrayList<>());
+        for (TimeSlot timeSlot : professorAvailabilities) {
+            if (!dayTimeSlots.containsKey(day)) dayTimeSlots.put(day, new ArrayList<>());
 
             SlotAvailability slotAvailability = new SlotAvailability();
 
@@ -174,40 +167,37 @@ public class TimeSlotService {
      * This method sets the availability of a professor for a specific week.
      * Calculates the number of one-hour slots between the start time and the end time and creates a ProfessorAvailability object for each one of them.
      *
+     * @param request A DTO containing the professorId, the weekNumber and a Map whose keys are the days of the week and the values are the time ranges in which the professor is available.
+     *                The time ranges are represented by a Pair of LocalTime objects, the first one representing the start time and the second one representing the end time.
+     *                <pre>
+     *                Example:<br>
+     *                {<br>
+     *                    "professorId": 1653,<br>
+     *                    "weekNumber": 45,<br>
+     *                    "timeRanges": {<br>
+     *                        "1": {<br>
+     *                            "startTime": "09:00:00",<br>
+     *                            "endTime": "10:00:00"<br>
+     *                        },<br>
+     *                        "2": {<br>
+     *                            "startTime": "09:00:00",<br>
+     *                            "endTime": "10:00:00"<br>
+     *                        },<br>
+     *                        "3": {<br>
+     *                            "startTime": "09:00:00",<br>
+     *                            "endTime": "10:00:00"<br>
+     *                        },<br>
+     *                        "4": {<br>
+     *                            "startTime": "09:00:00",<br>
+     *                            "endTime": "10:00:00"<br>
+     *                        }<br>
+     *                    }<br>
+     *                }<br>
+     *                </pre>
+     * @throws RuntimeException If the professorId does not correspond to an existing professor or the start time is after the end time or the start time is before 6:00 or the end time is after 22:00
      * @apiNote Take into account the restrictions on the start and end time and its formats.
      * The start time must be before the end time and the start time must be after 8:00 and the end time must be before 21:00
      * See this <a href="https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html"> link </a> for more information on the accepted formats
-     *
-     * @param request
-     *      A DTO containing the professorId, the weekNumber and a Map whose keys are the days of the week and the values are the time ranges in which the professor is available.
-     *      The time ranges are represented by a Pair of LocalTime objects, the first one representing the start time and the second one representing the end time.
-     *      <pre>
-     * Example:<br>
-     * {<br>
-     *     "professorId": 1653,<br>
-     *     "weekNumber": 45,<br>
-     *     "timeRanges": {<br>
-     *         "1": {<br>
-     *             "startTime": "09:00:00",<br>
-     *             "endTime": "10:00:00"<br>
-     *         },<br>
-     *         "2": {<br>
-     *             "startTime": "09:00:00",<br>
-     *             "endTime": "10:00:00"<br>
-     *         },<br>
-     *         "3": {<br>
-     *             "startTime": "09:00:00",<br>
-     *             "endTime": "10:00:00"<br>
-     *         },<br>
-     *         "4": {<br>
-     *             "startTime": "09:00:00",<br>
-     *             "endTime": "10:00:00"<br>
-     *         }<br>
-     *     }<br>
-     * }<br>
-     * </pre>
-     *
-     * @throws RuntimeException If the professorId does not correspond to an existing professor or the start time is after the end time or the start time is before 6:00 or the end time is after 22:00
      */
     public void setAvailabilityByWeekNumber(WeekAvailabilityRequest request) {
         Professor professor = professorService.findByEmail(request.getProfessorEmail());
@@ -221,28 +211,38 @@ public class TimeSlotService {
             LocalTime startTime = LocalTime.parse(entry.getValue().getFirst());
             LocalTime endTime = LocalTime.parse(entry.getValue().getSecond());
 
-            System.out.println(startTime);
-            System.out.println(endTime);
+            System.out.println("\n\nCREANDO UN TIME SLOT CON");
+            System.out.println("startTime:" + startTime);
+            System.out.println("endTime" + endTime);
+            System.out.println("para el día " + getDayOfWeek(entry.getKey()));
 
-            if(startTime.isAfter(endTime)) throw new RuntimeException("Start time cannot be after end time" );
-            if(startTime.isBefore(LocalTime.of(6,0))) throw new RuntimeException("Start time cannot be before 6:00" );
-            if(endTime.isAfter(LocalTime.of(22,0))) throw new RuntimeException("End time cannot be after 22:00" );
+            System.out.println("Para una currentWeek calculda :" + LocalDate.now().get(WeekFields.ISO.weekOfWeekBasedYear()));
+
+            if (startTime.isAfter(endTime)) throw new RuntimeException("Start time cannot be after end time");
+            if (startTime.isBefore(LocalTime.of(6, 0))) throw new RuntimeException("Start time cannot be before 6:00");
+            if (endTime.isAfter(LocalTime.of(22, 0))) throw new RuntimeException("End time cannot be after 22:00");
 
 
             long oneHourSlots = ChronoUnit.MINUTES.between(startTime, endTime) / 60;
 
             Integer weekNumber = request.getWeekNumber();
 
-            for(int iSlot = 0; iSlot < oneHourSlots ;iSlot++){
+            System.out.println("weekNumber: " + weekNumber);
+
+            for (int iSlot = 0; iSlot < oneHourSlots; iSlot++) {
                 TimeSlot timeSlot = new TimeSlot();
 
                 LocalDate currentDate = LocalDate.now();
-                LocalDate adjustedDate = currentDate.with(TemporalAdjusters.nextOrSame(getDayOfWeek(entry.getKey()))).with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                LocalDate firstDayOfWeek = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+                int woy =currentDate.get(WeekFields.ISO.weekOfWeekBasedYear());
 
-                if (currentDate.get(WeekFields.ISO.weekOfWeekBasedYear()) != weekNumber) {
-                    adjustedDate = adjustedDate.plusWeeks(weekNumber - currentDate.get(WeekFields.ISO.weekOfWeekBasedYear()));
-                }
+                LocalDate adjustedDate = firstDayOfWeek.plusDays((weekNumber-woy) * 7L + (entry.getKey() - 1));
 
+
+                System.out.println("LocalDate.now(): " + currentDate);
+                System.out.println("Adjusted Date inicial: " + adjustedDate);
+
+                System.out.println("Finalmente crea la adjusted Date a:" + adjustedDate);
                 timeSlot.setDate(adjustedDate);
                 timeSlot.setProfessor(professor);
                 timeSlot.setDay(entry.getKey());
@@ -257,13 +257,14 @@ public class TimeSlotService {
 
     /**
      * This method finds every available day in a given week for a specific professor.
-     *
+     * <p>
      * The request url should be in the following format: <br>
      * <pre>
      * <code>[GET] /professor-availability/weekly/{professorId}?week={weekNumber}</code>
      * </pre>
+     *
      * @param email The email of the professor whose availability we want to fetch.
-     * @param week The week number should be provided as a query parameter.
+     * @param week  The week number should be provided as a query parameter.
      * @return A DTO containing  a list of available days.
      * <pre>
      *     Example:<br>
