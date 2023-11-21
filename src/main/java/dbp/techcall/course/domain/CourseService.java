@@ -17,10 +17,13 @@ import dbp.techcall.workExperience.infrastructure.WorkExperienceRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -82,31 +85,49 @@ public class CourseService {
 
     public Page<BasicCourseResponse> getCoursesByProfessor(Long id, Integer page) {
         Pageable pageable = PageRequest.of(page, 15);
-        return courseRepository.findByProfessorId(id, pageable);
+        Professor professor = professorRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Professor not found"));
+        
+        Page<Course> course = courseRepository.findByProfessor(professor, pageable);
+        
+       List<BasicCourseResponse> response = new ArrayList<>();
+       
+         for(Course c : course.getContent()) {
+              BasicCourseResponse basicCourseResponse = new BasicCourseResponse();
+              basicCourseResponse.setCourseId(c.getId());
+              basicCourseResponse.setDescription(c.getDescription());
+              basicCourseResponse.setPrice(c.getPrice());
+              basicCourseResponse.setTitle(c.getTitle());
+              basicCourseResponse.setProfessorId(c.getProfessor().getId());
+              response.add(basicCourseResponse);
+            }
+         
+         return new PageImpl<>(response, pageable, course.getTotalElements());
+        
     }
 
     public CourseFullInfo getCourseFullInfo(Integer id) {
-        BasicCourseResponse course = courseRepository.findBasicResponseById(id);
+        Optional<Course> course = courseRepository.findById(id.longValue());
         if(course == null) {
             throw new ResourceNotFoundException("Course not found");
         }
 
-        ProfessorNames professor = professorRepository.findProfessorNamesById(course.getProfessor().getId());
+        ProfessorNames professor = professorRepository.findProfessorNamesById(course.get().getProfessor().getId());
 
         Pageable pageable = PageRequest.of(0, 5);
 
-        Page<BasicEducation> education = educationRepository.getEducationWithPagination(course.getProfessor().getId(), pageable);
-        Double rating = professorRepository.getRating(course.getProfessor().getEmail());
+        Page<BasicEducation> education = educationRepository.getEducationWithPagination(course.get().getProfessor().getId(), pageable);
+        Double rating = professorRepository.getRating(course.get().getProfessor().getEmail());
 
-        CourseFullInfo response = new CourseFullInfo();
+        CourseFullInfo response =new CourseFullInfo();
 
-        response.setRating(rating);
-        response.setId(course.getId());
-        response.setTitle(course.getTitle());
-        response.setDescription(course.getDescription());
-        response.setPrice(course.getPrice());
-        response.setProfessor(professor);
-        response.setEducations(education.getContent());
+
+            response.setRating(rating);
+            response.setId(course.get().getId());
+            response.setTitle(course.get().getTitle());
+            response.setDescription(course.get().getDescription());
+            response.setPrice(course.get().getPrice());
+            response.setProfessor(professor);
+            response.setEducations(education.getContent());
 
         return response;
     }

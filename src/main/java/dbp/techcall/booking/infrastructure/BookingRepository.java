@@ -16,7 +16,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(
             value = """
-                    select bk.id         as id, 
+                    select bk.id         as id,
                             ts.date       as date,
                            ts.start_time as startTime,
                            p.first_name  as firstName,
