@@ -11,6 +11,7 @@ import dbp.techcall.workExperience.dto.BasicExperienceRequest;
 import dbp.techcall.workExperience.dto.BasicExperienceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -148,8 +149,8 @@ public class ProfessorController {
         return ResponseEntity.ok("professor deleted");
     }
 
-    @PostMapping("forgotten-password")
-    public ResponseEntity<String> changePassword(@RequestBody String email, @RequestBody String password) {
+    @PostMapping("forgotten-password/{email}")
+    public ResponseEntity<String> changePassword(@PathVariable String email, @RequestBody String password) {
         if (professorService.changePassword(email, password)) {
 
             return ResponseEntity.ok("password changed");

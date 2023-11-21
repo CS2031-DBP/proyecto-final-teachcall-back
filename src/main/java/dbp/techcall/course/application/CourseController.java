@@ -74,6 +74,11 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/professord/{email}")
+    public ResponseEntity<List<CourseDTO>> coursesByProfessorEmail(@PathVariable String email) {
+        List<CourseDTO> courses = courseService.getCoursesByProfessorEmail(email);
+        return ResponseEntity.ok(courses);
+    }
 
 //    @PostMapping
 //    public ResponseEntity<CourseDTO> create(@RequestBody CourseDTO courseDTO) {

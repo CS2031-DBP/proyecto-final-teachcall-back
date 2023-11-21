@@ -42,7 +42,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                   on bk.c_id = c.id
                     ORDER BY startTime DESC;"""
             , nativeQuery = true)
-    Page<StudentBookingsRes> getBookingsInfoByStudentId(Long studentId, Pageable pageable);
+    Page<StudentBookingsRes> getBookingsInfoByStudentId(@Param("id") Long studentId, Pageable pageable);
 
     Page<ProfessorBooking> findAllByProfessor(Professor professor, Pageable pageable);
 

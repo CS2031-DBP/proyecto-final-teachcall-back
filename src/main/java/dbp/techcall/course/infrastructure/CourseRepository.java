@@ -15,6 +15,9 @@ import java.util.List;
 
 @Repository
 public interface CourseRepository extends JpaRepository <Course,Long    >{
+
+//    findByProfessorEmail
+    List<Course> findByProfessorEmail(String email);
     @Query(value =
             "select c.id, c.title, tp.firstName, tp.s as rating\n" +
                     "from course as c\n" +

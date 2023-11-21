@@ -31,6 +31,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
@@ -233,7 +234,10 @@ public class ProfessorService implements IProfessorService {
     //change password
     public Boolean changePassword(String email, String password) {
         Professor professor = findByEmail(email);
+        System.out.println(password);
+        System.out.println(passwordEncoder.encode(password));
         professor.setPassword(passwordEncoder.encode(password));
+        professor.setUpdatedAt(ZonedDateTime.now());
         professorRepository.save(professor);
         return true;
     }
