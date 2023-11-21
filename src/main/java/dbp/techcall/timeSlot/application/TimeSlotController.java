@@ -30,7 +30,7 @@ public class TimeSlotController{
     @GetMapping("/weekly/{email}")
     public ResponseEntity<WeekAvailabilityResponse> getAvailabilityByWeekNumber(@PathVariable String email, @RequestParam Integer week) {
         System.out.println("email " + email);
-        return ResponseEntity.ok(timeSlotService.getAvailabilityByWeekNumber(email, week));
+        return ResponseEntity.ok(timeSlotService.   getAvailabilityByWeekNumber(email, week));
     }
 
     @GetMapping("/{id}")

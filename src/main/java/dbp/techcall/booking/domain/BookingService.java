@@ -94,6 +94,10 @@ public class BookingService {
 
     public void addBooking(BasicBookingReq req, String username) throws ResourceNotFoundException {
         Student student = studentRepository.findByEmail(username);
+        if (student == null) {
+            throw new ResourceNotFoundException("Student not found, user might be a professor");
+        }
+
         Course course = courseRepository.findById(req.getCourseId()).get();
         Professor professor = professorRepository.findById(req.getProfessorId()).get();
         TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId()).get();
@@ -131,6 +135,10 @@ public class BookingService {
 
         Pageable pageable = PageRequest.of(page, 10);
         Page<ProfessorBooking> bookings = bookingRepository.findAllByProfessor(professor, pageable);
+
+        if (bookings.isEmpty()) {
+            throw new ResourceNotFoundException("No bookings found for professor with ID " + professor.getId());
+        }
 
         List<ProfessorBookingRes> response = new ArrayList<>();
 
