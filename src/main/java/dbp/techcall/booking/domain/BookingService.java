@@ -2,7 +2,15 @@ package dbp.techcall.booking.domain;
 
 import dbp.techcall.booking.dto.BasicBookingReq;
 import dbp.techcall.booking.dto.BookingInfo;
+
 import dbp.techcall.booking.dto.StudentBookingsRes;
+
+import dbp.techcall.booking.event.BookingCreatedEvent;
+import dbp.techcall.booking.event.BookingDeleteEvent;
+
+import dbp.techcall.booking.event.BookingCreatedEvent;
+import dbp.techcall.booking.event.BookingDeleteEvent;
+
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.booking.infrastructure.BookingRepository;
 import dbp.techcall.course.domain.Course;
@@ -15,10 +23,13 @@ import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.timeSlot.infrastructure.TimeSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -44,23 +55,14 @@ public class BookingService {
     @Autowired
     private StudentRepository studentRepository;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     private final List<Booking> bookings;
 
     public BookingService(List<Booking> bookings) {
         this.bookings = bookings;
     }
-
-
-
-    /*public Booking getBookingById(Long id) {
-        // Buscar una reserva por su ID
-        for (Booking booking : bookings) {
-            if (booking.getId().equals(id)) {
-                return booking;
-            }
-        }
-        return null;
-    }*/
 
     public Booking createBooking(Booking booking) {
         // Agregar una nueva reserva
@@ -82,7 +84,9 @@ public class BookingService {
     public void deleteBooking(Long id) {
         // Eliminar una reserva por su ID
         bookings.removeIf(booking -> booking.getId().equals(id));
+        eventPublisher.publishEvent(new BookingDeleteEvent(this, id));
     }
+
 
     public BookingInfo getBookingInfoById(Long id) {
         Optional<Booking> booking = bookingRepository.findById(id);
@@ -96,26 +100,20 @@ public class BookingService {
     }
 
     public void addBooking(BasicBookingReq req, String username) throws ResourceNotFoundException {
-
-
         Student student = studentRepository.findByEmail(username);
         Course course = courseRepository.findById(req.getCourseId()).get();
         Professor professor = professorRepository.findById(req.getProfessorId()).get();
         TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId()).get();
-
         Booking newBooking = new Booking();
         newBooking.setCourse(course);
         newBooking.setProfessor(professor);
         newBooking.setStudent(student);
         newBooking.getTimeSlot().add(timeSlot);
-
         bookingRepository.save(newBooking);
-
         timeSlot.setIsAvailable(false);
         timeSlot.setBooking(newBooking);
-
         timeSlotRepository.save(timeSlot);
-
+        eventPublisher.publishEvent(new BookingCreatedEvent(this, newBooking));
 
     }
 
@@ -129,6 +127,7 @@ public class BookingService {
         Pageable pageable = PageRequest.of(page, 10);
 
         return bookingRepository.getBookingsInfoByStudentId(studentId, pageable);
+
     }
 }
 
