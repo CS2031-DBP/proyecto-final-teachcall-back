@@ -1,8 +1,9 @@
 package dbp.techcall.booking.event;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.booking.domain.BookingService;
+import dbp.techcall.booking.email.EmailService;
 import dbp.techcall.meetingDetails.domain.MeetingDetails;
 import dbp.techcall.meetingDetails.domain.MeetingDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,13 +16,24 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Component
 public class BookingDeleteEventListener implements ApplicationListener<BookingDeleteEvent> {
 
-    private final MeetingDetailsService meetingDetailsService;
-    private final String apiKey;
+    @Autowired
+    private MeetingDetailsService meetingDetailsService;
+    @Autowired
+    private EmailService emailService;
+    @Autowired
+    private BookingService bookingService;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Value("${whereby}")
+    private String apiKey;
+
 
     @Autowired
     public BookingDeleteEventListener(MeetingDetailsService meetingDetailsService, @Value("${whereby}") String apiKey) {
@@ -30,26 +42,44 @@ public class BookingDeleteEventListener implements ApplicationListener<BookingDe
     }
 
     @Override
-    public void onApplicationEvent(BookingDeleteEvent bookingDeleteEvent) {
-        var data = meetingDetailsService.getMeetingDetailsById(bookingDeleteEvent.getBookingId()).getMeetingId();
-
-        String apiUrl = "https://api.whereby.dev/v1/meetings/" + data;
-        java.net.http.HttpRequest request = java.net.http.HttpRequest.newBuilder(URI.create(apiUrl))
+    public void onApplicationEvent(BookingDeleteEvent event) {
+        Long bookingId = event.getBookingId();
+        MeetingDetails meetingDetails = meetingDetailsService.getMeetingDetailsById(bookingId);
+        String apiUrl = "https://api.whereby.dev/v1/meetings/" + meetingDetails.getMeetingId();
+        HttpRequest request = HttpRequest.newBuilder(URI.create(apiUrl))
                 .header("Authorization", "Bearer " + apiKey)
-                .header("Content-Type", "application/json")
                 .DELETE()
                 .build();
 
         try {
             HttpResponse<String> response = sendRequestWithRetries(request);
-            if (response != null && response.statusCode() == 204) {
-                meetingDetailsService.deleteMeetingDetails(bookingDeleteEvent.getBookingId());
-            } else {
+            if (response.statusCode() == 204) {
+                meetingDetailsService.deleteMeetingDetailsAsync(bookingId);
+                Booking booking = bookingService.getBookingById(bookingId);
+
+                String messageToStudent = String.format(
+                        "Hola %s, tu reserva con el profesor %s para el curso %s a las %s horas ha sido cancelada.",
+                        booking.getStudent().getFirstName(),
+                        booking.getProfessor().getFirstName(),
+                        booking.getCourse().getTitle(),
+                        booking.getTimeSlot().iterator().next().getStartTime()
+                );
+                String messageToTeacher = String.format(
+                        "Hola %s, la reserva con el estudiante %s para el curso %s a las %s horas ha sido cancelada.",
+                        booking.getProfessor().getFirstName(),
+                        booking.getStudent().getFirstName(),
+                        booking.getCourse().getTitle(),
+                        booking.getTimeSlot().iterator().next().getStartTime()
+                );
+
+                emailService.sendEmailAsync(booking.getStudent().getEmail(), "Reserva Cancelada", messageToStudent);
+                emailService.sendEmailAsync(booking.getProfessor().getEmail(), "Reserva Cancelada", messageToTeacher);
             }
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }
+
 
     private HttpResponse<String> sendRequestWithRetries(HttpRequest request) throws IOException, InterruptedException {
         final int maxRetries = 3;

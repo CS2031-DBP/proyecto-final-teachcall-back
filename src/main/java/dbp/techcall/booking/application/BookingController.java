@@ -3,6 +3,7 @@ package dbp.techcall.booking.application;
 import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.booking.domain.BookingService;
 import dbp.techcall.booking.dto.*;
+import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -44,14 +45,21 @@ public class BookingController {
     }
 
     @PostMapping("/new")
-    public ResponseEntity<String> addBooking(@RequestBody BasicBookingReq booking) {
+    public ResponseEntity<String> addBooking(@RequestBody BasicBookingReq bookingReq) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
 
-        bookingService.addBooking(booking, username);
-        return ResponseEntity.ok("booking added ");
+        try {
+            bookingService.addBooking(bookingReq, username);
+            return ResponseEntity.ok("booking added");
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Booking already exists");
+        } catch (ResourceNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+        }
     }
+
 
 
     @GetMapping("/student")
