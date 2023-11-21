@@ -6,6 +6,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,11 +18,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Long> findLikedPostByProfessorId(Long id, Pageable page);
 
-    @Query(value = "select p.id as id, p.title as title, p.body as body, count(l.student_id) as likes, p.created_at as createdAt\n" +
-            "from post p\n" +
-            "left join student_likes l on l.post_id = p.id\n" +
-            "group by p.id, p.title, p.body\n" +
-            "order by p.id;", nativeQuery = true)
-    Page<PostInfo> getCurrentUserPostWithPagination(Long id, Pageable page);
+    @Query(value = """
+            select p.id as id, p.title as title, p.body as body, count(l.student_id) as likes, p.created_at as createdAt
+            from post p
+            left join student_likes l on l.post_id = p.id
+            where p.professor_id = :id
+            group by p.id, p.title, p.body
+            order by p.id;""", nativeQuery = true)
+    Page<PostInfo> getCurrentUserPostWithPagination(@Param("id") Long id, Pageable page);
 }
 
