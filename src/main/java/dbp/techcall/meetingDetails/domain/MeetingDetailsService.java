@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class MeetingDetailsService {
 
@@ -30,9 +32,12 @@ public class MeetingDetailsService {
     }
 
     public MeetingDetails getMeetingDetailsById(Long id) {
-        return meetingDetailsRepository.findById(id).orElseThrow();
+        Optional<MeetingDetails> meetingDetailsOptional = meetingDetailsRepository.findById(id);
+        if (!meetingDetailsOptional.isPresent()) {
+            throw new RuntimeException("MeetingDetails no encontrado");
+        }
+        return meetingDetailsOptional.get();
     }
-
     public String getMeetingDetailsHostRoomUrl(Integer id) {
         return meetingDetailsRepository.findByBookingId(id).getHostRoomUrl();
     }
