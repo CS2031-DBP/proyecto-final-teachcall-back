@@ -1,10 +1,7 @@
 package dbp.techcall.booking.domain;
 
-import dbp.techcall.booking.dto.BasicBookingReq;
-import dbp.techcall.booking.dto.BookingInfo;
 
-import dbp.techcall.booking.dto.StudentBookingsRes;
-
+import dbp.techcall.booking.dto.*;
 import dbp.techcall.booking.event.BookingCreatedEvent;
 import dbp.techcall.booking.event.BookingDeleteEvent;
 
@@ -14,26 +11,29 @@ import dbp.techcall.booking.event.BookingDeleteEvent;
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.booking.infrastructure.BookingRepository;
 import dbp.techcall.course.domain.Course;
+import dbp.techcall.course.dto.TitleDescriptionProjection;
 import dbp.techcall.course.infrastructure.CourseRepository;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.student.domain.Student;
+import dbp.techcall.student.dto.StudentNames;
 import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.timeSlot.domain.TimeSlot;
+import dbp.techcall.timeSlot.dto.DateTimeProjection;
 import dbp.techcall.timeSlot.infrastructure.TimeSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-import java.sql.Time;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -128,6 +128,36 @@ public class BookingService {
 
         return bookingRepository.getBookingsInfoByStudentId(studentId, pageable);
 
+    }
+
+    public Page<ProfessorBookingRes> getProfessorBookings(String username, Integer page) {
+        Professor professor = professorRepository.findByEmail(username);
+        if (professor == null) {
+            throw new ResourceNotFoundException("Professor not found, user might be a student");
+        }
+
+        Pageable pageable = PageRequest.of(page, 10);
+        Page<ProfessorBooking> bookings = bookingRepository.findAllByProfessor(professor, pageable);
+
+        List<ProfessorBookingRes> response = new ArrayList<>();
+
+        for(ProfessorBooking b : bookings.getContent()){
+            StudentNames student = studentRepository.findStudentNamesById(b.getStudent().getId());
+            DateTimeProjection timeSlot = timeSlotRepository.findDateTimeProjectionById(b.getTimeSlot().getId());
+            TitleDescriptionProjection course = courseRepository.findTitleDescriptionProjectionById(b.getCourse().getId());
+
+            ProfessorBookingRes professorBookingRes = new ProfessorBookingRes();
+
+            professorBookingRes.setId(b.getId());
+            professorBookingRes.setLink(b.getLink());
+            professorBookingRes.setStudent(student);
+            professorBookingRes.setTimeSlot(timeSlot);
+            professorBookingRes.setCourse(course);
+
+            response.add(professorBookingRes);
+        }
+
+        return new PageImpl<>(response, pageable, bookings.getTotalElements());
     }
 }
 

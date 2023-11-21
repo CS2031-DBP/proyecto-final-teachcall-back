@@ -1,7 +1,9 @@
 package dbp.techcall.booking.infrastructure;
 
 import dbp.techcall.booking.domain.Booking;
+import dbp.techcall.booking.dto.ProfessorBooking;
 import dbp.techcall.booking.dto.StudentBookingsRes;
+import dbp.techcall.professor.domain.Professor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -37,4 +39,6 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                     ORDER BY startTime DESC;"""
             , nativeQuery = true)
     Page<StudentBookingsRes> getBookingsInfoByStudentId(Long studentId, Pageable pageable);
+
+    Page<ProfessorBooking> findAllByProfessor(Professor professor, Pageable pageable);
 }
