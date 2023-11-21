@@ -17,6 +17,7 @@ public class MeetingDetailsController {
     @Autowired
     private MeetingDetailsService meetingDetailsService;
 
+
     @PreAuthorize("hasRole('teacher')")
     @GetMapping("/teacher/{bookingId}")
     public ResponseEntity<String> getMeetingDetailsHostRoomUrl(@PathVariable Integer bookingId) {
