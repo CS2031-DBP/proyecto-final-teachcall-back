@@ -17,7 +17,6 @@ public class UserRegistrationListener implements ApplicationListener<UserRegiste
     @Override
     public void onApplicationEvent(UserRegisteredEvent event) {
         Users registeredUser = event.getRegisteredUser();
-        String message = "Bienvenido a Teachcall, " + registeredUser.getFirstName() + "!";
-        emailService.sendEmailAsync(registeredUser.getEmail(), "Bienvenido a Teachcall", message);
+        emailService.sendWelcomeEmail(registeredUser.getEmail(), registeredUser.getFirstName());
     }
 }
