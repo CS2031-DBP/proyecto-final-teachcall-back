@@ -62,11 +62,11 @@ public class CourseController {
         return ResponseEntity.ok(courses);
     }
 
-    @GetMapping("/{id}")
+    /*@GetMapping("/{id}")
     public ResponseEntity<BasicCourseResponse> course(@PathVariable Integer id) {
         BasicCourseResponse course = courseRepository.findBasicResponseById(id);
         return ResponseEntity.ok(course);
-    }
+    }*/
 
     @GetMapping("/{id}/fullinfo")
     public ResponseEntity<CourseFullInfo> getCourseFullInfo(@PathVariable Long id){

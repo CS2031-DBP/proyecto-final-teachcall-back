@@ -1,6 +1,7 @@
 package dbp.techcall.timeSlot.application;
 
 
+import dbp.techcall.booking.dto.BookingInfo;
 import dbp.techcall.timeSlot.dto.*;
 import dbp.techcall.timeSlot.domain.TimeSlotService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class TimeSlotController{
     @GetMapping("/weekly/{email}")
     public ResponseEntity<WeekAvailabilityResponse> getAvailabilityByWeekNumber(@PathVariable String email, @RequestParam Integer week) {
         System.out.println("email " + email);
-        return ResponseEntity.ok(timeSlotService.getAvailabilityByWeekNumber(email, week));
+        return ResponseEntity.ok(timeSlotService.   getAvailabilityByWeekNumber(email, week));
     }
 
     @GetMapping("/{id}")
@@ -46,6 +47,11 @@ public class TimeSlotController{
     @GetMapping("/free/{id}")
     public ResponseEntity<List<BasicDayAvailability>> getFreeTimeSlots(@PathVariable Long id , @RequestParam Integer week, @RequestParam Integer day) {
         return ResponseEntity.ok(timeSlotService.getFreeTimeSlots(id, week,day));
+    }
+
+    @GetMapping("/booking/{time_slot_id}")
+    public ResponseEntity<BookingInfo> getBookingInfo(@PathVariable Long time_slot_id) {
+        return ResponseEntity.ok(timeSlotService.getBookingInfo(time_slot_id));
     }
 
 }

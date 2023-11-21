@@ -4,6 +4,7 @@ import dbp.techcall.course.domain.Course;
 import dbp.techcall.course.dto.BasicCourseResponse;
 import dbp.techcall.course.dto.TitleDescriptionProjection;
 import dbp.techcall.course.dto.TopFiveCourses;
+import dbp.techcall.professor.domain.Professor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,24 +15,27 @@ import java.util.List;
 
 
 @Repository
-public interface CourseRepository extends JpaRepository <Course,Long    >{
+public interface CourseRepository extends JpaRepository <Course,Long>{
     @Query(value =
-            "select c.id, c.title, tp.firstName, tp.s as rating\n" +
-                    "from course as c\n" +
-                    "join (select avg(rating) as s, p.id, p.first_name as firstName\n" +
-                    "from review r\n" +
-                    "join professor p\n" +
-                    "    on r.professor_id = p.id\n" +
-                    "group by p.id, p.first_name) as tp\n" +
-                    "on tp.id = c.professor_id\n" +
-                    "ORDER BY  rating DESC\n"+
-                    "LIMIT 6;"
+            """
+                    select c.id, c.title, tp.firstName, tp.s as rating
+                    from course as c
+                    join (select avg(rating) as s, p.id, p.first_name as firstName
+                    from review r
+                    join professor p
+                        on r.professor_id = p.id
+                    group by p.id, p.first_name) as tp
+                    on tp.id = c.professor_id
+                    ORDER BY  rating DESC
+                    LIMIT 6;"""
             , nativeQuery = true)
     List<TopFiveCourses> findTopCourses();
 
-    Page<BasicCourseResponse> findByProfessorId(Long id, Pageable pageable);
+    Page<Course> findByProfessor(Professor professor, Pageable pageable);
 
     BasicCourseResponse findBasicResponseById(Integer id);
 
     TitleDescriptionProjection findTitleDescriptionProjectionById(Integer id);
+
+
 }
