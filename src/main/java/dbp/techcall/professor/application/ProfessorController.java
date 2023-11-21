@@ -2,17 +2,20 @@ package dbp.techcall.professor.application;
 
 import dbp.techcall.education.dto.BasicEducationRequest;
 import dbp.techcall.education.dto.BasicEducationResponse;
+import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
-import dbp.techcall.professor.dto.AddCategoriesReq;
-import dbp.techcall.professor.dto.BasicEducation;
-import dbp.techcall.professor.dto.LastExperienceDto;
+import dbp.techcall.professor.dto.*;
 import dbp.techcall.professor.infrastructure.BasicProfessorResponse;
+import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.workExperience.dto.BasicExperienceRequest;
 import dbp.techcall.workExperience.dto.BasicExperienceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,6 +28,10 @@ public class ProfessorController {
 
     @Autowired
     private ProfessorService professorService;
+
+    @Autowired
+    private ProfessorRepository professorRepository;
+
 
     @GetMapping("/{id}")
     public ResponseEntity<BasicProfessorResponse> getProfessors(@PathVariable Long id) {
@@ -97,6 +104,59 @@ public class ProfessorController {
     @GetMapping("education/{email}")
     public ResponseEntity<Page<BasicEducation>> getEducation(@PathVariable String email, @RequestParam int page ){
         return ResponseEntity.ok(professorService.getEducationWithPagination(email, page));
+    }
+
+    @GetMapping("edit-user")
+    public ResponseEntity<EditProfessorDTO> getProfessor() {
+        //authenticate
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Professor professor = professorService.findByEmail(username);
+        //map to dto
+        EditProfessorDTO editProfessorDTO = ProfessorService.mapProfessorToEditProfessorDTO(professor);
+
+        return ResponseEntity.ok(editProfessorDTO);
+    }
+
+    @PatchMapping("edit-user")
+    public ResponseEntity<String> editProfessor(@RequestBody EditProfessorDTO editProfessorDTO) {
+        //authenticate
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Professor professor = professorService.findByEmail(username);
+        //map to dto
+        professor.setFirstName(editProfessorDTO.getFirstName());
+        professor.setLastName(editProfessorDTO.getLastName());
+        professor.setDescription(editProfessorDTO.getDescription());
+
+        return ResponseEntity.ok("professor edited");
+    }
+
+    @DeleteMapping()
+    public ResponseEntity<String> deleteProfessor() {
+        //authenticate
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Professor professor = professorService.findByEmail(username);
+
+        //map to dto
+        professorRepository.deleteById(professor.getId());
+
+        return ResponseEntity.ok("professor deleted");
+    }
+
+    @PostMapping("forgotten-password")
+    public ResponseEntity<String> changePassword(@RequestBody String email, @RequestBody String password) {
+        if (professorService.changePassword(email, password)) {
+
+            return ResponseEntity.ok("password changed");
+        }
+        else{
+            return ResponseEntity.ok("password not changed");
+        }
     }
 
 }
