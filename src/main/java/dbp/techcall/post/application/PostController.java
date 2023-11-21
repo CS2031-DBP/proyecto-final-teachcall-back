@@ -62,19 +62,20 @@ public class PostController {
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/{professor_id}")
-    public List<Post> getPostsByProfessor(@PathVariable("professor_id") Long professor_id) {
-        return postRepository.findByProfessorId(professor_id);
+    @GetMapping("/professor/{professor_id}")
+    public ResponseEntity<Page<PostInfo>> getPostsByProfessor(@PathVariable("professor_id") Long professor_id) {
+        Pageable pageable = Pageable.ofSize(10).withPage(0);
+        return ResponseEntity.ok(postRepository.getCurrentUserPostWithPagination(professor_id, pageable));
     }
 
     @GetMapping("/myposts")
-    public ResponseEntity<Page<PostInfo>> getCurrentUserPost(){
+    public ResponseEntity<Page<PostInfo>> getCurrentUserPost() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         boolean isProfessor = authorities.stream().anyMatch(r -> r.getAuthority().equals("ROLE_teacher"));
-        if(!isProfessor){
+        if (!isProfessor) {
             throw new IllegalArgumentException("You are not a professor");
         }
 
@@ -85,8 +86,12 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public Post getPostById(@PathVariable("id") Long id) {
-        return postRepository.findById(id).orElse(null);
+    public BasicPost getPostById(@PathVariable("id") Long id) {
+        Post post = postRepository.findById(id).orElse(null);
+        if (post == null) {
+            throw new ResourceNotFoundException("Post not found");
+        }
+        return modelMapper.map(post, BasicPost.class);
     }
 
 //    @PatchMapping("/{id}")
@@ -142,6 +147,10 @@ public class PostController {
         String username = userDetails.getUsername();
         Professor professor = professorService.findByEmail(username);
 
+        if (professor == null) {
+            throw new ResourceNotFoundException("You are not a professor or not logged in");
+        }
+
         Post newPost = new Post();
         LocalDateTime now = LocalDateTime.now();
 
@@ -195,7 +204,7 @@ public class PostController {
 
 
     @PatchMapping("/{post_id}")
-    public  ResponseEntity<String> updatePost(@PathVariable Long post_id, @RequestBody BasicPost post) {
+    public ResponseEntity<String> updatePost(@PathVariable Long post_id, @RequestBody BasicPost post) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -211,8 +220,8 @@ public class PostController {
             return ResponseEntity.notFound().build();
         }
 
-        existingPost.setTitle(!post.getTitle().isEmpty()?post.getTitle():existingPost.getTitle());
-        existingPost.setBody(!post.getBody().isEmpty()?post.getBody():existingPost.getBody());
+        existingPost.setTitle(!post.getTitle().isEmpty() ? post.getTitle() : existingPost.getTitle());
+        existingPost.setBody(!post.getBody().isEmpty() ? post.getBody() : existingPost.getBody());
         existingPost.setUpdatedAt(LocalDateTime.now());
 
         postRepository.save(existingPost);

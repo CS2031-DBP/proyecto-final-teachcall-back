@@ -1,7 +1,10 @@
 package dbp.techcall.timeSlot.domain;
 
+import dbp.techcall.booking.domain.Booking;
+import dbp.techcall.booking.dto.BookingInfo;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.domain.ProfessorService;
+import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.timeSlot.dto.*;
 import dbp.techcall.timeSlot.exceptions.UnsetAvailabilityException;
 import dbp.techcall.timeSlot.infrastructure.TimeSlotRepository;
@@ -353,4 +356,19 @@ public class TimeSlotService {
         return response;
     }
 
+    public BookingInfo getBookingInfo(Long timeSlotId) {
+        TimeSlot timeSlot = timeSlotRepository.findById(timeSlotId).orElse(null);
+
+        if (timeSlot == null) {
+            throw new RuntimeException("TimeSlot not found");
+        }
+
+        Booking booking = timeSlot.getBooking();
+
+        if (booking == null) {
+            throw new ResourceNotFoundException("Booking not found");
+        }
+
+        return new BookingInfo(booking);
+    }
 }

@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CourseFullInfo {
     Double rating;
-    Long id;
+    Integer id;
     String title;
     String description;
     double price;

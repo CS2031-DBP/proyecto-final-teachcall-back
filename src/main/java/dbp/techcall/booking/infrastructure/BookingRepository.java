@@ -14,7 +14,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(
             value = """
-                    select bk.id         as id, 
+                    select bk.id         as id,
                             ts.date       as date,
                            ts.start_time as startTime,
                            p.first_name  as firstName,
@@ -40,7 +40,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
                                   on bk.c_id = c.id
                     ORDER BY startTime DESC;"""
             , nativeQuery = true)
-    Page<StudentBookingsRes> getBookingsInfoByStudentId(Long studentId, Pageable pageable);
+    Page<StudentBookingsRes> getBookingsInfoByStudentId(@Param("id") Long studentId, Pageable pageable);
 
     Page<ProfessorBooking> findAllByProfessor(Professor professor, Pageable pageable);
 }

@@ -15,6 +15,8 @@ public class BookingInfo {
     private StartEndDto timeSlot;
     private String professorName;
     private String professorLastname;
+    private String studentName;
+    private String studentLastname;
     private String Title;
     private ViewerRoomDto meetingDetailsLink;
 
@@ -28,5 +30,8 @@ public class BookingInfo {
         this.professorLastname = booking.getProfessor().getLastName();
         this.Title = booking.getCourse().getTitle();
         this.meetingDetailsLink = modelMapper.map(booking.getMeetingDetails(), ViewerRoomDto.class);
+        this.studentName = booking.getStudent().getFirstName();
+        this.studentLastname = booking.getStudent().getLastName();
+
     }
 }
