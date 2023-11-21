@@ -233,6 +233,7 @@ public class ProfessorService implements IProfessorService {
     //change password
     public Boolean changePassword(String email, String password) {
         Professor professor = findByEmail(email);
+
         professor.setPassword(passwordEncoder.encode(password));
         professorRepository.save(professor);
         return true;

@@ -149,7 +149,13 @@ public class ProfessorController {
     }
 
     @PostMapping("forgotten-password")
-    public ResponseEntity<String> changePassword(@RequestBody String email, @RequestBody String password) {
+    public ResponseEntity<String> changePassword(@RequestBody String password) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        Professor professor = professorService.findByEmail(username);
+        String email = professor.getEmail();
+
         if (professorService.changePassword(email, password)) {
 
             return ResponseEntity.ok("password changed");
