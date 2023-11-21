@@ -55,6 +55,7 @@ public class BookingController {
         return ResponseEntity.ok("booking added ");
     }
 
+
     @GetMapping("/student")
     public ResponseEntity<Page<StudentBookingsRes>> getStudentBookings(@RequestParam(defaultValue = "0") Integer page ){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -65,3 +66,6 @@ public class BookingController {
     }
 
 }
+
+
+

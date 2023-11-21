@@ -2,12 +2,15 @@ package dbp.techcall.booking.domain;
 
 import dbp.techcall.booking.dto.BasicBookingReq;
 import dbp.techcall.booking.dto.BookingInfo;
-<<<<<<< HEAD
+
 import dbp.techcall.booking.dto.StudentBookingsRes;
-=======
+
 import dbp.techcall.booking.event.BookingCreatedEvent;
 import dbp.techcall.booking.event.BookingDeleteEvent;
->>>>>>> 39dcd78 (Whereby Evento Creacion Booking)
+
+import dbp.techcall.booking.event.BookingCreatedEvent;
+import dbp.techcall.booking.event.BookingDeleteEvent;
+
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.booking.infrastructure.BookingRepository;
 import dbp.techcall.course.domain.Course;
@@ -21,9 +24,11 @@ import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.timeSlot.infrastructure.TimeSlotRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -109,6 +114,7 @@ public class BookingService {
         timeSlot.setBooking(newBooking);
         timeSlotRepository.save(timeSlot);
         eventPublisher.publishEvent(new BookingCreatedEvent(this, newBooking));
+
     }
 
     public Page<StudentBookingsRes> getStudentBookings(String username, Integer page) {
@@ -121,6 +127,7 @@ public class BookingService {
         Pageable pageable = PageRequest.of(page, 10);
 
         return bookingRepository.getBookingsInfoByStudentId(studentId, pageable);
+
     }
 }
 
