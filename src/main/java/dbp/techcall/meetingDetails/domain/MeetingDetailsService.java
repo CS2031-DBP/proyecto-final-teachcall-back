@@ -25,11 +25,12 @@ public class MeetingDetailsService {
         meetingDetailsRepository.save(meetingDetails);
     }
 
-    public MeetingDetails deleteMeetingDetails(Long id) {
+    @Async
+    public void deleteMeetingDetailsAsync(Long id) {
         MeetingDetails meetingDetails = meetingDetailsRepository.findById(id).orElseThrow();
         meetingDetailsRepository.delete(meetingDetails);
-        return meetingDetails;
     }
+
 
     public MeetingDetails getMeetingDetailsById(Long id) {
         Optional<MeetingDetails> meetingDetailsOptional = meetingDetailsRepository.findById(id);

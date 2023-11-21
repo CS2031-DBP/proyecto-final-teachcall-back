@@ -70,6 +70,12 @@ public class BookingService {
         return booking;
     }
 
+    public Booking getBookingById(Long bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with id: " + bookingId));
+    }
+
+
     public Booking updateBooking(Long id, Booking booking) {
         // Actualizar una reserva existente por su ID
         for (int i = 0; i < bookings.size(); i++) {
