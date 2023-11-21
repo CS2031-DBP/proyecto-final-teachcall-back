@@ -131,5 +131,14 @@ public class CourseService {
 
         return response;
     }
+
+//    getCoursesByProfessorEmail
+    public List<CourseDTO> getCoursesByProfessorEmail(String email) {
+        List<Course> courses = courseRepository.findByProfessorEmail(email);
+        return courses.stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+    }
 }
+
 
