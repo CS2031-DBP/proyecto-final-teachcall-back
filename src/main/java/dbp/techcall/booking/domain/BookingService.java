@@ -114,7 +114,6 @@ public class BookingService {
         timeSlot.setBooking(newBooking);
         timeSlotRepository.save(timeSlot);
         eventPublisher.publishEvent(new BookingCreatedEvent(this, newBooking));
-
     }
 
     public Page<StudentBookingsRes> getStudentBookings(String username, Integer page) {
