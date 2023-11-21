@@ -6,10 +6,7 @@ import dbp.techcall.education.domain.Education;
 import dbp.techcall.education.dto.BasicEducationRequest;
 import dbp.techcall.education.dto.BasicEducationResponse;
 import dbp.techcall.education.infrastructure.EducationRepository;
-import dbp.techcall.professor.dto.AddCategoriesReq;
-import dbp.techcall.professor.dto.BasicEducation;
-import dbp.techcall.professor.dto.LastExperienceDto;
-import dbp.techcall.professor.dto.NewProfessorDto;
+import dbp.techcall.professor.dto.*;
 import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
 import dbp.techcall.professor.infrastructure.BasicProfessorResponse;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
@@ -232,6 +229,25 @@ public class ProfessorService implements IProfessorService {
     public BasicProfessorResponse getProfessorById(Long id) {
         return professorRepository.findProfessor(id);
     }
+
+    //change password
+    public Boolean changePassword(String email, String password) {
+        Professor professor = findByEmail(email);
+        professor.setPassword(passwordEncoder.encode(password));
+        professorRepository.save(professor);
+        return true;
+    }
+
+    public static EditProfessorDTO mapProfessorToEditProfessorDTO(Professor professor) {
+        EditProfessorDTO editProfessorDTO = new EditProfessorDTO();
+        editProfessorDTO.setFirstName(professor.getFirstName());
+        editProfessorDTO.setLastName(professor.getLastName());
+        editProfessorDTO.setDescription(professor.getDescription());
+//        editProfessorDTO.setPhoto(professor.getPhoto());
+        return editProfessorDTO;
+    }
+
+
 }
 
 

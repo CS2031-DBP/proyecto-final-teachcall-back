@@ -19,6 +19,7 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
+
     @GetMapping("/short/{id}")
     public BookingInfo getBookingInfoById(@PathVariable Long id) {
             BookingInfo bookingInfo = bookingService.getBookingInfoById(id);
@@ -38,9 +39,7 @@ public class BookingController {
 
     @DeleteMapping("/short/{id}")
     public ResponseEntity<Void> deleteBooking(@PathVariable Long id) {
-        // Llama al servicio para eliminar la reserva por ID
         bookingService.deleteBooking(id);
-        // Retorna un ResponseEntity con el estado HTTP NO_CONTENT (204)
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -53,6 +52,7 @@ public class BookingController {
         bookingService.addBooking(booking, username);
         return ResponseEntity.ok("booking added ");
     }
+
 
     @GetMapping("/student")
     public ResponseEntity<Page<StudentBookingsRes>> getStudentBookings(@RequestParam(defaultValue = "0") Integer page ){
@@ -73,4 +73,6 @@ public class BookingController {
     }
 
 }
+
+
 

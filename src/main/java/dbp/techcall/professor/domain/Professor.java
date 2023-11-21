@@ -25,7 +25,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "professor", schema="spring_app")
+@Table(name = "professor")
 public class Professor extends Users {
 
     @Column(name="price_per_hour")

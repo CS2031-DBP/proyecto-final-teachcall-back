@@ -79,4 +79,7 @@ public interface ProfessorRepository extends BaseUserRepository<Professor> {
             , nativeQuery = true)
     BasicProfessorResponse findProfessor(@Param("id") Long id);
 
+    void deleteById(Long id);
+    void deleteByEmail(String email);
+
 }
