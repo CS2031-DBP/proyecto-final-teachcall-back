@@ -134,13 +134,14 @@ public class ProfessorController {
         return ResponseEntity.ok("professor edited");
     }
 
-    @DeleteMapping("delete-user")
+    @DeleteMapping()
     public ResponseEntity<String> deleteProfessor() {
         //authenticate
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
         Professor professor = professorService.findByEmail(username);
+
         //map to dto
         professorRepository.deleteById(professor.getId());
 
