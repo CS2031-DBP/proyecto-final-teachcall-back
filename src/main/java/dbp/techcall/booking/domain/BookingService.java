@@ -108,7 +108,6 @@ public class BookingService {
         if (student == null) {
             throw new ResourceNotFoundException("Student not found, user might be a professor");
         }
-
         Course course = courseRepository.findById(req.getCourseId()).get();
         Professor professor = professorRepository.findById(req.getProfessorId()).get();
         TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId()).get();
