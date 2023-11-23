@@ -26,7 +26,7 @@ public class TechcallApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "https://teachcalldbp.web.app/")
+                        .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "https://teachcall-2f3e8.web.app/")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD","PATCH")
                         .maxAge(3600)
                         .allowedHeaders("*")
