@@ -9,6 +9,7 @@ import dbp.techcall.booking.infrastructure.BookingRepository;
 import dbp.techcall.course.domain.Course;
 import dbp.techcall.course.dto.TitleDescriptionProjection;
 import dbp.techcall.course.infrastructure.CourseRepository;
+import dbp.techcall.meetingDetails.domain.MeetingDetailsService;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
@@ -38,6 +39,9 @@ public class BookingService {
 
     @Autowired
     private CourseRepository courseRepository;
+
+    @Autowired
+    private MeetingDetailsService meetingDetailsService;
 
     @Autowired
     private ProfessorRepository professorRepository;
@@ -155,7 +159,7 @@ public class BookingService {
             ProfessorBookingRes professorBookingRes = new ProfessorBookingRes();
 
             professorBookingRes.setId(b.getId());
-            professorBookingRes.setLink(b.getLink());
+            professorBookingRes.setLink(meetingDetailsService.getMeetingDetailsHostRoomUrl(b.getId().intValue()));
             professorBookingRes.setStudent(student);
             professorBookingRes.setTimeSlot(timeSlot);
             professorBookingRes.setCourse(course);

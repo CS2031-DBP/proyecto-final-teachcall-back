@@ -16,31 +16,34 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(
             value = """
-                    select bk.id         as id,
-                            ts.date       as date,
-                           ts.start_time as startTime,
-                           p.first_name  as firstName,
-                           p.last_name   as lastName,
-                           c.title       as title,
-                           bk.link       as link
-                    from time_slot as ts
-                             join
-                         (select id,
-                                 link,
-                                 course_id    as c_id,
-                                 professor_id as p_id,
-                                 student_id   as s_id
-                          from booking
-                          where student_id = :id ) as bk
-                         on ts.booking_id = bk.id
-                             join
-                         (select id, first_name, last_name
-                          from professor) as p
-                         on bk.p_id = p.id
-                             join (select id, title
-                                   from course) as c
-                                  on bk.c_id = c.id
-                    ORDER BY startTime DESC;"""
+            SELECT bk.id         AS id,
+                   ts.date       AS date,
+                   ts.start_time AS startTime,
+                   p.first_name  AS firstName,
+                   p.last_name   AS lastName,
+                   c.title       AS title,
+                   md.viewer_room_url AS link  -- Seleccionamos el viewer_room_url de la tabla meeting_details
+            FROM time_slot AS ts
+            JOIN (
+                SELECT b.id,
+                       md.viewer_room_url, -- Necesitamos seleccionar el viewer_room_url aquí para unirlo después
+                       b.course_id    AS c_id,
+                       b.professor_id AS p_id,
+                       b.student_id   AS s_id
+                FROM booking AS b
+                JOIN meeting_details AS md ON b.id = md.booking_id -- Hacemos el JOIN aquí con la tabla meeting_details
+                WHERE b.student_id = :id\s
+            ) AS bk ON ts.booking_id = bk.id
+            JOIN (
+                SELECT id, first_name, last_name
+                FROM professor
+            ) AS p ON bk.p_id = p.id
+            JOIN (
+                SELECT id, title
+                FROM course
+            ) AS c ON bk.c_id = c.id
+            ORDER BY startTime DESC;
+            """
             , nativeQuery = true)
     Page<StudentBookingsRes> getBookingsInfoByStudentId(@Param("id") Long studentId, Pageable pageable);
 
