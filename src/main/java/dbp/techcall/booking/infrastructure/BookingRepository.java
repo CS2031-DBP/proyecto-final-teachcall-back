@@ -16,33 +16,30 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     @Query(
             value = """
-            SELECT bk.id         AS id,
-                   ts.date       AS date,
-                   ts.start_time AS startTime,
-                   p.first_name  AS firstName,
-                   p.last_name   AS lastName,
-                   c.title       AS title,
-                   md.viewer_room_url AS link  -- Seleccionamos el viewer_room_url de la tabla meeting_details
-            FROM time_slot AS ts
-            JOIN (
-                SELECT b.id,
-                       md.viewer_room_url, -- Necesitamos seleccionar el viewer_room_url aquí para unirlo después
-                       b.course_id    AS c_id,
-                       b.professor_id AS p_id,
-                       b.student_id   AS s_id
-                FROM booking AS b
-                JOIN meeting_details AS md ON b.id = md.booking_id -- Hacemos el JOIN aquí con la tabla meeting_details
-                WHERE b.student_id = :id\s
-            ) AS bk ON ts.booking_id = bk.id
-            JOIN (
-                SELECT id, first_name, last_name
-                FROM professor
-            ) AS p ON bk.p_id = p.id
-            JOIN (
-                SELECT id, title
-                FROM course
-            ) AS c ON bk.c_id = c.id
-            ORDER BY startTime DESC;
+            SELECT
+              bk.id,
+              ts.date,
+              ts.start_time AS startTime,
+              p.first_name AS firstName,
+              p.last_name AS lastName,
+              c.title,
+              md.viewer_room_url AS link
+            FROM\s
+              booking AS bk
+            JOIN\s
+              meeting_details AS md ON bk.id = md.booking_id
+            JOIN\s
+              time_slot AS ts ON bk.id = ts.booking_id
+            JOIN\s
+              professor AS p ON bk.professor_id = p.id
+            JOIN\s
+              course AS c ON bk.course_id = c.id
+            WHERE\s
+              bk.student_id = ?
+            ORDER BY\s
+              ts.start_time DESC
+            FETCH FIRST ? ROWS ONLY;
+            
             """
             , nativeQuery = true)
     Page<StudentBookingsRes> getBookingsInfoByStudentId(@Param("id") Long studentId, Pageable pageable);
