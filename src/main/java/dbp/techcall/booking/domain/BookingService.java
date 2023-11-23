@@ -11,6 +11,7 @@ import dbp.techcall.course.dto.TitleDescriptionProjection;
 import dbp.techcall.course.infrastructure.CourseRepository;
 import dbp.techcall.meetingDetails.domain.MeetingDetailsService;
 import dbp.techcall.professor.domain.Professor;
+import dbp.techcall.professor.dto.ProfessorNames;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.student.domain.Student;
@@ -123,17 +124,41 @@ public class BookingService {
         eventPublisher.publishEvent(new BookingCreatedEvent(this, newBooking));
     }
 
-    public Page<StudentBookingsRes> getStudentBookings(String username, Integer page) {
+    public Page<StudentBookingRes> getStudentBookings(String username, Integer page) {
         Student student = studentRepository.findByEmail(username);
         if (student == null) {
             throw new ResourceNotFoundException("Student not found, user might be a professor");
         }
-        Long studentId = student.getId();
 
         Pageable pageable = PageRequest.of(page, 10);
+        Page<StudentBooking> bookings = bookingRepository.findAllByStudent(student, pageable);
 
-        return bookingRepository.getBookingsInfoByStudentId(studentId, pageable);
+        if (bookings.isEmpty()) {
+            throw new ResourceNotFoundException("No bookings found for student with ID " + student.getId());
+        }
 
+        List<StudentBookingRes> response = new ArrayList<>();
+
+        for(StudentBooking b : bookings.getContent()){
+            ProfessorNames professor = professorRepository.findProfessorNamesById(b.getProfessor().getId());
+            DateTimeProjection timeSlot = null;
+            if (b.getTimeSlot() != null) {
+                timeSlot = timeSlotRepository.findDateTimeProjectionById(b.getTimeSlot().getId());
+            }            Integer courseId = b.getCourse().getId().intValue();
+            TitleDescriptionProjection course = courseRepository.findTitleDescriptionProjectionById(courseId);
+
+            StudentBookingRes studentBookingRes = new StudentBookingRes();
+
+            studentBookingRes.setId(b.getId());
+            studentBookingRes.setLink(meetingDetailsService.getMeetingDetailsHostRoomUrl(b.getId().intValue()));
+            studentBookingRes.setProfessor(professor);
+            studentBookingRes.setTimeSlot(timeSlot);
+            studentBookingRes.setCourse(course);
+
+            response.add(studentBookingRes);
+        }
+
+        return new PageImpl<>(response, pageable, bookings.getTotalElements());
     }
 
     public Page<ProfessorBookingRes> getProfessorBookings(String username, Integer page) {
@@ -153,7 +178,10 @@ public class BookingService {
 
         for(ProfessorBooking b : bookings.getContent()){
             StudentNames student = studentRepository.findStudentNamesById(b.getStudent().getId());
-            DateTimeProjection timeSlot = timeSlotRepository.findDateTimeProjectionById(b.getTimeSlot().getId());
+            DateTimeProjection timeSlot = null;
+            if (b.getTimeSlot() != null) {
+                timeSlot = timeSlotRepository.findDateTimeProjectionById(b.getTimeSlot().getId());
+            }
             TitleDescriptionProjection course = courseRepository.findTitleDescriptionProjectionById(b.getCourse().getId());
 
             ProfessorBookingRes professorBookingRes = new ProfessorBookingRes();

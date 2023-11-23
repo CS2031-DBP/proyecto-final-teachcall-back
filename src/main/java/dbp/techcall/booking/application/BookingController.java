@@ -62,9 +62,8 @@ public class BookingController {
     }
 
 
-    @PreAuthorize("hasRole('student')")
     @GetMapping("/student")
-    public ResponseEntity<Page<StudentBookingsRes>> getStudentBookings(@RequestParam(defaultValue = "0") Integer page ){
+    public ResponseEntity<Page<StudentBookingRes>> getStudentBookings(@RequestParam(defaultValue = "0") Integer page ){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
@@ -72,7 +71,6 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getStudentBookings(username, page));
     }
 
-    @PreAuthorize("hasRole('teacher')")
     @GetMapping("/professor")
     public ResponseEntity<Page<ProfessorBookingRes>> getProfessorBookings(@RequestParam(defaultValue = "0") Integer page){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
