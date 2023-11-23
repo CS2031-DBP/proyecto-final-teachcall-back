@@ -47,13 +47,14 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         var configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://127.0.0.1:5173", "https://teachcalldbp.web.app"));
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST","PUT","DELETE", "PATCH"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(Arrays.asList("*")); // Permitir todos los orígenes
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

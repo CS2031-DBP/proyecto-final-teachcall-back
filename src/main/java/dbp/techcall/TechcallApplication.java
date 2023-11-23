@@ -26,12 +26,13 @@ public class TechcallApplication {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins("http://localhost:5173", "http://127.0.0.1:5173", "https://teachcalldbp.web.app/")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD","PATCH")
+                        .allowedOrigins("*") // Permitir todos los orígenes
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "HEAD", "PATCH")
                         .maxAge(3600)
                         .allowedHeaders("*")
                         .allowCredentials(false);
             };
         };
-    };
+    }
+
 }
