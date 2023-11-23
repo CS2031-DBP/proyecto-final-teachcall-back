@@ -171,7 +171,7 @@ public class BookingService {
         Page<ProfessorBooking> bookings = bookingRepository.findAllByProfessor(professor, pageable);
 
         if (bookings.isEmpty()) {
-            throw new ResourceNotFoundException("No bookings found for professor with ID " + professor.getId());
+            throw new ResourceNotFoundException("No bookings where found for professor with ID " + professor.getId());
         }
 
         List<ProfessorBookingRes> response = new ArrayList<>();
