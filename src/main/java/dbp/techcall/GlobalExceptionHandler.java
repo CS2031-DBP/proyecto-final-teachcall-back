@@ -7,6 +7,7 @@ import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.timeSlot.exceptions.AvailabilityDatesErrorException;
 import dbp.techcall.timeSlot.exceptions.UnsetAvailabilityException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -55,6 +56,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AlreadyCompletedTourException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     protected String handleAlreadyCompletedTourException(AlreadyCompletedTourException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    protected String handleAuthenticationException(AuthenticationException e) {
         return e.getMessage();
     }
 }
