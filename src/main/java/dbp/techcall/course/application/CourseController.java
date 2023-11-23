@@ -2,10 +2,7 @@ package dbp.techcall.course.application;
 
 import dbp.techcall.course.domain.Course;
 import dbp.techcall.course.domain.CourseService;
-import dbp.techcall.course.dto.BasicCourseResponse;
-import dbp.techcall.course.dto.CourseDTO;
-import dbp.techcall.course.dto.CourseFullInfo;
-import dbp.techcall.course.dto.TopFiveCourses;
+import dbp.techcall.course.dto.*;
 import dbp.techcall.course.infrastructure.CourseRepository;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
@@ -13,12 +10,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/course")
@@ -89,4 +86,25 @@ public class CourseController {
 //    }
 
 
+    @PostMapping("/new")
+    public ResponseEntity<String> newCourse(@RequestBody NewCouseReq newCourse){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+
+        Professor professor = professorRepository.findByEmail(username);
+
+        if (professor == null) {
+            return ResponseEntity.status(403).body("User is not a professor");
+        }
+        Course course = new Course();
+        course.setTitle(newCourse.getTitle());
+        course.setDescription(newCourse.getDescription());
+        course.setPrice(newCourse.getPrice());
+        course.setProfessor(professor);
+
+        courseRepository.save(course);
+
+        return ResponseEntity.ok("Course created");
+    }
 }
