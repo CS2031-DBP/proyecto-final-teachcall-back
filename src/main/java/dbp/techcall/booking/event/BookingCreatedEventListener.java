@@ -94,20 +94,8 @@ public class BookingCreatedEventListener implements ApplicationListener<BookingC
                 String viewerRoomUrl = (String) responseBody.get("roomUrl");
                 String meetingId = (String) responseBody.get("meetingId");
                 meetingDetailsService.createMeetingDetailsAync(booking, hostRoomUrl, viewerRoomUrl, endDate, meetingId);
-                String messageToStudent = String.format(
-                        "Hola, tienes un nuevo booking. Has agendado una cita con el profesor %s a las %s horas del curso %s.",
-                        booking.getProfessor().getFirstName(),
-                        booking.getTimeSlot().iterator().next().getStartTime(),
-                        booking.getCourse().getTitle()
-                );
-                String messageToTeacher = String.format(
-                        "Hola, tienes un nuevo booking. El estudiante %s ha agendado una cita contigo a las %s horas del curso %s.",
-                        booking.getStudent().getFirstName(),
-                        booking.getTimeSlot().iterator().next().getStartTime(),
-                        booking.getCourse().getTitle()
-                );
-                emailService.sendEmailAsync(booking.getStudent().getEmail(), "Nuevo Booking", messageToStudent);
-                emailService.sendEmailAsync(booking.getProfessor().getEmail(), "Nuevo Booking", messageToTeacher);
+                emailService.sendBookingTeacherEmailAsync(booking.getProfessor().getEmail(), "Nuevo Booking", booking.getProfessor().getFirstName(), booking.getStudent().getFirstName(), endDate, booking.getCourse().getTitle());
+                emailService.sendBookingStudentEmailAsync(booking.getStudent().getEmail(), "Nuevo Booking", booking.getProfessor().getFirstName(), booking.getStudent().getFirstName(), endDate, booking.getCourse().getTitle());
             }
         } catch (Exception e) {
         }

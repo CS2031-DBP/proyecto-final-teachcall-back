@@ -68,15 +68,18 @@
 <body>
 <div class="container">
     <img src="https://i.imgur.com/cHBAQO1.png" alt="Teachcall Logo" class="logo">
-    <h1>Bienvenido a Teachcall, <span th:text="${firstName}">Nombre</span>!</h1>
-    <p>Estamos emocionados de tenerte a bordo. Con Teachcall puedes:</p>
-    <ul>
-        <li>Reservar clases fácilmente.</li>
-        <li>Gestionar tu horario de manera eficiente.</li>
-        <li>Acceder a una gran cantidad de recursos educativos.</li>
-    </ul>
-    <p>¡Y mucho más! Además, no olvides descargar nuestra app para tener la mejor experiencia.</p>
-    <a href="https://teachcall-2f3e8.web.app/" class="btn">Comenzar</a>
+    <h1>Confirmación de Reserva</h1>
+    <p>Hola, <span th:text="${professorName}">[Nombre del Profesor]</span>. Has recibido una nueva reserva de clase.</p>
+    <div>
+        <h2>Detalles de la Reserva:</h2>
+        <ul>
+            <li>Estudiante: <span th:text="${student}">Nombre del Estudiante</span></li>
+            <li>Fecha: <span th:text="${date}">Fecha de la Clase</span></li>
+            <li>Curso: <span th:text="${course}">Nombre del Curso</span></li>
+        </ul>
+    </div>
+    <p>Por favor, revisa tu calendario para más detalles y prepárate para tu próxima clase.</p>
+    <a href="https://teachcall-2f3e8.web.app/" class="btn">Ir al Calendario</a>
 </div>
 </body>
 </html>
