@@ -1,5 +1,6 @@
 package dbp.techcall.timeSlot.infrastructure;
 
+import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.timeSlot.dto.BasicDayAvailability;
 import dbp.techcall.timeSlot.domain.TimeSlot;
 import dbp.techcall.timeSlot.dto.DateTimeProjection;

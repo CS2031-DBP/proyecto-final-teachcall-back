@@ -148,6 +148,9 @@ public class BookingService {
 
             StudentBookingRes studentBookingRes = new StudentBookingRes();
 
+            Integer bookingId = b.getId().intValue();
+            System.out.println(bookingId);
+
             studentBookingRes.setId(b.getId());
             studentBookingRes.setLink(meetingDetailsService.getMeetingDetailsHostRoomUrl(b.getId().intValue()));
             studentBookingRes.setProfessor(professor);
@@ -176,6 +179,7 @@ public class BookingService {
         List<ProfessorBookingRes> response = new ArrayList<>();
 
         for(ProfessorBooking b : bookings.getContent()){
+            System.out.println(b.getId());
             StudentNames student = studentRepository.findStudentNamesById(b.getStudent().getId());
             DateTimeProjection timeSlot = null;
             if (b.getTimeSlot() != null) {

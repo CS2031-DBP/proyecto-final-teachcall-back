@@ -11,4 +11,6 @@ import lombok.Setter;
 public class JwtRes {
     private String token;
     private BasicUserInfo user;
+    private String pp;
+    private String cp;
 }

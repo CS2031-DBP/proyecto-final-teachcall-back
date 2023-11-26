@@ -1,16 +1,21 @@
 package dbp.techcall.professor.domain;
 
+import com.amazonaws.services.s3.model.ListObjectsV2Request;
+import com.amazonaws.services.s3.model.ListObjectsV2Result;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
+import dbp.techcall.auth.dto.JwtRes;
 import dbp.techcall.category.domain.Category;
 import dbp.techcall.category.infrastructure.CategoryRepository;
 import dbp.techcall.education.domain.Education;
 import dbp.techcall.education.dto.BasicEducationRequest;
-import dbp.techcall.education.dto.BasicEducationResponse;
 import dbp.techcall.education.infrastructure.EducationRepository;
 import dbp.techcall.professor.dto.*;
 import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
+import dbp.techcall.professor.exceptions.EmptyFileException;
 import dbp.techcall.professor.infrastructure.BasicProfessorResponse;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
+import dbp.techcall.s3.StorageService;
 import dbp.techcall.school.domain.School;
 import dbp.techcall.school.infrastructure.SchoolRepository;
 import dbp.techcall.workExperience.domain.WorkExperience;
@@ -29,11 +34,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -58,6 +65,9 @@ public class ProfessorService implements IProfessorService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private StorageService storageService;
 
     @Override
     public void save(NewProfessorDto newProfessor) {
@@ -198,7 +208,6 @@ public class ProfessorService implements IProfessorService {
     }
 
 
-
     public Page<BasicProfessorResponse> getProfessorsByCategory(Integer page, String category) {
         Pageable pageable = PageRequest.of(page, 10);
         return professorRepository.findAllProfessorsByCategoryWithPagination(pageable, category);
@@ -252,6 +261,63 @@ public class ProfessorService implements IProfessorService {
     }
 
 
+    public boolean addMedia(Professor professor, MultipartFile img, String fileName) {
+
+        if (img.isEmpty()) throw new EmptyFileException("Empty file");
+
+        String extension = img.getOriginalFilename().substring(img.getOriginalFilename().lastIndexOf("."));
+        String provObjectKey = professor.getId().toString() + "/profile/" + fileName + extension;
+
+        String objectKey = Objects.equals(fileName, "cover")
+                ? professor.getCoverPicKey()
+                : professor.getProfilePicKey();
+
+        try {
+            String key = storageService.uploadFile(img, objectKey == null ? provObjectKey : objectKey);
+
+            if (fileName.equals("cover")) professor.setCoverPicKey(key);
+            else if (fileName.equals("pp")) professor.setProfilePicKey(key);
+
+            professorRepository.save(professor);
+            return true;
+
+        } catch (Exception e) {
+            throw new RuntimeException("\nError on ProfessorService - addProfilePic on uploading file to S3");
+        }
+
+    }
+
+    public String getMediaUrl(Professor professor, String fileName) {
+        try {
+            String objectKey = Objects.equals(fileName, "cover")
+                    ? professor.getCoverPicKey()
+                    : professor.getProfilePicKey();
+
+            if (objectKey == null) throw new ResourceNotFoundException("User does not have a " + fileName + "image");
+
+            String url = storageService.generatePresignedUrl(objectKey);
+            if (url.isEmpty()) throw new ResourceNotFoundException("User does not have a " + fileName + "image");
+
+            return url;
+        } catch (Exception e) {
+            throw new RuntimeException("\nError on ProfessorService - getMediaUrl on generating presigned url from S3");
+        }
+    }
+
+    public boolean deleteMedia(Professor professor, String fileName) {
+        try {
+            String objectKey = Objects.equals(fileName, "cover")
+                    ? professor.getCoverPicKey()
+                    : professor.getProfilePicKey();
+            if (objectKey == null) throw new ResourceNotFoundException("User does not have a " + fileName + "image");
+
+            storageService.deleteFile(objectKey);
+            return true;
+        } catch (Exception e) {
+            throw new RuntimeException("\nError on ProfessorService - deleteMedia on deleting file from S3");
+        }
+
+    }
 }
 
 

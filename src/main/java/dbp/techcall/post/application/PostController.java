@@ -4,6 +4,7 @@ package dbp.techcall.post.application;
 import dbp.techcall.post.domain.Post;
 import dbp.techcall.post.domain.PostService;
 import dbp.techcall.post.dto.BasicPost;
+import dbp.techcall.post.dto.MyPostsResponse;
 import dbp.techcall.post.dto.PostInfo;
 import dbp.techcall.post.dto.PostInfoResponse;
 import dbp.techcall.post.infrastructure.PostRepository;
@@ -18,12 +19,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -69,7 +72,7 @@ public class PostController {
     }
 
     @GetMapping("/myposts")
-    public ResponseEntity<Page<PostInfo>> getCurrentUserPost() {
+    public ResponseEntity<Page<MyPostsResponse>> getCurrentUserPost() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
@@ -94,39 +97,6 @@ public class PostController {
         return modelMapper.map(post, BasicPost.class);
     }
 
-//    @PatchMapping("/{id}")
-//    public ResponseEntity<Post> updatePost(@PathVariable("id") Long id, @RequestBody BasicPost post) {
-//        // find the post
-//        Post existingPost = postRepository.findById(id).orElse(null);
-//
-//        if (existingPost == null) {
-//            // Return 404 Not Found if the post is not found
-//            return ResponseEntity.notFound().build();
-//        }
-//
-//        // find the user in session
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        String username = userDetails.getUsername();
-//        Professor professor = professorService.findByEmail(username);
-//
-//        // check if the user is the author of the post
-//        if (existingPost.getProfessor().equals(professor)) {
-//            // update the post
-//            existingPost.setTitle(post.getTitle());
-//            existingPost.setBody(post.getBody());
-//            existingPost.setUpdatedAt(LocalDateTime.now());
-//            // save the post
-//            Post savedPost = postRepository.save(existingPost);
-//
-//            // return ok
-//            return ResponseEntity.ok(savedPost);
-//        } else {
-//            // return forbidden
-//            return ResponseEntity.status(403).build();
-//        }
-//    }
-
     @GetMapping("/feed")
     public ResponseEntity<Page<PostInfoResponse>> getAllPostWithPagination(@RequestParam("page") int page, @RequestParam("size") int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -140,8 +110,8 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @PostMapping
-    public ResponseEntity<String> createPost(@RequestBody BasicPost post) {
+    @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<String> createPost(@RequestPart("title") String title, @RequestPart("body") String body, @RequestPart(value = "file", required = false) MultipartFile file) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
@@ -151,15 +121,19 @@ public class PostController {
             throw new ResourceNotFoundException("You are not a professor or not logged in");
         }
 
-        Post newPost = new Post();
-        LocalDateTime now = LocalDateTime.now();
+        String extension = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
-        newPost.setTitle(post.getTitle());
-        newPost.setBody(post.getBody());
-        newPost.setProfessor(professor);
-        newPost.setCreatedAt(now);
+        if (!extension.equals("png") && !extension.equals("pdf")) {
+            throw new IllegalArgumentException("File extension is not supported");
+        }
 
-        postRepository.save(newPost);
+
+        BasicPost post = new BasicPost();
+        post.setTitle(title);
+        post.setBody(body);
+        post.setFile(file);
+
+        postService.createPost(post, professor);
 
         return ResponseEntity.ok("success");
     }
@@ -250,7 +224,6 @@ public class PostController {
 
         return ResponseEntity.ok("success");
     }
-
 
 
 }
