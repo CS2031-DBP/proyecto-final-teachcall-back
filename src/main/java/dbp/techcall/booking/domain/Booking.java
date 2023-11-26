@@ -48,5 +48,4 @@ public class Booking{
     @Setter
     @OneToOne(mappedBy = "booking")
     private MeetingDetails meetingDetails;
-
 }
