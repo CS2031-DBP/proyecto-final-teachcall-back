@@ -3,6 +3,8 @@ package dbp.techcall;
 import dbp.techcall.auth.exceptions.UserAlreadyExistsException;
 import dbp.techcall.booking.exceptions.BookingNotFoundException;
 import dbp.techcall.professor.exceptions.AlreadyCompletedTourException;
+import dbp.techcall.professor.exceptions.EmptyFileException;
+import dbp.techcall.professor.exceptions.UnsupportedFileExtensionException;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import dbp.techcall.timeSlot.exceptions.AvailabilityDatesErrorException;
 import dbp.techcall.timeSlot.exceptions.UnsetAvailabilityException;
@@ -62,6 +64,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(AuthenticationException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     protected String handleAuthenticationException(AuthenticationException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(EmptyFileException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected String handleEmptyFileException(EmptyFileException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(RuntimeException.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected String handleRuntimeException(RuntimeException e) {
+        return e.getMessage();
+    }
+
+    @ExceptionHandler(UnsupportedFileExtensionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    protected String handleUnsupportedFileExtensionException(UnsupportedFileExtensionException e) {
         return e.getMessage();
     }
 }

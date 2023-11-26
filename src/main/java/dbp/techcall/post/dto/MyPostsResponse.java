@@ -9,15 +9,12 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @RequiredArgsConstructor
-public class PostInfoResponse {
+public class MyPostsResponse {
     Integer id;
     String title;
     String body;
     LocalDateTime createdAt;
-    String firstName;
-    String lastName;
     String mediaUrl;
     String mediaExtension;
-    boolean liked;
-    int likesQ;
+    int likes;
 }

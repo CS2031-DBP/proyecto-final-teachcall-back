@@ -10,6 +10,7 @@ import dbp.techcall.auth.exceptions.UserAlreadyExistsException;
 import dbp.techcall.jwt.JwtService;
 import dbp.techcall.professor.domain.Professor;
 import dbp.techcall.professor.infrastructure.ProfessorRepository;
+import dbp.techcall.s3.StorageService;
 import dbp.techcall.student.domain.Student;
 import dbp.techcall.student.repository.StudentRepository;
 import dbp.techcall.user.BasicUserInfo;
@@ -22,7 +23,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.ReadOnlyFileSystemException;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -46,7 +50,10 @@ public class AuthService implements IAuthUseCase {
     @Autowired
     private final UserRegistrationListener eventPublisher;
 
-    public JwtRes register(RegisterReq request){
+    @Autowired
+    private final StorageService storageService;
+
+    public JwtRes register(RegisterReq request) {
 
         if (request.getRole().equals("student")) {
             Student existingStudent = studentRepository.findByEmail(request.getEmail());
@@ -78,9 +85,9 @@ public class AuthService implements IAuthUseCase {
             JwtRes response = new JwtRes();
             response.setToken(jwt);
             response.setUser(modelMapper.map(student, BasicUserInfo.class));
-            return  response;
+            return response;
         }
-        if (request.getRole().equals("teacher")) {
+        else if (request.getRole().equals("teacher")) {
             Professor professor = new Professor();
             professor.setFirstName(request.getFirstName());
             professor.setLastName(request.getLastName());
@@ -94,45 +101,64 @@ public class AuthService implements IAuthUseCase {
             eventPublisher.onApplicationEvent(new UserRegisteredEvent(professor));
 
             String jwt = jwtService.generateToken(professor);
-            JwtRes response =  new JwtRes();
+            JwtRes response = new JwtRes();
 
             response.setToken(jwt);
             response.setUser(modelMapper.map(professor, BasicUserInfo.class));
             System.out.println(jwt);
-            return  response;
+            return response;
 
-        }
-        else {
+        } else {
             throw new IllegalArgumentException("Role is not valid");
         }
 
     }
 
-    public JwtRes login(LoginReq req){
+    public JwtRes login(LoginReq req) {
 
         Users user;
+        List<String> objectKeys = new ArrayList<>();
 
         if (req.getRole().equals("student")) {
             user = studentRepository.findByEmail(req.getEmail());
-        }
-        else if (req.getRole().equals("teacher")) {
+        } else if (req.getRole().equals("teacher")) {
             user = teacherRepository.findByEmail(req.getEmail());
-        }
-        else {
-            throw new IllegalArgumentException("Role is not valid");
-        }
-
-        if(user == null){
-            throw new UsernameNotFoundException("Email is not registered");
+            if (user == null) throw new UsernameNotFoundException("Email is not registered");
+            objectKeys.addAll(extractProfileImgKeys((Professor) user));
+        } else {
+            throw new ReadOnlyFileSystemException();
         }
 
-        if(!passwordEncoder.matches(req.getPassword(), user.getPassword())){
+        if (user == null) throw new UsernameNotFoundException("Email is not registered");
+        if (!passwordEncoder.matches(req.getPassword(), user.getPassword()))
             throw new IllegalArgumentException("Password is incorrect");
-        }
+
 
         JwtRes response = new JwtRes();
+        if (objectKeys.isEmpty()) {
+            response.setPp(" ");
+            response.setCp(" ");
+        } else {
+            response.setPp(
+                    objectKeys.get(0) == null
+                            ? ""
+                            : storageService.generatePresignedUrl(objectKeys.get(0)));
+
+            response.setCp(
+                    objectKeys.get(1) == null
+                            ? ""
+                            : storageService.generatePresignedUrl(objectKeys.get(1)));
+        }
+
         response.setToken(jwtService.generateToken(modelMapper.map(user, UserDetails.class)));
         response.setUser(modelMapper.map(user, BasicUserInfo.class));
         return response;
+    }
+
+    private List<String> extractProfileImgKeys(Professor professor) {
+        List<String> keys = new ArrayList<>();
+        keys.add(professor.getProfilePicKey());
+        keys.add(professor.getCoverPicKey());
+        return keys;
     }
 }

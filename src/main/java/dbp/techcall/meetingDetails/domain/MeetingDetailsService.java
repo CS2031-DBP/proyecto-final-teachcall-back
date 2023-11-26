@@ -1,5 +1,4 @@
 package dbp.techcall.meetingDetails.domain;
-
 import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.meetingDetails.infrastructure.MeetingDetailsRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -11,6 +11,7 @@ public interface PostInfo {
     public Long getId();
     public String getTitle();
     public String getBody();
+    public String getMediaUrl();
     public Long getLikes();
     public LocalDateTime getCreatedAt();
 }

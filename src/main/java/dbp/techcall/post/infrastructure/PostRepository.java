@@ -19,12 +19,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Long> findLikedPostByProfessorId(Long id, Pageable page);
 
     @Query(value = """
-            select p.id as id, p.title as title, p.body as body, count(l.student_id) as likes, p.created_at as createdAt
+            select p.id as id, p.title as title, p.body as body, p.media_key as mediaUrl, count(l.student_id) as likes, p.created_at as createdAt
             from post p
             left join student_likes l on l.post_id = p.id
             where p.professor_id = :id
             group by p.id, p.title, p.body
-            order by p.id;""", nativeQuery = true)
+            order by p.created_at;""", nativeQuery = true)
     Page<PostInfo> getCurrentUserPostWithPagination(@Param("id") Long id, Pageable page);
 }
 

@@ -37,6 +37,12 @@ public class Professor extends Users {
     @Column(name = "completed_tour", columnDefinition = "boolean default false")
     private Boolean tourCompleted;
 
+    @Column(name = "profile_pic_key", columnDefinition = "varchar(500)")
+    private String profilePicKey;
+
+    @Column(name = "cover_pic_key", columnDefinition = "varchar(500)")
+    private String coverPicKey;
+
     @OneToMany(mappedBy = "professor", cascade = CascadeType.ALL)
     private List<Post> posts;
 
