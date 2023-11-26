@@ -134,7 +134,6 @@ public class PostController {
         String username = userDetails.getUsername();
 
         Student student = studentRepository.findByEmail(username);
-
         Pageable pageable = Pageable.ofSize(size).withPage(page);
         Page<PostInfoResponse> posts = postService.getAllPostWithEPagination(pageable, student);
         return ResponseEntity.ok(posts);
