@@ -103,25 +103,41 @@ public class BookingService {
 
     }
 
-    public void addBooking(BasicBookingReq req, String username) throws ResourceNotFoundException {
+    public void addBooking(BasicBookingReq req, String username) throws ResourceNotFoundException, TimeSlotUnavailableException {
         Student student = studentRepository.findByEmail(username);
         if (student == null) {
             throw new ResourceNotFoundException("Student not found, user might be a professor");
         }
-        Course course = courseRepository.findById(req.getCourseId()).get();
-        Professor professor = professorRepository.findById(req.getProfessorId()).get();
-        TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId()).get();
+
+        Course course = courseRepository.findById(req.getCourseId())
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
+        Professor professor = professorRepository.findById(req.getProfessorId())
+                .orElseThrow(() -> new ResourceNotFoundException("Professor not found"));
+        TimeSlot timeSlot = timeSlotRepository.findById(req.getTimeSlotId())
+                .orElseThrow(() -> new ResourceNotFoundException("TimeSlot not found"));
+
+        // Verificar si el TimeSlot está disponible
+        if (!timeSlot.getIsAvailable()) {
+            throw new TimeSlotUnavailableException("TimeSlot is not available");
+        }
+
+        // Otras validaciones relacionales si son necesarias
+
         Booking newBooking = new Booking();
         newBooking.setCourse(course);
         newBooking.setProfessor(professor);
         newBooking.setStudent(student);
         newBooking.getTimeSlot().add(timeSlot);
+
         bookingRepository.save(newBooking);
+
         timeSlot.setIsAvailable(false);
         timeSlot.setBooking(newBooking);
         timeSlotRepository.save(timeSlot);
+
         eventPublisher.publishEvent(new BookingCreatedEvent(this, newBooking));
     }
+
 
     public Page<StudentBookingRes> getStudentBookings(String username, Integer page) {
         Student student = studentRepository.findByEmail(username);

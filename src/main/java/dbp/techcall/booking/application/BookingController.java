@@ -2,6 +2,7 @@ package dbp.techcall.booking.application;
 
 import dbp.techcall.booking.domain.Booking;
 import dbp.techcall.booking.domain.BookingService;
+import dbp.techcall.booking.domain.TimeSlotUnavailableException;
 import dbp.techcall.booking.dto.*;
 import dbp.techcall.review.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,14 +54,15 @@ public class BookingController {
 
         try {
             bookingService.addBooking(bookingReq, username);
-            return ResponseEntity.ok("booking added");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("Booking already exists");
+            return ResponseEntity.ok("Booking added");
+        } catch (TimeSlotUnavailableException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("TimeSlot is not available");
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Resource not found");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred");
         }
     }
-
 
     @GetMapping("/student")
     public ResponseEntity<Page<StudentBookingRes>> getStudentBookings(@RequestParam(defaultValue = "0") Integer page ){
