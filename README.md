@@ -23,10 +23,6 @@ En TeachCall, adoptamos una arquitectura hexagonal y vertical slicing para garan
 - **Enfoque en la Experiencia del Usuario**: Hemos dado prioridad a una interfaz intuitiva y accesible.
 - **Seguridad y Fiabilidad**: Gracias a Spring Security y una arquitectura bien pensada, ofrecemos una plataforma segura y confiable.
 
-## Contribución 🤝
-
-Para contribuir a este proyecto, por favor, consulte [CONTRIBUTING.md](CONTRIBUTING.md) para obtener detalles sobre nuestro código de conducta y el proceso para realizar pull requests.
-
 ## Licencia 📄
 
 Este proyecto se encuentra bajo la Licencia MIT - vea el archivo [LICENSE.md](LICENSE.md) para más detalles.
