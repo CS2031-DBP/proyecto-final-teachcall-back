@@ -1,30 +1,30 @@
-# TeachCall 🎓📞 - Ganador 2023-2 del Curso de Desarrollo Basado en Plataformas (CS2031)
+# TeachCall 🎓📞 - 2023-2 Winner of the Platform-Based Development Course (CS2031)
 
-## Descripción 📝
+## Description 📝
 
-TeachCall, el proyecto ganador del curso de Desarrollo Basado en Plataformas (CS2031) de UTEC, es una plataforma B2C innovadora diseñada para conectar profesores con estudiantes que buscan clases particulares. El proyecto, desarrollado en Java con Spring Boot, React y React Native, sobresale por su funcionalidad y diseño, demostrando la sinergia perfecta entre la creatividad y la técnica.
+TeachCall, the winning project of UTEC's Platform-Based Development Course (CS2031), is an innovative B2C platform designed to connect teachers with students seeking private lessons. Developed in Java with Spring Boot, React, and React Native, the project stands out for its functionality and design, demonstrating the perfect synergy between creativity and technique.
 
-## Integrantes del equipo 👥
+## Team Members 👥
 
-| Nombre                      | Github User   | Contacto                       |
-|-----------------------------|---------------|--------------------------------|
-| Gabriel Eduardo Romero Diez | gabrielromerod| gabriel.romero@utec.edu.pe     |
-| Gustavo Tadeo Ortiz Vasquez | gortiz1234    | gustavo.ortiz@utec.edu.pe      |
-| David Mauricio Jacobo Ruiz  | Mauwt         | david.jacobo@utec.edu.pe       |
-| Kayla De Vivanco Briceño    | kdevivanco    | kayla.devivanco@utec.edu.pe    |
+| Name                         | Github User   | Contact                       |
+|------------------------------|---------------|-------------------------------|
+| Gabriel Eduardo Romero Diez  | gabrielromerod| gabriel.romero@utec.edu.pe    |
+| Gustavo Tadeo Ortiz Vasquez  | gortiz1234    | gustavo.ortiz@utec.edu.pe     |
+| David Mauricio Jacobo Ruiz   | Mauwt         | david.jacobo@utec.edu.pe      |
+| Kayla De Vivanco Briceño     | kdevivanco    | kayla.devivanco@utec.edu.pe   |
 
-## Arquitectura y Tecnologías Utilizadas 🏗️
+## Architecture and Technologies Used 🏗️
 
-En TeachCall, adoptamos una arquitectura hexagonal y vertical slicing para garantizar un diseño modular y escalable. La base de datos PostgreSQL, junto con Spring Boot en el backend, proporciona una base sólida y segura. Implementamos Spring Security, un servicio de correo electrónico, y conexiones con el API de Whereby utilizando eventos asíncronos. En el frontend, usamos React para componentes reutilizables y React Native para la versión móvil, asegurando una experiencia de usuario fluida y coherente.
+In TeachCall, we adopted a hexagonal architecture and vertical slicing to ensure a modular and scalable design. The PostgreSQL database, along with Spring Boot on the backend, provides a solid and secure foundation. We implemented Spring Security, an email service, and connections with the Whereby API using asynchronous events. On the frontend, we used React for reusable components and React Native for the mobile version, ensuring a smooth and consistent user experience.
 
-## Aspectos Destacados del Proyecto 🌟
+## Project Highlights 🌟
 
-- **Innovación y Creatividad**: TeachCall es la confluencia de ideas innovadoras y soluciones técnicas avanzadas.
-- **Enfoque en la Experiencia del Usuario**: Hemos dado prioridad a una interfaz intuitiva y accesible.
-- **Seguridad y Fiabilidad**: Gracias a Spring Security y una arquitectura bien pensada, ofrecemos una plataforma segura y confiable.
+- **Innovation and Creativity**: TeachCall is the confluence of innovative ideas and advanced technical solutions.
+- **Focus on User Experience**: We have prioritized an intuitive and accessible interface.
+- **Security and Reliability**: Thanks to Spring Security and a well-thought-out architecture, we offer a secure and reliable platform.
 
-## Licencia 📄
+## License 📄
 
-Este proyecto se encuentra bajo la Licencia MIT - vea el archivo [LICENSE.md](LICENSE.md) para más detalles.
+This project is under the MIT License - see the [LICENSE.md](LICENSE.md) file for more details.
 
-Creado con ❤️ por el equipo de TeachCall de UTEC.
+Created with ❤️ by the TeachCall team at UTEC.
